@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teja Adusumilli Portfolio</title>
+
+  <!--
+    - favicon
+  -->
+  <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon" />
+
+  <!--
+    - custom css link
+  -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
+
+  <!--
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"
+    integrity="sha512-o8Oz5nlfh/wn2cDRoohU80FjplJn6j2FVta+i9NgrU6/DRyzxwGQ+R/XcTHo+wWdaDcV34+wr5FNWjO4gqGI+Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <!--
+    - #MAIN
+  -->
+
+  <main>
+    <!--
+      - #SIDEBAR
+    -->
+
+    <aside class="sidebar" data-sidebar>
+      <div class="sidebar-info">
+        <figure class="avatar-box">
+          <img src="./assets/images/my-avatar.png" alt="Teja Adusumilli" width="80" />
+        </figure>
+
+        <div class="info-content">
+          <h1 class="name" title="Richard hanrick">Teja Adusumilli</h1>
+
+          <p class="title">Salesforce developer</p>
+        </div>
+
+        <button class="info_more-btn" data-sidebar-btn>
+          <span>Show Contacts</span>
+
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+      </div>
+
+      <div class="sidebar-info_more">
+        <div class="separator"></div>
+
+        <ul class="contacts-list">
+          <li class="contact-item">
+            <div class="icon-box">
+              <ion-icon name="mail-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Email</p>
+
+              <a href="mailto:teamteja3@gmail.com" class="contact-link">teamteja3@gmail.com</a>
+            </div>
+          </li>
+
+          <li class="contact-item">
+            <div class="icon-box">
+              <ion-icon name="phone-portrait-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Phone</p>
+
+              <a href="tel:+919502171788" class="contact-link">+919502171788</a>
+            </div>
+          </li>
+
+          <li class="contact-item">
+            <div class="icon-box">
+              <ion-icon name="calendar-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Birthday</p>
+
+              <time datetime="21-09-1993">21th September</time>
+            </div>
+          </li>
+
+          <li class="contact-item">
+            <div class="icon-box">
+              <ion-icon name="location-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Location</p>
+
+              <address>hyderabad, telangana</address>
+            </div>
+          </li>
+        </ul>
+
+        <div class="separator"></div>
+
+        <ul class="social-list">
+          <li class="social-item">
+            <a href="https://www.salesforce.com/trailblazer/tteja21" class="social-link">
+              <ion-icon name="cloud"></ion-icon>
+            </a>
+          </li>
+          <li class="social-item">
+            <a href="https://www.facebook.com/adusumilli.sivateja.7" class="social-link">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+          </li>
+
+          <li class="social-item">
+            <a href="https://www.linkedin.com/in/teja-adusumilli-5434a9188" class="social-link">
+              <ion-icon name="logo-linkedin"></ion-icon>
+            </a>
+          </li>
+
+          <li class="social-item">
+            <a href="https://www.instagram.com/teja_adusumilli/#" class="social-link">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!--
+      - #main-content
+    -->
+
+    <div class="main-content">
+      <!--
+        - #NAVBAR
+      -->
+
+      <nav class="navbar">
+        <ul class="navbar-list">
+          <li class="navbar-item">
+            <button class="navbar-link active" data-nav-link>About</button>
+          </li>
+
+          <li class="navbar-item">
+            <button class="navbar-link" data-nav-link>Resume</button>
+          </li>
+
+          <!-- <li class="navbar-item">
+            <a class="navbar-link" href="https://www.salesforce.com/trailblazer/tteja21" target="_blank">salesforce profile </a>
+           
+          </li> -->
+
+          <li class="navbar-item">
+            <a class="navbar-link" href="https://learnnewsalesforce.blogspot.com/" target="_blank">Blog
+            </a>
+          </li>
+
+          <li class="navbar-item">
+            <button class="navbar-link" data-nav-link>Contact</button>
+          </li>
+          <li class="navbar-item">
+            <button class="navbar-link" data-nav-link>feedback</button>
+          </li>
+        </ul>
+      </nav>
+
+      <!--
+        - #ABOUT
+      -->
+
+      <article class="about active" data-page="about">
+        <header>
+          <h2 class="h2 article-title">About me</h2>
+        </header>
+
+        <section class="about-text">
+          <p>
+            I am a skilled Salesforce Developer with expertise in designing,
+            developing, and optimizing scalable solutions on the Salesforce
+            platform. With hands-on experience in Apex, Lightning Web
+            Components (LWC), Visualforce, and Salesforce APIs, I specialize
+            in customizing Salesforce to meet business needs, automate
+            workflows, and enhance user experiences.
+          </p>
+
+          <p>
+            I am passionate about building robust, efficient, and
+            user-friendly Salesforce applications that drive business success.
+            Always eager to stay updated with the latest Salesforce
+            advancements and best practices, I strive to deliver high-quality
+            solutions that align with industry standards.
+          </p>
+          <h3 class="h3 service-title">Key Skills & Expertise:</h3>
+          <p>
+            Lightning Web Components (LWC) & Aura Components for dynamic UI
+            development
+          </p>
+          <p>
+            Apex (Triggers, Batch, Schedulers, Future Methods, Test Classes)
+            for backend customization
+          </p>
+          <p>
+            SOQL, SOSL & Salesforce Data Model for efficient data management
+          </p>
+          <p>REST & SOAP APIs, Integrations with third-party applications</p>
+          <p>Flows, Process Builder, and Declarative Automation</p>
+          <p>
+            Salesforce Security Model (Profiles, Roles, Sharing Rules,
+            Permission Sets)
+          </p>
+          <p>
+            Experience Cloud, Service Cloud, Sales Cloud, and Custom
+            Applications
+          </p>
+          <p>
+            CI/CD, Version Control (Git, Bitbucket), Deployment Tools (Copado,
+            Gearset, SFDX)
+          </p>
+        </section>
+
+        <!--
+          - service
+        -->
+
+        <section class="service">
+          <h3 class="h3 service-title">What i'm doing</h3>
+
+          <ul class="service-list">
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/apex (2).svg
+                " alt="design icon" width="40" />
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">
+                  Custom Salesforce Development
+                </h4>
+
+                <p class="service-item-text">
+                  I specialize in creating custom Salesforce solutions using
+                  Apex, Lightning Web Components (LWC), and Visualforce to
+                  address unique business challenges and ensure seamless
+                  operations.
+                </p>
+              </div>
+            </li>
+
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/lightning_extension.svg" alt="Web development icon" width="40" />
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">Salesforce Integrations</h4>
+
+                <p class="service-item-text">
+                  Expert in integrating Salesforce with third-party systems
+                  using REST/SOAP APIs and middleware tools like MuleSoft to
+                  enhance system connectivity and streamline workflows.
+                </p>
+              </div>
+            </li>
+
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/automate.svg" alt="mobile app icon" width="40" />
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">
+                  Automation & Optimization
+                </h4>
+
+                <p class="service-item-text">
+                  Design and implement robust automation solutions, including
+                  Flows, Process Builder, and Apex Triggers, to optimize
+                  processes, reduce manual effort, and boost efficiency.
+                </p>
+              </div>
+            </li>
+
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/lock.svg" alt="camera icon" width="40" />
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">
+                  Salesforce Data Management & Security
+                </h4>
+
+                <p class="service-item-text">
+                  Proficient in managing complex data models, using SOQL/SOSL
+                  for data queries, and implementing robust security measures
+                  such as Profiles, Roles, Sharing Rules, and Permission Sets.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <!--
+          - testimonials
+        -->
+
+        <!--         <section class="testimonials">
+
+          <h3 class="h3 testimonials-title">Collaboration</h3>
+
+          <ul class="testimonials-list has-scrollbar">
+
+            <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/avatar-1.png" alt="Satya Bandaru" width="60" data-testimonials-avatar>
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Satya Bandaru</h4>
+
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                   Siva Teja is an exceptional professional and a true asset to any team. Having worked alongside him for approximately three years, I've consistently been impressed by his diverse skill set and unwavering dedication.
+One of Siva Teja's standout qualities is his elite problem-solving ability. He approaches challenges with a strategic mindset, quickly dissecting complex issues and devising effective, often innovative, solutions. This talent is complemented by his deep expertise in LWC (Lightning Web Components) and JavaScript, where he consistently delivers robust and efficient code. Furthermore, his proficiency as an Apex developer ensures a comprehensive understanding of the Salesforce platform, enabling him to build powerful back-end solutions.
+Beyond his technical prowess, Siva Teja is a truly outstanding team player. He's collaborative, supportive, and always willing to share his knowledge to help others succeed. His "never say no" attitude means he embraces new challenges with enthusiasm and reliability, consistently going above and beyond to contribute to project success. He's the kind of colleague you can always count on, whether it's for a difficult technical task or simply to lend a helping hand. 
+In summary, Siva Teja combines top-tier technical skills with an exemplary work ethic and a fantastic team-oriented approach. Any organisation would be fortunate to have him.
+                  </p>
+                </div>
+
+              </div>
+            </li>
+
+            <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/avator- (5).png" alt="Gowtham Anantha" width="60" data-testimonials-avatar>
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Gowtham Anantha</h4>
+
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                    I would like to sincerely appreciate Siva Teja for his outstanding work and dedication as a Salesforce Developer. His expertise, attention to detail, and proactive approach have significantly contributed to the success of our project. Siva Teja consistently delivers high-quality solutions that enhance business processes and drive value for SFDC team.
+
+His ability to understand complex requirements and translate them into efficient, scalable Salesforce solutions is truly commendable. It has been a pleasure working with such a skilled professional who consistently goes above and beyond to ensure excellence.
+                  </p>
+                </div>
+
+              </div>
+            </li>
+
+            <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/avator- (9).png" alt="Subrahmanyam Nangineni" width="60" data-testimonials-avatar>
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Subrahmanyam Nangineni</h4>
+
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                    One of the things I appreciate most about working with you is your natural ability to collaborate. Your depth of knowledge and technical skill continue to impress me. You approach every challenge with a calm, analytical mindset, and your ability to break down complex problems into manageable solutions is a rare and valuable strength. It’s clear that your experience and expertise are grounded in both a strong understanding of your field and a genuine enthusiasm for continuous learning.
+                  </p>
+                </div>
+
+              </div>
+            </li>
+
+            <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/avatar-4.png" alt="Henry william" width="60" data-testimonials-avatar>
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Henry william</h4>
+
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                    Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
+                    lot of experience
+                    and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
+                    consectetur adipiscing
+                    elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
+                  </p>
+                </div>
+
+              </div>
+            </li>
+             <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/avator-5.jpg" alt="Daniel lewis" width="60" data-testimonials-avatar>
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Daniel lewis</h4>
+
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                    Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
+                    lot of experience
+                    and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
+                    consectetur adipiscing
+                    elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
+                  </p>
+                </div>
+
+              </div>
+            </li>
+
+            <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/avator-7.png" alt="Jessica miller" width="60" data-testimonials-avatar>
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Jessica miller</h4>
+
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                    Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
+                    lot of experience
+                    and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
+                    consectetur adipiscing
+                    elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
+                  </p>
+                </div>
+
+              </div>
+            </li>
+
+          </ul>
+
+        </section> -->
+
+        <!--     new slider cards     -->
+
+        <section class="testimonials">
+          <h3 class="h3 testimonials-title">Collaboration</h3>
+
+          <div class="testimonials-wrapper">
+            <button class="testimonial-nav-btn left" onclick="scrollTestimonials(-1)">
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+
+            <ul class="testimonials-list has-scrollbar">
+              <!-- the existing <li class="testimonials-item"> … </li> content stays unchanged -->
+              <li class="testimonials-item">
+                <div class="content-card" data-testimonials-item>
+                  <figure class="testimonials-avatar-box">
+                    <img src="./assets/images/avatar-1.png" alt="Satya Bandaru" width="60" data-testimonials-avatar />
+                  </figure>
+
+                  <h4 class="h4 testimonials-item-title" data-testimonials-title>
+                    Satya Bandaru
+                  </h4>
+
+                  <div class="testimonials-text" data-testimonials-text>
+                    <p>
+                      Siva Teja is an exceptional professional and a true
+                      asset to any team. Having worked alongside him for
+                      approximately three years, I've consistently been
+                      impressed by his diverse skill set and unwavering
+                      dedication. One of Siva Teja's standout qualities is his
+                      elite problem-solving ability. He approaches challenges
+                      with a strategic mindset, quickly dissecting complex
+                      issues and devising effective, often innovative,
+                      solutions. This talent is complemented by his deep
+                      expertise in LWC (Lightning Web Components) and
+                      JavaScript, where he consistently delivers robust and
+                      efficient code. Furthermore, his proficiency as an Apex
+                      developer ensures a comprehensive understanding of the
+                      Salesforce platform, enabling him to build powerful
+                      back-end solutions. Beyond his technical prowess, Siva
+                      Teja is a truly outstanding team player. He's
+                      collaborative, supportive, and always willing to share
+                      his knowledge to help others succeed. His "never say no"
+                      attitude means he embraces new challenges with
+                      enthusiasm and reliability, consistently going above and
+                      beyond to contribute to project success. He's the kind
+                      of colleague you can always count on, whether it's for a
+                      difficult technical task or simply to lend a helping
+                      hand. In summary, Siva Teja combines top-tier technical
+                      skills with an exemplary work ethic and a fantastic
+                      team-oriented approach. Any organisation would be
+                      fortunate to have him.
+                    </p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="testimonials-item">
+                <div class="content-card" data-testimonials-item>
+                  <figure class="testimonials-avatar-box">
+                    <img src="./assets/images/avator- (5).png" alt="Gowtham Anantha" width="60"
+                      data-testimonials-avatar />
+                  </figure>
+
+                  <h4 class="h4 testimonials-item-title" data-testimonials-title>
+                    Gowtham Anantha
+                  </h4>
+
+                  <div class="testimonials-text" data-testimonials-text>
+                    <p>
+                      I would like to sincerely appreciate Siva Teja for his
+                      outstanding work and dedication as a Salesforce
+                      Developer. His expertise, attention to detail, and
+                      proactive approach have significantly contributed to the
+                      success of our project. Siva Teja consistently delivers
+                      high-quality solutions that enhance business processes
+                      and drive value for SFDC team. His ability to understand
+                      complex requirements and translate them into efficient,
+                      scalable Salesforce solutions is truly commendable. It
+                      has been a pleasure working with such a skilled
+                      professional who consistently goes above and beyond to
+                      ensure excellence.
+                    </p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="testimonials-item">
+                <div class="content-card" data-testimonials-item>
+                  <figure class="testimonials-avatar-box">
+                    <img src="./assets/images/avator- (9).png" alt="Subrahmanyam" width="60" data-testimonials-avatar />
+                  </figure>
+
+                  <h4 class="h4 testimonials-item-title" data-testimonials-title>
+                    Subrahmanyam
+                  </h4>
+
+                  <div class="testimonials-text" data-testimonials-text>
+                    <p>
+                      One of the things I appreciate most about working with
+                      you is your natural ability to collaborate. Your depth
+                      of knowledge and technical skill continue to impress me.
+                      You approach every challenge with a calm, analytical
+                      mindset, and your ability to break down complex problems
+                      into manageable solutions is a rare and valuable
+                      strength. It’s clear that your experience and expertise
+                      are grounded in both a strong understanding of your
+                      field and a genuine enthusiasm for continuous learning.
+                    </p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="testimonials-item">
+                <div class="content-card" data-testimonials-item>
+                  <figure class="testimonials-avatar-box">
+                    <img src="./assets/images/avatar-4.png" alt="Henry william" width="60" data-testimonials-avatar />
+                  </figure>
+
+                  <h4 class="h4 testimonials-item-title" data-testimonials-title>
+                    Henry william
+                  </h4>
+
+                  <div class="testimonials-text" data-testimonials-text>
+                    <p>
+                      Richard was hired to create a corporate identity. We
+                      were very pleased with the work done. She has a lot of
+                      experience and is very concerned about the needs of
+                      client. Lorem ipsum dolor sit amet, ullamcous cididt
+                      consectetur adipiscing elit, seds do et eiusmod tempor
+                      incididunt ut laborels dolore magnarels alia.
+                    </p>
+                  </div>
+                </div>
+              </li>
+              <li class="testimonials-item">
+                <div class="content-card" data-testimonials-item>
+                  <figure class="testimonials-avatar-box">
+                    <img src="./assets/images/avator-5.jpg" alt="Daniel lewis" width="60" data-testimonials-avatar />
+                  </figure>
+
+                  <h4 class="h4 testimonials-item-title" data-testimonials-title>
+                    Daniel lewis
+                  </h4>
+
+                  <div class="testimonials-text" data-testimonials-text>
+                    <p>
+                      Richard was hired to create a corporate identity. We
+                      were very pleased with the work done. She has a lot of
+                      experience and is very concerned about the needs of
+                      client. Lorem ipsum dolor sit amet, ullamcous cididt
+                      consectetur adipiscing elit, seds do et eiusmod tempor
+                      incididunt ut laborels dolore magnarels alia.
+                    </p>
+                  </div>
+                </div>
+              </li>
+
+              <li class="testimonials-item">
+                <div class="content-card" data-testimonials-item>
+                  <figure class="testimonials-avatar-box">
+                    <img src="./assets/images/avator-7.png" alt="Jessica miller" width="60" data-testimonials-avatar />
+                  </figure>
+
+                  <h4 class="h4 testimonials-item-title" data-testimonials-title>
+                    Jessica miller
+                  </h4>
+
+                  <div class="testimonials-text" data-testimonials-text>
+                    <p>
+                      Richard was hired to create a corporate identity. We
+                      were very pleased with the work done. She has a lot of
+                      experience and is very concerned about the needs of
+                      client. Lorem ipsum dolor sit amet, ullamcous cididt
+                      consectetur adipiscing elit, seds do et eiusmod tempor
+                      incididunt ut laborels dolore magnarels alia.
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+            <button class="testimonial-nav-btn right" onclick="scrollTestimonials(1)">
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+          </div>
+        </section>
+
+        <!--
+          - testimonials modal
+        -->
+
+        <div class="modal-container" data-modal-container>
+          <div class="overlay" data-overlay></div>
+
+          <section class="testimonials-modal">
+            <button class="modal-close-btn" data-modal-close-btn>
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+
+            <div class="modal-img-wrapper">
+              <figure class="modal-avatar-box">
+                <img src="./assets/images/avatar-1.png" alt="Daniel lewis" width="80" data-modal-img />
+              </figure>
+
+              <img src="./assets/images/icon-quote.svg" alt="quote icon" />
+            </div>
+
+            <div class="modal-content">
+              <h4 class="h3 modal-title" data-modal-title>Daniel lewis</h4>
+              <p>Tech Mahindra</p>
+              <!--               <time datetime="2021-06-14">14 June, 2021</time> -->
+
+              <div data-modal-text>
+                <p>
+                  Richard was hired to create a corporate identity. We were
+                  very pleased with the work done. She has a lot of experience
+                  and is very concerned about the needs of client. Lorem ipsum
+                  dolor sit amet, ullamcous cididt consectetur adipiscing
+                  elit, seds do et eiusmod tempor incididunt ut laborels
+                  dolore magnarels alia.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!--
+          - clients
+        -->
+
+        <section class="clients">
+          <h3 class="h3 clients-title">Certifications</h3>
+          <div class="certificate-wrapper">
+            <button class="certificate-nav-btn left" onclick="scrollCertifications(-1)">
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+            <ul class="clients-list certificate-list has-scrollbar">
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/JavaScript-Developer-I.png" alt="Certifications" />
+                </a>
+              </li>
+
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/Platform-App-Builder.png" alt="Certifications" />
+                </a>
+              </li>
+
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/Platform-Developer-I.png" alt="Certifications" />
+                </a>
+              </li>
+
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/Platform-Developer-II.png" alt="Certifications" />
+                </a>
+              </li>
+
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/Service-Cloud-Consultant.png" alt="Certifications" />
+                </a>
+              </li>
+
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/Administrator.png" alt="Administrator" />
+                </a>
+              </li>
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/2023-07_Badge_SF-Certified_AI-Associate_High-Res.png" alt="Administrator" />
+                </a>
+              </li>
+              <li class="clients-item certificate-item">
+                <a href="#">
+                  <img src="./assets/images/2024-06_Badge_SF-Certified_AI-Specialist_High-Res.png"
+                    alt="Administrator" />
+                </a>
+              </li>
+            </ul>
+            <button class="certificate-nav-btn right" onclick="scrollCertifications(1)">
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+          </div>
+        </section>
+      </article>
+
+      <!--
+        - #RESUME
+      -->
+
+      <article class="resume" data-page="resume">
+        <header class="resume-header">
+          <h2 class="h2 article-title">Resume</h2>
+          <a href="assets/resume.pdf" download class="resume-btn">
+            <ion-icon name="download-outline"></ion-icon>
+            <span>Download Resume</span>
+          </a>
+        </header>
+        <section class="timeline">
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="book-outline"></ion-icon>
+            </div>
+
+            <h3 class="h3">Education</h3>
+          </div>
+
+          <ol class="timeline-list">
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">
+                Pragati Engineering College, Surampalem
+              </h4>
+
+              <span>2012 — 2016</span>
+
+              <p class="timeline-text">
+                It is a four-year UG course which provides a foundation
+                knowledge of how to use a computer's software and hardware
+                components.
+              </p>
+            </li>
+
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">
+                sri chaitanya junior college, vijayawada
+              </h4>
+
+              <span>2011 — 2012</span>
+
+              <p class="timeline-text">
+                The MPC course offers a comprehensive curriculum in
+                Mathematics, Physics, and Chemistry, providing a strong
+                foundation for future studies in science and engineering.
+              </p>
+            </li>
+
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">
+                Viswakavi Residential Public School, Bhimavaram
+              </h4>
+
+              <span>2007 — 2010</span>
+
+              <p class="timeline-text">
+                A School is not just a place where students attend classes and
+                complete assignments; it is a nurturing environment where
+                learning and personal growth take place.
+              </p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="timeline">
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="book-outline"></ion-icon>
+            </div>
+
+            <h3 class="h3">Experience</h3>
+          </div>
+
+          <ol class="timeline-list">
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">Creative director</h4>
+
+              <span>2015 — Present</span>
+
+              <p class="timeline-text">
+                Nemo enim ipsam voluptatem blanditiis praesentium voluptum
+                delenit atque corrupti, quos dolores et qvuas molestias
+                exceptur.
+              </p>
+            </li>
+
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">Art director</h4>
+
+              <span>2013 — 2015</span>
+
+              <p class="timeline-text">
+                Nemo enims ipsam voluptatem, blanditiis praesentium voluptum
+                delenit atque corrupti, quos dolores et quas molestias
+                exceptur.
+              </p>
+            </li>
+
+            <li class="timeline-item">
+              <h4 class="h4 timeline-item-title">Web designer</h4>
+
+              <span>2010 — 2013</span>
+
+              <p class="timeline-text">
+                Nemo enims ipsam voluptatem, blanditiis praesentium voluptum
+                delenit atque corrupti, quos dolores et quas molestias
+                exceptur.
+              </p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="skill">
+          <h3 class="h3 skills-title">My skills</h3>
+
+          <ul class="skills-list content-card">
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Web design</h5>
+                <data value="80">80%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Graphic design</h5>
+                <data value="70">70%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 70%"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Branding</h5>
+                <data value="90">90%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 90%"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">WordPress</h5>
+                <data value="50">50%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 50%"></div>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </article>
+
+      <!--
+        - #CONTACT
+      -->
+
+      <article class="contact" data-page="contact">
+        <header>
+          <h2 class="h2 article-title">Contact Me</h2>
+        </header>
+
+        <section class="about-text">
+          <div id="feedback-container">
+            <form id="feedbackForm">
+              <input type="text" name="name" placeholder="Your Name" required /><br />
+              <input type="email" name="email" placeholder="Your Email" required /><br />
+              <input type="tel" name="phone" placeholder="Phone Number" /><br />
+              <textarea name="comments" placeholder="Your Comments" required></textarea><br />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+          <div id="toast" class="toast hidden">Submitted Successfully!</div>
+        </section>
+      </article>
+      <!--
+        - #FEEDBACK
+      -->
+     <!--  Feedback Section (drop into page)  -->
+<article id="feedbackSection" class="Feedback" data-page="feedback">
+  <header>
+    <h2 class="h2 article-title">Feedback</h2>
+  </header>
+
+  <!-- Container where cards will be mounted -->
+  <div id="feedbackContainer" class="feedback-grid" aria-live="polite"></div>
+
+  <!-- Modal (hidden until .show is added) -->
+  <div id="feedbackModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal>
+      <section class="modal-panel" role="document" aria-labelledby="modal-name" aria-describedby="modal-comment" tabindex="-1">
+        <button class="modal-close-btn" aria-label="Close feedback dialog">&times;</button>
+
+        <div class="modal-top">
+          <figure class="modal-avatar-box">
+            <img id="modal-avatar" src="./assets/images/avatar-1.png" alt="Avatar" width="80" height="80">
+          </figure>
+          <div class="modal-quote">
+            <img src="./assets/images/icon-quote.svg" alt="">
+          </div>
+        </div>
+
+        <div class="modal-content-inner">
+          <h3 id="modal-name" class="modal-title"></h3>
+          <p id="modal-email" class="modal-email"></p>
+          <div class="modal-text">
+            <p id="modal-comment"></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</article>
+
+
+
+      <!--
+        - #PORTFOLIO
+      -->
+
+      <article class="portfolio" data-page="portfolio">
+        <header>
+          <h2 class="h2 article-title">Portfolio</h2>
+        </header>
+
+        <section class="projects">
+          <ul class="filter-list">
+            <li class="filter-item">
+              <button class="active" data-filter-btn>All</button>
+            </li>
+
+            <li class="filter-item">
+              <button data-filter-btn>Web design</button>
+            </li>
+
+            <li class="filter-item">
+              <button data-filter-btn>Applications</button>
+            </li>
+
+            <li class="filter-item">
+              <button data-filter-btn>Web development</button>
+            </li>
+          </ul>
+
+          <div class="filter-select-box">
+            <button class="filter-select" data-select>
+              <div class="select-value" data-selecct-value>
+                Select category
+              </div>
+
+              <div class="select-icon">
+                <ion-icon name="chevron-down"></ion-icon>
+              </div>
+            </button>
+
+            <ul class="select-list">
+              <li class="select-item">
+                <button data-select-item>All</button>
+              </li>
+
+              <li class="select-item">
+                <button data-select-item>Web design</button>
+              </li>
+
+              <li class="select-item">
+                <button data-select-item>Applications</button>
+              </li>
+
+              <li class="select-item">
+                <button data-select-item>Web development</button>
+              </li>
+            </ul>
+          </div>
+
+          <ul class="project-list">
+            <li class="project-item active" data-filter-item data-category="web development">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-1.jpg" alt="finance" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">Finance</h3>
+
+                <p class="project-category">Web development</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="web development">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-2.png" alt="orizon" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">Orizon</h3>
+
+                <p class="project-category">Web development</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="web design">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-3.jpg" alt="fundo" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">Fundo</h3>
+
+                <p class="project-category">Web design</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="applications">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-4.png" alt="brawlhalla" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">Brawlhalla</h3>
+
+                <p class="project-category">Applications</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="web design">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-5.png" alt="dsm." loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">DSM.</h3>
+
+                <p class="project-category">Web design</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="web design">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-6.png" alt="metaspark" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">MetaSpark</h3>
+
+                <p class="project-category">Web design</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="web development">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-7.png" alt="summary" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">Summary</h3>
+
+                <p class="project-category">Web development</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="applications">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-8.jpg" alt="task manager" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">Task Manager</h3>
+
+                <p class="project-category">Applications</p>
+              </a>
+            </li>
+
+            <li class="project-item active" data-filter-item data-category="web development">
+              <a href="#">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/project-9.png" alt="arrival" loading="lazy" />
+                </figure>
+
+                <h3 class="project-title">Arrival</h3>
+
+                <p class="project-category">Web development</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </article>
+
+      <!--
+        - #BLOG
+      -->
+
+      <article class="blog" data-page="blog">
+        <header>
+          <h2 class="h2 article-title">Blog</h2>
+        </header>
+
+        <section class="blog-posts">
+          <ul class="blog-posts-list">
+            <li class="blog-post-item">
+              <a href="#">
+                <figure class="blog-banner-box">
+                  <img src="./assets/images/blog-1.jpg" alt="Design conferences in 2022" loading="lazy" />
+                </figure>
+
+                <div class="blog-content">
+                  <div class="blog-meta">
+                    <p class="blog-category">Design</p>
+
+                    <span class="dot"></span>
+
+                    <time datetime="2022-02-23">Fab 23, 2022</time>
+                  </div>
+
+                  <h3 class="h3 blog-item-title">
+                    Design conferences in 2022
+                  </h3>
+
+                  <p class="blog-text">
+                    Veritatis et quasi architecto beatae vitae dicta sunt,
+                    explicabo.
+                  </p>
+                </div>
+              </a>
+            </li>
+
+            <li class="blog-post-item">
+              <a href="#">
+                <figure class="blog-banner-box">
+                  <img src="./assets/images/blog-2.jpg" alt="Best fonts every designer" loading="lazy" />
+                </figure>
+
+                <div class="blog-content">
+                  <div class="blog-meta">
+                    <p class="blog-category">Design</p>
+
+                    <span class="dot"></span>
+
+                    <time datetime="2022-02-23">Fab 23, 2022</time>
+                  </div>
+
+                  <h3 class="h3 blog-item-title">
+                    Best fonts every designer
+                  </h3>
+
+                  <p class="blog-text">
+                    Sed ut perspiciatis, nam libero tempore, cum soluta nobis
+                    est eligendi.
+                  </p>
+                </div>
+              </a>
+            </li>
+
+            <li class="blog-post-item">
+              <a href="#">
+                <figure class="blog-banner-box">
+                  <img src="./assets/images/blog-3.jpg" alt="Design digest #80" loading="lazy" />
+                </figure>
+
+                <div class="blog-content">
+                  <div class="blog-meta">
+                    <p class="blog-category">Design</p>
+
+                    <span class="dot"></span>
+
+                    <time datetime="2022-02-23">Fab 23, 2022</time>
+                  </div>
+
+                  <h3 class="h3 blog-item-title">Design digest #80</h3>
+
+                  <p class="blog-text">
+                    Excepteur sint occaecat cupidatat no proident, quis
+                    nostrum exercitationem ullam corporis suscipit.
+                  </p>
+                </div>
+              </a>
+            </li>
+
+            <li class="blog-post-item">
+              <a href="#">
+                <figure class="blog-banner-box">
+                  <img src="./assets/images/blog-4.jpg" alt="UI interactions of the week" loading="lazy" />
+                </figure>
+
+                <div class="blog-content">
+                  <div class="blog-meta">
+                    <p class="blog-category">Design</p>
+
+                    <span class="dot"></span>
+
+                    <time datetime="2022-02-23">Fab 23, 2022</time>
+                  </div>
+
+                  <h3 class="h3 blog-item-title">
+                    UI interactions of the week
+                  </h3>
+
+                  <p class="blog-text">
+                    Enim ad minim veniam, consectetur adipiscing elit, quis
+                    nostrud exercitation ullamco laboris nisi.
+                  </p>
+                </div>
+              </a>
+            </li>
+
+            <li class="blog-post-item">
+              <a href="#">
+                <figure class="blog-banner-box">
+                  <img src="./assets/images/blog-5.jpg" alt="The forgotten art of spacing" loading="lazy" />
+                </figure>
+
+                <div class="blog-content">
+                  <div class="blog-meta">
+                    <p class="blog-category">Design</p>
+
+                    <span class="dot"></span>
+
+                    <time datetime="2022-02-23">Fab 23, 2022</time>
+                  </div>
+
+                  <h3 class="h3 blog-item-title">
+                    The forgotten art of spacing
+                  </h3>
+
+                  <p class="blog-text">
+                    Maxime placeat, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua.
+                  </p>
+                </div>
+              </a>
+            </li>
+
+            <li class="blog-post-item">
+              <a href="#">
+                <figure class="blog-banner-box">
+                  <img src="./assets/images/blog-6.jpg" alt="Design digest #79" loading="lazy" />
+                </figure>
+
+                <div class="blog-content">
+                  <div class="blog-meta">
+                    <p class="blog-category">Design</p>
+
+                    <span class="dot"></span>
+
+                    <time datetime="2022-02-23">Fab 23, 2022</time>
+                  </div>
+
+                  <h3 class="h3 blog-item-title">Design digest #79</h3>
+
+                  <p class="blog-text">
+                    Optio cumque nihil impedit uo minus quod maxime placeat,
+                    velit esse cillum.
+                  </p>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <!--
+    - custom js link
+  -->
+  <script src="./assets/js/script.js"></script>
+
+  <!--
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
