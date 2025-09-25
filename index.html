@@ -16,6 +16,7 @@
     - custom css link
   -->
   <link rel="stylesheet" href="./assets/css/style.css" />
+  <link rel="stylesheet" href="./assets/css/styleCards.css" />
 
   <!--
     - google font link
@@ -173,6 +174,9 @@
           </li>
           <li class="navbar-item">
             <button class="navbar-link" data-nav-link>feedback</button>
+          </li>
+          <li class="navbar-item">
+            <button class="navbar-link" data-nav-link>storyhouse</button>
           </li>
         </ul>
       </nav>
@@ -860,31 +864,11 @@ His ability to understand complex requirements and translate them into efficient
           <h3 class="h3 skills-title">My skills</h3>
 
           <ul class="skills-list content-card">
-            <li class="skills-item">
+            
+
+           <li class="skills-item">
               <div class="title-wrapper">
-                <h5 class="h5">Web design</h5>
-                <data value="80">80%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 80%"></div>
-              </div>
-            </li>
-
-            <li class="skills-item">
-              <div class="title-wrapper">
-                <h5 class="h5">Graphic design</h5>
-                <data value="70">70%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 70%"></div>
-              </div>
-            </li>
-
-            <li class="skills-item">
-              <div class="title-wrapper">
-                <h5 class="h5">Branding</h5>
+                <h5 class="h5">Salesforce System Administrator</h5>
                 <data value="90">90%</data>
               </div>
 
@@ -895,14 +879,46 @@ His ability to understand complex requirements and translate them into efficient
 
             <li class="skills-item">
               <div class="title-wrapper">
-                <h5 class="h5">WordPress</h5>
-                <data value="50">50%</data>
+                <h5 class="h5">Lightning Web Components</h5>
+                <data value="90">90%</data>
               </div>
 
               <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 50%"></div>
+                <div class="skill-progress-fill" style="width: 90%"></div>
               </div>
             </li>
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">SOQL/SOSL</h5>
+                <data value="80">80%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%"></div>
+              </div>
+            </li>
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Lightning Design System </h5>
+                <data value="50">80%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%"></div>
+              </div>
+            </li>
+             <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Apex</h5>
+                <data value="70">70%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 70%"></div>
+              </div>
+            </li>
+           
+
           </ul>
         </section>
       </article>
@@ -968,7 +984,80 @@ His ability to understand complex requirements and translate them into efficient
   </div>
 </article>
 
+<article class="storyhouse" data-page="storyhouse">
+  <!-- <header>
+    <h2 class="h2 article-title">StoryHouse</h2>
+  </header> -->
 
+  <!-- Container where cards will be mounted -->
+  
+<div class="storyhousebody">
+    <!-- Visible tab (Story House) so user can "see the functionality implemented" -->
+    <div class="top-tab">
+      <div class="tabs">
+        <div class="tab active">Story House</div>
+      </div>
+    
+    <div>
+      <br/>
+    </div>
+ <div>
+      <br/>
+    </div>
+
+    
+  </div>
+  <section></section>
+    <section class="storyhousesections">
+      <div class="scard" data-tilt>
+        <div class="item">
+          <h1>01</h1>
+          <h2>HTML5, CSS3</h2>
+          <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard. Lorem Ipsum
+            is simply dummy text of the printing.
+          </p>
+        </div>
+      </div>
+
+      <div class="scard" data-tilt>
+        <div class="item">
+          <h1>02</h1>
+          <h2>JavaScript</h2>
+          <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard. Lorem Ipsum
+            is simply dummy text of the printing.
+          </p>
+        </div>
+      </div>
+
+      <div class="scard" data-tilt>
+        <div class="item">
+          <h1>03</h1>
+          <h2>ReactJS</h2>
+          <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard. Lorem Ipsum
+            is simply dummy text of the printing.
+          </p>
+        </div>
+      </div>
+
+      <!-- New card for Story House -->
+      <div class="scard" data-tilt>
+        <div class="item">
+          <h1>04</h1>
+          <h2>Story House</h2>
+          <p>
+            Welcome to Story House — a place for short quotes, motivational
+            stories and moral tales. Replace this text with your own content.
+          </p>
+        </div>
+      </div>
+    </section>
+</article>
 
       <!--
         - #PORTFOLIO
@@ -1354,12 +1443,23 @@ His ability to understand complex requirements and translate them into efficient
     - custom js link
   -->
   <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/vanilla-tilt.js"></script>
+
 
   <!--
     - ionicon link
   -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <script>
+      // Initialize VanillaTilt for all .card elements (keeps your original behaviour)
+      VanillaTilt.init(document.querySelectorAll('.card'), {
+        max: 25,
+        speed: 400,
+        glare: true,
+        'max-glare': 1
+      });
+    </script>
 </body>
 
 </html>
