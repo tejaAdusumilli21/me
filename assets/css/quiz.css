@@ -389,8 +389,8 @@ button:hover .button-text {
 .options { display:flex; flex-direction:column; gap:8px; }
 .option { border:1px solid #dbe2ee; padding:8px 10px; border-radius:6px; cursor:pointer; display:flex; gap:10px; align-items:center; }
 .option input[type="radio"] { margin-right:8px; }
-.option.correct { background:#ecfde6; border-color:#7ad07a; }
-.option.wrong { background:#fff1f0; border-color:#f18787; opacity:0.95; }
+.option.correct {  border-color:#7ad07a; }
+.option.wrong {  border-color:#f18787; opacity:0.95; }
 .explanation { margin-top:8px; font-size:13px; color:#1f2937; background:#f8fafc; padding:8px; border-radius:6px; border:1px dashed #e2e8f0; }
 .controls { display:flex; gap:8px; margin-top:12px; align-items:center; }
 .btn { padding:8px 12px; border-radius:6px; border:none; cursor:pointer; }
