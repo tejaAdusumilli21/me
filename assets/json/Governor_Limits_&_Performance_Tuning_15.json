@@ -1,0 +1,309 @@
+{
+    "section": "Governor Limits & Performance Tuning",
+  "levels": {
+    "level15": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What are Governor Limits in Salesforce?",
+          "options": {
+            "A": "Salesforce-imposed runtime limits to ensure efficient use of resources in a multi-tenant environment.",
+            "B": "Limits on the number of user licenses an org can buy.",
+            "C": "A set of UI quotas for Lightning pages.",
+            "D": "Only limits applied to integrations outside Salesforce."
+          },
+          "answer": "A",
+          "explanation": "Governor limits are runtime restrictions (SOQL, DML, CPU, heap, etc.) enforced to protect the shared multi-tenant platform."
+        },
+        {
+          "id": 2,
+          "question": "Why do we have Governor Limits?",
+          "options": {
+            "A": "To slow down poorly written code only in sandbox orgs.",
+            "B": "To prevent one org’s code from monopolizing shared Salesforce resources.",
+            "C": "To limit data storage usage per object.",
+            "D": "To restrict the number of managed packages installed."
+          },
+          "answer": "B",
+          "explanation": "Limits ensure fair use of shared resources so no single org impacts performance for others on the multi-tenant platform."
+        },
+        {
+          "id": 3,
+          "question": "Name some common Apex Governor Limits.",
+          "options": {
+            "A": "SOQL queries: 100 per transaction; DML statements: 150 per transaction; Records returned: 50,000; Heap size: 6 MB sync/12 MB async; Callouts: 100 per transaction.",
+            "B": "No SOQL allowed in Apex; DML is unlimited.",
+            "C": "Heap size: 1 GB for synchronous transactions.",
+            "D": "Only limits apply to UI rendering, not Apex."
+          },
+          "answer": "A",
+          "explanation": "These are representative Apex limits; exact numbers can vary by context (sync/async) and Salesforce updates."
+        },
+        {
+          "id": 4,
+          "question": "What is the limit on CPU time?",
+          "options": {
+            "A": "100 ms for all transactions.",
+            "B": "10,000 ms for synchronous and 60,000 ms for asynchronous transactions.",
+            "C": "No CPU limit on asynchronous transactions.",
+            "D": "1,000,000 ms for both sync and async."
+          },
+          "answer": "B",
+          "explanation": "Salesforce enforces CPU time limits per transaction: typically ~10s (sync) and ~60s (async) — check docs for exact current values."
+        },
+        {
+          "id": 5,
+          "question": "What is the limit on future calls?",
+          "options": {
+            "A": "10 future calls per transaction.",
+            "B": "No limit on future calls.",
+            "C": "50 future calls per transaction.",
+            "D": "500 future calls per org per day."
+          },
+          "answer": "C",
+          "explanation": "Apex @future methods are limited (commonly 50 per transaction); use Queueable/Batch when you need more robust async patterns."
+        },
+        {
+          "id": 6,
+          "question": "What are Limits methods in Salesforce?",
+          "options": {
+            "A": "Methods like getDmlStatements(), getQueries(), getHeapSize() on the Limits class to check consumption.",
+            "B": "Apex methods to change governor limits at runtime.",
+            "C": "Only available in managed packages.",
+            "D": "A UI section under Setup to adjust org limits."
+          },
+          "answer": "A",
+          "explanation": "The Limits Apex class exposes runtime counters so code can inspect current consumption and defend against hitting limits."
+        },
+        {
+          "id": 7,
+          "question": "What happens when governor limits are exceeded?",
+          "options": {
+            "A": "An informational warning is logged but execution continues.",
+            "B": "The system throws a runtime exception and the transaction is rolled back.",
+            "C": "The platform ignores the excess and fines the admin.",
+            "D": "Only the current method is skipped, rest of transaction continues."
+          },
+          "answer": "B",
+          "explanation": "Exceeding a hard governor limit throws a fatal exception and typically causes the entire transaction to roll back."
+        },
+        {
+          "id": 8,
+          "question": "How to handle “Too many SOQL queries: 101” error?",
+          "options": {
+            "A": "Run each query in a separate transaction automatically.",
+            "B": "Bulkify code: use collections, maps, and avoid queries inside loops.",
+            "C": "Disable governor limits for the running user.",
+            "D": "Convert SOQL to SOSL to avoid the limit."
+          },
+          "answer": "B",
+          "explanation": "Move queries outside loops, use maps and single queries for bulk records to reduce total SOQL calls per transaction."
+        },
+        {
+          "id": 9,
+          "question": "How to handle “Too many DML statements: 151” error?",
+          "options": {
+            "A": "Perform DML inside loops to ensure separate transactions.",
+            "B": "Bulkify DML by grouping records into lists and using a single insert/update call.",
+            "C": "Use Database.rollback to continue processing.",
+            "D": "Convert DML operations to dynamic SOQL."
+          },
+          "answer": "B",
+          "explanation": "Collect records into lists and perform bulk DML operations (single insert/update) to stay within DML limits."
+        },
+        {
+          "id": 10,
+          "question": "What is Heap Size limit?",
+          "options": {
+            "A": "Maximum memory allocated to store objects during execution (e.g., ~6 MB sync, ~12 MB async).",
+            "B": "Maximum number of characters in a String only.",
+            "C": "A limit only relevant to batch apex.",
+            "D": "Unlimited memory for async jobs."
+          },
+          "answer": "A",
+          "explanation": "Heap size caps in-memory object storage during execution; smaller queries and streaming approaches reduce heap usage."
+        },
+        {
+          "id": 11,
+          "question": "How to reduce Heap Size errors?",
+          "options": {
+            "A": "Use transient keyword in Visualforce controllers; stream large data instead of storing in memory; query only required fields.",
+            "B": "Store all queried data in a single large collection for reuse.",
+            "C": "Increase the heap limit in Setup.",
+            "D": "Convert all SOQL to JSON strings to save memory."
+          },
+          "answer": "A",
+          "explanation": "Avoid keeping large collections in memory, use transient for VF state, and retrieve only necessary fields to minimize heap footprint."
+        },
+        {
+          "id": 12,
+          "question": "What is the maximum batch size in Batch Apex?",
+          "options": {
+            "A": "2000 records per batch.",
+            "B": "10 records per batch.",
+            "C": "No limit—depends on org licenses.",
+            "D": "100,000 records per batch."
+          },
+          "answer": "A",
+          "explanation": "Batch Apex execute() scope can be up to 2000 records per chunk; choosing appropriate batch size helps manage limits and performance."
+        },
+        {
+          "id": 13,
+          "question": "How to handle “Too many queueable jobs added” error?",
+          "options": {
+            "A": "Max 50 Queueable jobs per transaction; chain jobs carefully to avoid adding more than allowed.",
+            "B": "Queueable jobs are unlimited, so this never happens.",
+            "C": "Convert Queueable jobs to synchronous methods to bypass the limit.",
+            "D": "Restart the platform to reset the counter."
+          },
+          "answer": "A",
+          "explanation": "Limit is commonly 50 queueable jobs added per transaction; design chaining patterns and job orchestration to respect this."
+        },
+        {
+          "id": 14,
+          "question": "What is the maximum callout limit per transaction?",
+          "options": {
+            "A": "100 HTTP callouts.",
+            "B": "1,000 HTTP callouts.",
+            "C": "Callouts are unlimited.",
+            "D": "5 callouts per org per minute."
+          },
+          "answer": "A",
+          "explanation": "Apex callouts (HTTP/SOAP) are limited per transaction — commonly to 100 — so batch and aggregate requests when possible."
+        },
+        {
+          "id": 15,
+          "question": "What is the maximum size of a SOQL query result?",
+          "options": {
+            "A": "10,000 records.",
+            "B": "50,000 records.",
+            "C": "500,000 records.",
+            "D": "No limit; returns everything."
+          },
+          "answer": "B",
+          "explanation": "SOQL returns up to 50,000 records in a single context; for larger datasets use Batch/SOQL with queryLocator or Bulk API."
+        },
+        {
+          "id": 16,
+          "question": "What is the maximum size of SOSL query results?",
+          "options": {
+            "A": "2000 records.",
+            "B": "50 records.",
+            "C": "100,000 records.",
+            "D": "SOSL has no limits."
+          },
+          "answer": "A",
+          "explanation": "SOSL returns up to around 2,000 results across all returned lists; SOSL is designed for text search across objects/fields."
+        },
+        {
+          "id": 17,
+          "question": "How do you avoid hitting CPU time limits?",
+          "options": {
+            "A": "Optimize loops; use maps and sets; offload heavy logic to asynchronous Apex.",
+            "B": "Run everything inside nested loops for clarity.",
+            "C": "Disable governor limits for the running user.",
+            "D": "Only use synchronous callouts to reduce CPU usage."
+          },
+          "answer": "A",
+          "explanation": "Efficient algorithms, minimizing expensive operations, and moving heavy work to async contexts help avoid CPU limit breaches."
+        },
+        {
+          "id": 18,
+          "question": "How to tune queries for performance?",
+          "options": {
+            "A": "Use selective queries with indexed fields; use LIMIT; avoid non-selective filters and functions in WHERE.",
+            "B": "Always query all fields to avoid future changes.",
+            "C": "Use ORDER BY on large blobs for speed.",
+            "D": "Avoid indexes to enable full table scans."
+          },
+          "answer": "A",
+          "explanation": "Selective filters (indexed fields), LIMIT, and avoiding non-selective predicates make queries efficient and less likely to time out."
+        },
+        {
+          "id": 19,
+          "question": "What is a Selective Query in Salesforce?",
+          "options": {
+            "A": "A query that uses indexed fields in WHERE clauses and retrieves <10% of object records.",
+            "B": "Any query that uses LIKE '%value%'.",
+            "C": "A query that always uses ORDER BY.",
+            "D": "A query that returns all records from the object."
+          },
+          "answer": "A",
+          "explanation": "Selectivity is about using indexes and returning a small portion of the table; Salesforce Query Plan can verify selectivity."
+        },
+        {
+          "id": 20,
+          "question": "How to check if a query is selective?",
+          "options": {
+            "A": "Use the Query Plan Tool in Developer Console.",
+            "B": "Only check by running the query in production and observing performance.",
+            "C": "There is no way to check selectivity.",
+            "D": "Use SOQL Analyzer in Setup which doesn't exist."
+          },
+          "answer": "A",
+          "explanation": "Query Plan Tool shows index usage, cost and helps determine whether a query is selective or needs optimization."
+        },
+        {
+          "id": 21,
+          "question": "What is View State in Visualforce?",
+          "options": {
+            "A": "The serialized data sent between server and client to maintain page state; max size ~135 KB.",
+            "B": "A way to store files in Documents tab.",
+            "C": "A type of static resource.",
+            "D": "A JavaScript variable only."
+          },
+          "answer": "A",
+          "explanation": "View State preserves controller state across requests; keeping it small improves page performance and avoids size limits."
+        },
+        {
+          "id": 22,
+          "question": "How to reduce View State size?",
+          "options": {
+            "A": "Use transient variables; use smaller forms; avoid large collections in controllers.",
+            "B": "Store everything in controller properties permanently.",
+            "C": "Enable debug mode to compress the view state.",
+            "D": "Remove the <apex:form> tag entirely for all pages."
+          },
+          "answer": "A",
+          "explanation": "Mark non-essential fields transient, reduce data placed in controller, and minimize input components to shrink View State."
+        },
+        {
+          "id": 23,
+          "question": "What is the best practice for handling large data volumes (LDV)?",
+          "options": {
+            "A": "Use indexed fields; use skinny tables; use asynchronous processing (Batch, Queueable, Platform Events).",
+            "B": "Load all data into memory and process in a single transaction.",
+            "C": "Avoid using indexes to ensure full scans every time.",
+            "D": "Run complex queries in synchronous triggers during user save."
+          },
+          "answer": "A",
+          "explanation": "LDV best practices include relying on indexes, skinny tables, and async processing to keep transactions within limits and performant."
+        },
+        {
+          "id": 24,
+          "question": "What is a Skinny Table?",
+          "options": {
+            "A": "Custom database tables created by Salesforce support to improve query performance on large data sets.",
+            "B": "A type of report template for dashboards.",
+            "C": "A UI component for mobile devices.",
+            "D": "A deprecated table format for Classic UI only."
+          },
+          "answer": "A",
+          "explanation": "Skinny tables denormalize frequently used fields into a lightweight table to speed queries on very large objects (requires Salesforce support)."
+        },
+        {
+          "id": 25,
+          "question": "Best practices to avoid hitting Governor Limits?",
+          "options": {
+            "A": "Always bulkify triggers and Apex; use collections for queries/DML; use batch jobs for large data; monitor with Limits class; prefer declarative automation when possible.",
+            "B": "Write procedural code that executes a SOQL per record for clarity.",
+            "C": "Ignore limits in sandbox and hope production behaves the same.",
+            "D": "Use DML in tight loops to simplify logic."
+          },
+          "answer": "A",
+          "explanation": "Follow bulk patterns, prefer declarative solutions, offload heavy processes to async jobs, and use Limits checks to keep code safe under governor constraints."
+        }
+      ]
+    }
+  }
+}

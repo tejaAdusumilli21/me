@@ -1,0 +1,1389 @@
+{
+    "section": "Mini Quizz",
+  "levels": {
+    "level18": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "How do you ensure a trigger is bulkified?",
+          "options": {
+            "A": "Run the trigger once per record with synchronous callouts.",
+            "B": "Use collections (lists/maps/sets), avoid SOQL/DML inside loops.",
+            "C": "Use seeAllData=true to access production records.",
+            "D": "Move SOQL inside nested loops for clarity."
+          },
+          "answer": "B",
+          "explanation": "Bulkification means processing many records in a single transaction using collections and avoiding per-record queries or DML."
+        },
+        {
+          "id": 2,
+          "question": "Trigger needs to prevent duplicate Account creation based on Email. How would you implement it?",
+          "options": {
+            "A": "Only rely on manual user checks during data entry.",
+            "B": "Call an external API to validate duplicates at runtime.",
+            "C": "Query existing Accounts with same Email \u2192 If found, use addError() on the record.",
+            "D": "Use Page Layout validation to block duplicates."
+          },
+          "answer": "C",
+          "explanation": "Query for matching emails (outside loops), and call addError() to prevent insert/update when a duplicate exists."
+        },
+        {
+          "id": 3,
+          "question": "How do you avoid recursion in triggers?",
+          "options": {
+            "A": "Use a static Boolean flag or recursion handler class.",
+            "B": "Put DML inside every loop to force separate transactions.",
+            "C": "Use UI-only solutions instead of triggers.",
+            "D": "Call System.exit to stop execution after first run."
+          },
+          "answer": "A",
+          "explanation": "Static variables or frameworks that track execution prevent triggers from re-invoking themselves in the same transaction."
+        },
+        {
+          "id": 4,
+          "question": "A trigger is firing twice when inserting records via Data Loader. Why?",
+          "options": {
+            "A": "Multiple triggers exist or workflow/process is updating same object \u2192 consolidate logic into one trigger framework.",
+            "B": "Data Loader automatically duplicates transactions by design.",
+            "C": "Browser cache is causing the duplication.",
+            "D": "Salesforce enforces duplicate trigger execution for large imports."
+          },
+          "answer": "A",
+          "explanation": "Multiple triggers or automations (workflows/process builder/flows) causing updates can lead to re-invocation; consolidate and control recursion."
+        },
+        {
+          "id": 5,
+          "question": "You need to auto-populate BillingCity from ShippingCity. Where do you write this?",
+          "options": {
+            "A": "In a scheduled batch job that runs nightly.",
+            "B": "In a before insert, before update trigger.",
+            "C": "Only in a Visualforce page controller.",
+            "D": "In a report export job."
+          },
+          "answer": "B",
+          "explanation": "Before triggers allow modifying record field values before the record is committed, so auto-population should occur there."
+        },
+        {
+          "id": 6,
+          "question": "How do you handle trigger order of execution?",
+          "options": {
+            "A": "Assume after triggers always run first.",
+            "B": "Only use Process Builder to control order.",
+            "C": "Order is random; you cannot account for it.",
+            "D": "Ensure logic respects Salesforce’s standard order: validation \u2192 before triggers \u2192 DML \u2192 after triggers \u2192 workflows."
+          },
+          "answer": "D",
+          "explanation": "Know the Salesforce execution order and design triggers/automation accordingly to avoid unexpected behavior."
+        },
+        {
+          "id": 7,
+          "question": "Can we call a future method from a trigger?",
+          "options": {
+            "A": "Yes \u2014 unlimited future calls allowed.",
+            "B": "Only Queueable jobs can be called from triggers.",
+            "C": "Yes, but ensure limits (max 50) and avoid chaining unnecessarily.",
+            "D": "No \u2014 future methods are forbidden in triggers."
+          },
+          "answer": "C",
+          "explanation": "@future methods can be invoked from triggers, but there are per-transaction limits and best practice is to use Queueable when possible."
+        },
+        {
+          "id": 8,
+          "question": "How do you update parent records when child records are inserted?",
+          "options": {
+            "A": "Use after insert trigger on child, aggregate values, then update parent.",
+            "B": "Update parent in a before insert child trigger without queries.",
+            "C": "Require users to manually update parents.",
+            "D": "Use a Flow on the parent record only."
+          },
+          "answer": "A",
+          "explanation": "After insert on child ensures child IDs exist; aggregate child data and perform bulk update on parent records."
+        },
+        {
+          "id": 9,
+          "question": "Trigger needs to restrict Account deletion if it has active Opportunities. Solution?",
+          "options": {
+            "A": "Query related Opportunities \u2192 If active found, addError() on Account.",
+            "B": "Allow deletion and send email alert to admin.",
+            "C": "Disable delete button using JavaScript only.",
+            "D": "Use a scheduled job to undo deletions later."
+          },
+          "answer": "A",
+          "explanation": "Prevent deletion by checking related records in the trigger and calling addError() to block the DML operation."
+        },
+        {
+          "id": 10,
+          "question": "Trigger must create a Contact automatically when Account is created. Where do you write this?",
+          "options": {
+            "A": "After insert trigger on Account \u2192 Insert Contact records.",
+            "B": "Before insert trigger on Contact object.",
+            "C": "In a scheduled job that runs monthly.",
+            "D": "In a Visualforce page only."
+          },
+          "answer": "A",
+          "explanation": "After insert ensures the Account Id is available; then create related Contact records in bulk and insert them."
+        },
+        {
+          "id": 11,
+          "question": "How do you write trigger logic reusable across objects?",
+          "options": {
+            "A": "Use a generic trigger handler framework.",
+            "B": "Duplicate code per object for clarity.",
+            "C": "Only use Process Builder for cross-object logic.",
+            "D": "Use separate triggers with identical code blocks."
+          },
+          "answer": "A",
+          "explanation": "Trigger handler frameworks abstract common logic into reusable classes and keep triggers thin and maintainable."
+        },
+        {
+          "id": 12,
+          "question": "You’re hitting “Too many SOQL queries: 101” in a trigger. Fix?",
+          "options": {
+            "A": "Split the transaction into multiple synchronous calls per record.",
+            "B": "Use seeAllData=true in tests to avoid the error.",
+            "C": "Move queries outside loops, aggregate using IN operator.",
+            "D": "Run each SOQL inside a new thread."
+          },
+          "answer": "C",
+          "explanation": "Reduce per-record queries by batching lookups with IN lists and using maps to reference related data."
+        },
+        {
+          "id": 13,
+          "question": "Trigger needs to assign sequential numbers to Cases. How would you do it?",
+          "options": {
+            "A": "Use a Custom Setting/Metadata for last number and update it in trigger.",
+            "B": "Use record Id string as sequence.",
+            "C": "Use System.now() timestamp as a sequence.",
+            "D": "Manually assign numbers by agents."
+          },
+          "answer": "A",
+          "explanation": "Maintain a counter in custom metadata/settings or a dedicated record and update it in a controlled (synchronized) manner to generate sequential numbers."
+        },
+        {
+          "id": 14,
+          "question": "How do you handle large data updates in triggers?",
+          "options": {
+            "A": "Use Batch Apex instead of heavy trigger logic.",
+            "B": "Run trigger for each record separately.",
+            "C": "Disable triggers permanently during updates.",
+            "D": "Perform updates via UI only."
+          },
+          "answer": "A",
+          "explanation": "For very large operations, offload processing to Batch Apex where chunking and limits are handled more effectively."
+        },
+        {
+          "id": 15,
+          "question": "You need to send email notifications after a record update in trigger. Where should you do it?",
+          "options": {
+            "A": "In after update trigger.",
+            "B": "In a before update trigger to prevent notification.",
+            "C": "Never \u2014 triggers cannot send emails.",
+            "D": "Only from Visualforce pages."
+          },
+          "answer": "A",
+          "explanation": "After update ensures the DML has completed and you can safely send notifications or perform actions dependent on saved data."
+        },
+        {
+          "id": 16,
+          "question": "How do you handle field history tracking limits in triggers?",
+          "options": {
+            "A": "Create a custom audit object and insert logs.",
+            "B": "Use Field History Tracking for infinite history.",
+            "C": "Store history in page layout descriptions.",
+            "D": "Disable all history tracking."
+          },
+          "answer": "A",
+          "explanation": "When standard history limits are insufficient, use a custom audit object to record changes programmatically."
+        },
+        {
+          "id": 17,
+          "question": "Trigger needs to handle file attachments migration. How?",
+          "options": {
+            "A": "Use ContentDocumentLink object in after insert/update triggers.",
+            "B": "Store attachments in a text field on the object.",
+            "C": "Attachments cannot be migrated via triggers.",
+            "D": "Only use Remote Site Settings for attachments."
+          },
+          "answer": "A",
+          "explanation": "New file model uses ContentDocument and ContentDocumentLink; use after triggers or batch jobs to associate and migrate files."
+        },
+        {
+          "id": 18,
+          "question": "What happens if you have multiple triggers on the same object?",
+          "options": {
+            "A": "Execution order is not guaranteed \u2192 Best practice: one trigger per object.",
+            "B": "They will run in alphabetical order by trigger name.",
+            "C": "Salesforce merges them automatically into one.",
+            "D": "Only the first trigger is executed."
+          },
+          "answer": "A",
+          "explanation": "Multiple triggers can execute in unpredictable order, so consolidate logic into a single trigger that delegates to handlers."
+        },
+        {
+          "id": 19,
+          "question": "How do you test trigger logic with bulk records?",
+          "options": {
+            "A": "Insert 200+ test records in test class.",
+            "B": "Only test single-record scenarios.",
+            "C": "Use production data for tests.",
+            "D": "Use UI manual testing only."
+          },
+          "answer": "A",
+          "explanation": "Tests should simulate real bulk conditions by inserting large numbers of records (e.g., 200) to ensure correctness under limits."
+        },
+        {
+          "id": 20,
+          "question": "When would you choose Flow over Trigger?",
+          "options": {
+            "A": "Triggers are deprecated; Flow must be used.",
+            "B": "Use Flow for declarative simple logic, Trigger for complex, scalable logic.",
+            "C": "Use Flow only for UI pages, never for record updates.",
+            "D": "Always choose Flow for all backend logic."
+          },
+          "answer": "B",
+          "explanation": "Flows are ideal for simple, admin-friendly automations; triggers are better for complex, performance-sensitive or highly custom logic."
+        },
+        {
+          "id": 21,
+          "question": "How do you make a REST API callout from Salesforce?",
+          "options": {
+            "A": "Use Http, HttpRequest, and HttpResponse classes.",
+            "B": "Use Visualforce remoting only.",
+            "C": "Call Apex methods via SOAP only.",
+            "D": "Use Streaming API to send REST calls."
+          },
+          "answer": "A",
+          "explanation": "Apex HTTP classes allow building and sending HTTP requests (GET/POST/etc.) to external REST endpoints."
+        },
+        {
+          "id": 22,
+          "question": "How do you authenticate external API calls securely?",
+          "options": {
+            "A": "Use Named Credentials instead of hardcoding credentials.",
+            "B": "Embed username/password directly in Apex strings.",
+            "C": "Use Remote Site Settings only for credentials.",
+            "D": "Store credentials in a public static resource."
+          },
+          "answer": "A",
+          "explanation": "Named Credentials centralize endpoint and auth config so callouts don't require hardcoded secrets in code."
+        },
+        {
+          "id": 23,
+          "question": "You need to schedule nightly sync with external system. Which Apex do you use?",
+          "options": {
+            "A": "Schedulable Apex + Batch Apex.",
+            "B": "Future methods only.",
+            "C": "Visualforce controllers scheduled via UI.",
+            "D": "Use manual data exports only."
+          },
+          "answer": "A",
+          "explanation": "Schedulable Apex can schedule jobs that run Batch Apex to process large datasets and perform callouts per batch."
+        },
+        {
+          "id": 24,
+          "question": "How do you expose Salesforce data to external systems?",
+          "options": {
+            "A": "Use Apex REST services or SOAP web services.",
+            "B": "Only allow CSV exports from the UI.",
+            "C": "Use Apex triggers to push data to FTP.",
+            "D": "Expose database credentials to external apps."
+          },
+          "answer": "A",
+          "explanation": "Create @RestResource or @WebService classes to expose endpoints that external systems can call to access Salesforce data."
+        },
+        {
+          "id": 25,
+          "question": "What is the difference between REST and SOAP in Salesforce?",
+          "options": {
+            "A": "REST \u2192 Lightweight, JSON/XML. SOAP \u2192 Heavier, strict WSDL, enterprise use.",
+            "B": "SOAP is always faster than REST.",
+            "C": "REST requires WSDL while SOAP does not.",
+            "D": "They are identical protocol implementations."
+          },
+          "answer": "A",
+          "explanation": "REST uses simple HTTP verbs and JSON typically; SOAP relies on XML and WSDL contracts and is more rigid."
+        },
+        {
+          "id": 26,
+          "question": "How do you handle large data integration?",
+          "options": {
+            "A": "Use Bulk API or Batch Apex with callouts.",
+            "B": "Perform millions of small synchronous callouts.",
+            "C": "Use Streaming API for bulk inserts only.",
+            "D": "Send all records in a single HTTP request body without chunking."
+          },
+          "answer": "A",
+          "explanation": "Bulk API is designed for high-volume data loads; Batch Apex can process large sets and perform callouts per batch."
+        },
+        {
+          "id": 27,
+          "question": "How do you retry failed callouts in Salesforce?",
+          "options": {
+            "A": "Use Queueable Apex with retry logic.",
+            "B": "Rely on automatic platform retries by default.",
+            "C": "Use synchronous retries inside the same transaction.",
+            "D": "Use Remote Site Settings to auto-resend."
+          },
+          "answer": "A",
+          "explanation": "Queueable or scheduled jobs with retry counters provide a controlled way to retry failed callouts outside the original transaction."
+        },
+        {
+          "id": 28,
+          "question": "How do you handle governor limits in API callouts?",
+          "options": {
+            "A": "Move callouts to Queueable/Future Apex.",
+            "B": "Run callouts directly inside triggers for speed.",
+            "C": "Use unlimited callouts setting in Setup.",
+            "D": "Call external APIs synchronously for each record."
+          },
+          "answer": "A",
+          "explanation": "Offloading callouts to asynchronous contexts helps avoid synchronous limits and provides better error handling/retries."
+        },
+        {
+          "id": 29,
+          "question": "How to handle authentication tokens in integrations?",
+          "options": {
+            "A": "Store tokens in Custom Metadata/Named Credentials and refresh programmatically.",
+            "B": "Hardcode tokens in Apex for speed.",
+            "C": "Email tokens to developers for manual refresh.",
+            "D": "Store tokens in static resources accessible to all users."
+          },
+          "answer": "A",
+          "explanation": "Secure storage (Named Credentials or protected Custom Metadata) plus programmatic refresh ensures safe token lifecycle management."
+        },
+        {
+          "id": 30,
+          "question": "How do you integrate Salesforce with external database?",
+          "options": {
+            "A": "Use Salesforce Connect (External Objects) or middleware (MuleSoft).",
+            "B": "Directly open JDBC connections from Apex.",
+            "C": "Export data to CSV and ftp it nightly only.",
+            "D": "Store external DB credentials in custom fields and query remotely."
+          },
+          "answer": "A",
+          "explanation": "Salesforce Connect provides near real-time access to external data; middleware handles complex transformations and orchestration."
+        },
+        {
+          "id": 31,
+          "question": "Which API to use for real-time sync?",
+          "options": {
+            "A": "Bulk API 2.0.",
+            "B": "Streaming API / Platform Events.",
+            "C": "Metadata API.",
+            "D": "Ant Migration Tool."
+          },
+          "answer": "B",
+          "explanation": "Streaming API and Platform Events enable push-based, near real-time integration scenarios."
+        },
+        {
+          "id": 32,
+          "question": "Which API to use for batch sync of millions of records?",
+          "options": {
+            "A": "Streaming API.",
+            "B": "Tooling API.",
+            "C": "REST API synchronous calls per record.",
+            "D": "Bulk API 2.0."
+          },
+          "answer": "D",
+          "explanation": "Bulk API 2.0 is optimized for large-scale data loads with efficient batching and retries."
+        },
+        {
+          "id": 33,
+          "question": "How do you prevent duplicate API requests in Salesforce?",
+          "options": {
+            "A": "Rely on the platform to ignore duplicates.",
+            "B": "Implement idempotency key in integration.",
+            "C": "Allow external system to resend duplicates unlimited.",
+            "D": "Use random UUID per request without dedupe."
+          },
+          "answer": "B",
+          "explanation": "Idempotency keys allow the receiving system to detect and ignore repeated requests safely."
+        },
+        {
+          "id": 34,
+          "question": "What is the limit of callouts per transaction?",
+          "options": {
+            "A": "1 callout per transaction.",
+            "B": "100 callouts.",
+            "C": "Unlimited callouts.",
+            "D": "10,000 callouts."
+          },
+          "answer": "B",
+          "explanation": "Apex callouts are limited per transaction (commonly 100); batch and queueable approaches help manage callout volumes."
+        },
+        {
+          "id": 35,
+          "question": "How do you debug API callout failures?",
+          "options": {
+            "A": "Use Visualforce to show raw HTTP traffic.",
+            "B": "Check Debug Logs and setup Named Credential logs.",
+            "C": "Only rely on external system logs.",
+            "D": "Re-run production transactions until success."
+          },
+          "answer": "B",
+          "explanation": "Enable debug logs for the Apex caller, inspect request/response, and review Named Credentials/audit info to find issues."
+        },
+        {
+          "id": 36,
+          "question": "How do you send data to external system when a record changes in Salesforce?",
+          "options": {
+            "A": "Use Outbound Messages, Platform Events, or Apex callouts.",
+            "B": "Only use reports emailed daily.",
+            "C": "Use Visualforce remoting exclusively.",
+            "D": "Send data by exporting CSV manually."
+          },
+          "answer": "A",
+          "explanation": "Outbound messaging, events, and Apex callouts provide declarative and programmatic ways to notify external systems of changes."
+        },
+        {
+          "id": 37,
+          "question": "When do you use Middleware (MuleSoft, Dell Boomi, etc.) over direct API?",
+          "options": {
+            "A": "When integration needs transformation, orchestration, error handling.",
+            "B": "When you want simpler direct point-to-point integrations only.",
+            "C": "Only when external systems are offline.",
+            "D": "Middleware is never recommended for enterprise scenarios."
+          },
+          "answer": "A",
+          "explanation": "Middleware handles complex mappings, retries, routing and orchestration that are hard to do with direct API calls alone."
+        },
+        {
+          "id": 38,
+          "question": "How do you handle governor limits when syncing thousands of records to an API?",
+          "options": {
+            "A": "Process in Batch Apex with callouts per batch.",
+            "B": "Perform all callouts in a single synchronous loop.",
+            "C": "Run callouts inside UI actions only.",
+            "D": "Disable limits in Sandbox and assume production will be fine."
+          },
+          "answer": "A",
+          "explanation": "Batch Apex lets you chunk large datasets and perform authorized callouts per execute() chunk, staying within transaction limits."
+        },
+        {
+          "id": 39,
+          "question": "What’s the difference between Named Credential and Remote Site Settings?",
+          "options": {
+            "A": "Named Credential \u2192 Stores URL + Auth securely. Remote Site Settings \u2192 Only whitelists URLs.",
+            "B": "They are identical and redundant.",
+            "C": "Remote Site Settings store authentication tokens securely.",
+            "D": "Named Credentials are deprecated."
+          },
+          "answer": "A",
+          "explanation": "Named Credentials encapsulate endpoint and auth config; Remote Site Settings just permit callout to a URL without storing auth."
+        },
+        {
+          "id": 40,
+          "question": "How do you expose Salesforce REST API to mobile apps?",
+          "options": {
+            "A": "Use Connected Apps + OAuth 2.0 authentication.",
+            "B": "Embed user passwords in the app for direct login.",
+            "C": "Only support SOAP for mobile devices.",
+            "D": "Use Streaming API exclusively for data writes."
+          },
+          "answer": "A",
+          "explanation": "Connected Apps enable secure OAuth flows so mobile apps can obtain access tokens to call Salesforce REST APIs."
+        },
+        {
+          "id": 41,
+          "question": "How do you pass data from parent to child LWC?",
+          "options": {
+            "A": "Use @api public property.",
+            "B": "Use window.postMessage only.",
+            "C": "Make child call server to fetch parent values.",
+            "D": "Use Visualforce remoting."
+          },
+          "answer": "A",
+          "explanation": "Parent components set public @api properties on child components to pass values down the component tree."
+        },
+        {
+          "id": 42,
+          "question": "How do you pass data from child to parent LWC?",
+          "options": {
+            "A": "Fire Custom Events.",
+            "B": "Directly modify parent's private properties.",
+            "C": "Use global variables on window object.",
+            "D": "Use Apex polling to notify parent."
+          },
+          "answer": "A",
+          "explanation": "Children dispatch CustomEvent instances that parents listen to for receiving data or notifications."
+        },
+        {
+          "id": 43,
+          "question": "How do you call Apex from LWC?",
+          "options": {
+            "A": "Use @AuraEnabled methods with @wire or imperative calls.",
+            "B": "Use Remote Site Settings to call Apex directly.",
+            "C": "LWC cannot call Apex; use Aura only.",
+            "D": "Embed Apex code inside HTML template."
+          },
+          "answer": "A",
+          "explanation": "Expose static Apex methods with @AuraEnabled(cacheable=true) for wire or without cache for imperative calls."
+        },
+        {
+          "id": 44,
+          "question": "Which is better: wire vs imperative Apex call?",
+          "options": {
+            "A": "Wire \u2192 Reactive, automatic refresh. Imperative \u2192 Manual control.",
+            "B": "Imperative is always better in all cases.",
+            "C": "Wire only works with batch Apex methods.",
+            "D": "They are identical with no differences."
+          },
+          "answer": "A",
+          "explanation": "@wire is declarative and reactive; imperative calls provide explicit control when you need to call on user action or pass params at runtime."
+        },
+        {
+          "id": 45,
+          "question": "How do you handle large data in LWC datatable?",
+          "options": {
+            "A": "Use pagination + lazy loading.",
+            "B": "Load all records into memory once and render them.",
+            "C": "Use synchronous callouts in renderedCallback.",
+            "D": "Use Visualforce components instead."
+          },
+          "answer": "A",
+          "explanation": "Pagination and lazy-loading reduce memory and rendering overhead and improve UX for large datasets."
+        },
+        {
+          "id": 46,
+          "question": "How do you display related records dynamically in LWC?",
+          "options": {
+            "A": "Use getRelatedRecords Apex method or SOQL.",
+            "B": "Hardcode related records in JavaScript constants.",
+            "C": "Use only getRecord without relationships.",
+            "D": "Use CSS only to fetch related data."
+          },
+          "answer": "A",
+          "explanation": "Query related records in Apex (or use LDS adapters where suitable) and expose results to LWC for dynamic rendering."
+        },
+        {
+          "id": 47,
+          "question": "How do you refresh data after record update in LWC?",
+          "options": {
+            "A": "Reload the entire browser window only.",
+            "B": "Use refreshApex().",
+            "C": "Use setTimeout to re-run the wire automatically.",
+            "D": "No way to refresh without rerendering component."
+          },
+          "answer": "B",
+          "explanation": "refreshApex takes the wired result and refreshes it from the server, updating the component state."
+        },
+        {
+          "id": 48,
+          "question": "How do you navigate from LWC to record page?",
+          "options": {
+            "A": "Use NavigationMixin.",
+            "B": "Use window.location.href with full URL only.",
+            "C": "Use Visualforce remoting.",
+            "D": "Navigation is not supported in LWC."
+          },
+          "answer": "A",
+          "explanation": "NavigationMixin from lightning/navigation is the recommended way to navigate to records/pages in Lightning."
+        },
+        {
+          "id": 49,
+          "question": "Can LWC call external API directly?",
+          "options": {
+            "A": "Yes, always call external APIs from client-side JS without restrictions.",
+            "B": "No, must go through Apex callout or Named Credentials.",
+            "C": "Only if the endpoint is on the same domain.",
+            "D": "Only via Visualforce pages."
+          },
+          "answer": "B",
+          "explanation": "Browser-based CORS restrictions and authentication require using Apex callouts or server-side proxies like Named Credentials."
+        },
+        {
+          "id": 50,
+          "question": "How do you optimize LWC performance?",
+          "options": {
+            "A": "Lazy load components, cache data (@wire with cacheable=true), reduce DOM re-renders.",
+            "B": "Render everything on initial load for completeness.",
+            "C": "Use inline styles with heavy selectors to slow rendering.",
+            "D": "Avoid caching to ensure fresh data always."
+          },
+          "answer": "A",
+          "explanation": "Lazy loading, cacheable wire calls, and minimizing DOM updates significantly improve performance."
+        },
+        {
+          "id": 51,
+          "question": "How do you handle Lightning Message Service in LWC?",
+          "options": {
+            "A": "Use window.postMessage only for Lightning communication.",
+            "B": "Use lightning/messageService to communicate between LWCs or Aura components across DOM boundaries.",
+            "C": "LMS is only available in Classic UI.",
+            "D": "Use custom events to communicate across unrelated DOM trees."
+          },
+          "answer": "B",
+          "explanation": "LMS is the supported pub/sub mechanism to exchange messages between components irrespective of containment."
+        },
+        {
+          "id": 52,
+          "question": "How do you prevent excessive Apex calls in LWC?",
+          "options": {
+            "A": "Cache data locally, use @wire(cacheable=true) and combine multiple records in one call.",
+            "B": "Call Apex for every keystroke in an input field.",
+            "C": "Always use imperative calls to make them faster.",
+            "D": "Use multiple tiny Apex methods rather than batching calls."
+          },
+          "answer": "A",
+          "explanation": "Cache responses and design API endpoints to return aggregated data to reduce the number of server calls."
+        },
+        {
+          "id": 53,
+          "question": "How do you handle form validation in LWC?",
+          "options": {
+            "A": "Use reportValidity() and checkValidity() methods on lightning-input fields.",
+            "B": "Only validate forms on the server after submission.",
+            "C": "Use CSS to block invalid input.",
+            "D": "Use Visualforce input components inside LWC."
+          },
+          "answer": "A",
+          "explanation": "LWC provides client-side validation helpers like reportValidity() and checkValidity() for lightning-input components."
+        },
+        {
+          "id": 54,
+          "question": "How do you handle error messages from Apex in LWC?",
+          "options": {
+            "A": "Capture the error property returned by @wire or promise rejection and display via lightning-toast or custom UI.",
+            "B": "Ignore errors and log them only to server logs.",
+            "C": "Use alert() for every error in production.",
+            "D": "Rely on Visualforce to show error messages."
+          },
+          "answer": "A",
+          "explanation": "Handle promise rejections and wire error payloads to provide user-friendly messages using toast or component UI."
+        },
+        {
+          "id": 55,
+          "question": "How do you call a batch Apex job from LWC?",
+          "options": {
+            "A": "Call an Apex @AuraEnabled method which enqueues the batch job.",
+            "B": "Use NavigationMixin to trigger batch execution.",
+            "C": "Only admins can run batch jobs from Setup.",
+            "D": "Batch jobs cannot be started programmatically."
+          },
+          "answer": "A",
+          "explanation": "Expose a server-side method annotated for Aura/LWC that invokes Database.executeBatch; call it from the component."
+        },
+        {
+          "id": 56,
+          "question": "How do you pass multiple parameters from LWC to Apex?",
+          "options": {
+            "A": "Pass a JavaScript object and Apex accepts it as a Map or individual parameters.",
+            "B": "Only one primitive parameter is allowed per call.",
+            "C": "Serialize parameters into a CSV string always.",
+            "D": "Use cookies to transfer parameters."
+          },
+          "answer": "A",
+          "explanation": "Apex methods accept complex types (Maps, Lists) when passed from LWC as JSON objects; just ensure types match or use wrappers."
+        },
+        {
+          "id": 57,
+          "question": "How do you dynamically create multiple components in LWC?",
+          "options": {
+            "A": "Use template if:true or for:each directives in template markup.",
+            "B": "Use document.createElement to create Aura components.",
+            "C": "Only static components are allowed in LWC.",
+            "D": "Use server-side rendering only."
+          },
+          "answer": "A",
+          "explanation": "for:each allows iterating arrays to render multiple instances; conditional rendering uses if:true/if:false."
+        },
+        {
+          "id": 58,
+          "question": "How do you handle CSS isolation in LWC?",
+          "options": {
+            "A": "LWC uses Shadow DOM, so CSS in one component does not affect others.",
+            "B": "All CSS is global by default in LWC.",
+            "C": "You must manually namespace every class to avoid collisions.",
+            "D": "LWC does not support CSS files."
+          },
+          "answer": "A",
+          "explanation": "Shadow DOM provides style encapsulation so component CSS is scoped to the component's template."
+        },
+        {
+          "id": 59,
+          "question": "How do you handle custom labels in LWC?",
+          "options": {
+            "A": "Import labels using @salesforce/label/c.LabelName syntax.",
+            "B": "Read labels from a custom object via SOQL in client-side JS.",
+            "C": "Use window.label to get labels automatically.",
+            "D": "Labels are not available in LWC."
+          },
+          "answer": "A",
+          "explanation": "Custom labels are imported statically into JavaScript via the special @salesforce/label module for localization."
+        },
+        {
+          "id": 60,
+          "question": "How do you implement pagination in LWC?",
+          "options": {
+            "A": "Use current page index, fetch limited records via Apex, and provide Next/Prev buttons.",
+            "B": "Load entire dataset and hide rows using CSS.",
+            "C": "Use only client-side sorting to simulate pagination.",
+            "D": "Pagination is not supported in LWC."
+          },
+          "answer": "A",
+          "explanation": "Server-side pagination fetches slices of data using LIMIT/OFFSET or keyed queries; UI provides navigation controls."
+        },
+        {
+          "id": 61,
+          "question": "How do you debug LWC?",
+          "options": {
+            "A": "Use browser dev tools, console logs, Salesforce Lightning Inspector extension.",
+            "B": "Only use System.debug in Apex.",
+            "C": "Use Visualforce remoting debug panels.",
+            "D": "Debugging is not possible for LWC."
+          },
+          "answer": "A",
+          "explanation": "Browser developer tools and the Lightning Inspector extension enable JS and component lifecycle debugging for LWC."
+        },
+        {
+          "id": 62,
+          "question": "How do you handle picklist values in LWC?",
+          "options": {
+            "A": "Fetch via Apex using getPicklistValues or getPicklistValuesByRecordType wire adapters.",
+            "B": "Hardcode picklist values in the component JS.",
+            "C": "Picklists cannot be used in LWC.",
+            "D": "Use CSS to style picklist options dynamically."
+          },
+          "answer": "A",
+          "explanation": "LDS adapters fetch picklist metadata; Apex can also be used if more control is needed."
+        },
+        {
+          "id": 63,
+          "question": "How do you optimize LWC for large data sets?",
+          "options": {
+            "A": "Lazy loading, pagination, cacheable=true in wire, avoid heavy DOM rendering.",
+            "B": "Render all DOM nodes and rely on browser memory.",
+            "C": "Use synchronous Apex calls on every action.",
+            "D": "Only use Aura components for performance."
+          },
+          "answer": "A",
+          "explanation": "Avoid loading everything at once; use caching and pagination, and minimize re-rendering to optimize performance."
+        },
+        {
+          "id": 64,
+          "question": "How do you perform sorting in LWC datatable?",
+          "options": {
+            "A": "Use onsort event to sort client-side or server-side.",
+            "B": "Sorting is not supported in lightning-datatable.",
+            "C": "Use CSS to reorder table rows.",
+            "D": "Only manually reorder rows with drag-and-drop."
+          },
+          "answer": "A",
+          "explanation": "Handle the onsort event: either sort the locally cached records or request sorted data from the server."
+        },
+        {
+          "id": 65,
+          "question": "How do you dynamically show/hide fields in LWC?",
+          "options": {
+            "A": "Use conditional rendering with if:true or if:false.",
+            "B": "Update page layout metadata at runtime.",
+            "C": "Use Visualforce to toggle fields.",
+            "D": "Use CSS to permanently hide fields in the DOM."
+          },
+          "answer": "A",
+          "explanation": "Conditional templates let you render elements based on component state or computed properties."
+        },
+        {
+          "id": 66,
+          "question": "How do you handle dependent picklists in LWC?",
+          "options": {
+            "A": "Fetch controlling values via Apex and filter dependent values dynamically.",
+            "B": "Dependent picklists can't be used in LWC.",
+            "C": "Use only static picklist maps stored in JS.",
+            "D": "Use server-side rendering to simulate dependence."
+          },
+          "answer": "A",
+          "explanation": "Retrieve picklist metadata and filter dependent options based on the controlling field selection."
+        },
+        {
+          "id": 67,
+          "question": "How do you call Flow from LWC?",
+          "options": {
+            "A": "Use Lightning Flow Screen Component or lightning-flow LWC component.",
+            "B": "Flows cannot be invoked from LWC.",
+            "C": "Embed Visualforce that calls the flow.",
+            "D": "Use Apex to start a flow imperatively only."
+          },
+          "answer": "A",
+          "explanation": "The lightning-flow component allows embedding and starting Flows from LWC; you can also call Flow via navigation or Apex-invocable flows."
+        },
+        {
+          "id": 68,
+          "question": "How do you communicate between sibling LWCs?",
+          "options": {
+            "A": "Use custom events or Lightning Message Service.",
+            "B": "Directly access sibling's private properties.",
+            "C": "Use cookies shared between components.",
+            "D": "Siblings cannot communicate at all."
+          },
+          "answer": "A",
+          "explanation": "Custom events for parent-child communication; LMS or pubsub patterns for siblings or cross DOM trees."
+        },
+        {
+          "id": 69,
+          "question": "How do you handle modal dialogs in LWC?",
+          "options": {
+            "A": "Use lightning-modal base component or custom modal with if:true conditional rendering.",
+            "B": "Modals are only available in Aura.",
+            "C": "Use alert() for all dialogs.",
+            "D": "Open a new browser window for every dialog."
+          },
+          "answer": "A",
+          "explanation": "Use the standard lightning-modal or implement modal markup and conditional rendering to show/hide it."
+        },
+        {
+          "id": 70,
+          "question": "How do you handle file upload in LWC?",
+          "options": {
+            "A": "Use lightning-file-upload component and handle onuploadfinished event.",
+            "B": "LWC cannot handle file uploads.",
+            "C": "Use Visualforce file upload inside LWC.",
+            "D": "Upload via FTP from the client."
+          },
+          "answer": "A",
+          "explanation": "lightning-file-upload provides a standard way to upload files to records and handle completion events."
+        },
+        {
+          "id": 71,
+          "question": "How do you call Apex from Visualforce page?",
+          "options": {
+            "A": "Use <apex:page controller=\"ControllerName\"> and bind methods/variables using {!methodName}.",
+            "B": "Only use JavaScript remoting for Apex calls.",
+            "C": "Visualforce cannot call Apex controllers.",
+            "D": "Use NavigationMixin to call Apex."
+          },
+          "answer": "A",
+          "explanation": "Visualforce pages are backed by Apex controllers and can reference controller methods and properties via expression syntax."
+        },
+        {
+          "id": 72,
+          "question": "How do you pass parameters from Visualforce to Apex?",
+          "options": {
+            "A": "Use apex:param with <apex:commandButton> or <apex:actionFunction>.",
+            "B": "Only use cookies to pass parameters.",
+            "C": "Parameters cannot be passed from VF to Apex.",
+            "D": "Use Remote Site Settings."
+          },
+          "answer": "A",
+          "explanation": "apex:param and actionFunction enable client-side JS to pass values to controller action methods."
+        },
+        {
+          "id": 73,
+          "question": "How do you rerender part of a VF page after action?",
+          "options": {
+            "A": "Use rerender attribute on <apex:commandButton> or <apex:actionFunction>.",
+            "B": "Use page refresh only.",
+            "C": "Visualforce does not support partial rerendering.",
+            "D": "Use LWC to rerender Visualforce components."
+          },
+          "answer": "A",
+          "explanation": "The rerender attribute specifies which components should be updated after an action without full page reload."
+        },
+        {
+          "id": 74,
+          "question": "How do you call JavaScript from Apex in VF?",
+          "options": {
+            "A": "Use <apex:outputPanel> with oncomplete or actionFunction callbacks.",
+            "B": "Apex can directly call window functions.",
+            "C": "Only server-side rendering is possible.",
+            "D": "Use CSS animations to trigger JS."
+          },
+          "answer": "A",
+          "explanation": "Use actionFunction or commandButton oncomplete callbacks to run JavaScript after server actions complete."
+        },
+        {
+          "id": 75,
+          "question": "How do you display a list of records in VF?",
+          "options": {
+            "A": "Use <apex:repeat> or <apex:dataTable> bound to an Apex list variable.",
+            "B": "Use only <apex:outputText> for each record manually.",
+            "C": "Visualforce cannot iterate collections.",
+            "D": "Use JavaScript to append rows without server data."
+          },
+          "answer": "A",
+          "explanation": "apex:repeat and apex:dataTable are standard tags for iterating over collections and rendering lists/tables."
+        },
+        {
+          "id": 76,
+          "question": "How do you handle picklists in Visualforce?",
+          "options": {
+            "A": "Use <apex:selectList> and populate options from Apex List<SelectOption>.",
+            "B": "Picklists are not supported in Visualforce.",
+            "C": "Use only inputText to mimic picklists.",
+            "D": "Hardcode select options in HTML with no server binding."
+          },
+          "answer": "A",
+          "explanation": "SelectList with SelectOption collections from controller provides dynamic picklist rendering and binding."
+        },
+        {
+          "id": 77,
+          "question": "How do you implement pagination in VF?",
+          "options": {
+            "A": "Maintain offset and limit variables in Apex controller and update on Next/Previous buttons.",
+            "B": "Load all records and hide rows via CSS.",
+            "C": "Visualforce automatically paginates lists.",
+            "D": "Use Streaming API for pagination."
+          },
+          "answer": "A",
+          "explanation": "Standard approach uses offset/limit or StandardSetController to manage pages and navigation."
+        },
+        {
+          "id": 78,
+          "question": "How do you perform validation in VF page?",
+          "options": {
+            "A": "Use Apex controller methods with addError() or <apex:pageMessages>.",
+            "B": "Only client-side validation is allowed.",
+            "C": "Use Streaming API to validate inputs.",
+            "D": "Visualforce automatically validates according to schema."
+          },
+          "answer": "A",
+          "explanation": "Server-side validation in controllers with addError ensures rules are enforced regardless of client behavior; pageMessages shows errors."
+        },
+        {
+          "id": 79,
+          "question": "How do you call Flow from Visualforce?",
+          "options": {
+            "A": "Embed Flow using <flow:interview name=\"FlowName\"/>.",
+            "B": "Flows cannot be used in Visualforce.",
+            "C": "Only LWC can host Flows, not VF.",
+            "D": "Export Flow as static HTML and include it."
+          },
+          "answer": "A",
+          "explanation": "flow:interview tag lets you embed and run Flows within Visualforce pages."
+        },
+        {
+          "id": 80,
+          "question": "How do you debug Visualforce pages?",
+          "options": {
+            "A": "Use debug logs, inspect DOM, and add System.debug in Apex controller.",
+            "B": "Only use browser alerts for debugging.",
+            "C": "Visualforce pages cannot be debugged.",
+            "D": "Use Streaming API for debugging traces."
+          },
+          "answer": "A",
+          "explanation": "Server-side debug logs and client-side DOM inspection / browser console are primary debugging tools for VF."
+        },
+        {
+          "id": 81,
+          "question": "How do you use JavaScript remoting in VF?",
+          "options": {
+            "A": "Annotate Apex methods with @RemoteAction and call via JavaScript using Controller.methodName().",
+            "B": "Use @AuraEnabled instead for VF remoting.",
+            "C": "JavaScript remoting is deprecated and not supported.",
+            "D": "Only use form submits for server communication."
+          },
+          "answer": "A",
+          "explanation": "@RemoteAction allows direct JavaScript calls to Apex methods without a full page postback, enabling responsive UIs."
+        },
+        {
+          "id": 82,
+          "question": "How do you implement dynamic styling in VF?",
+          "options": {
+            "A": "Use <apex:outputText styleClass=\"{!condition?'classA':'classB'}\"/>.",
+            "B": "CSS must be static in VF and cannot be dynamic.",
+            "C": "Use server-side CSS injection only.",
+            "D": "Use Apex to write inline <style> tags for every element."
+          },
+          "answer": "A",
+          "explanation": "Binding expressions can select CSS classes dynamically based on controller state to implement conditional styling."
+        },
+        {
+          "id": 83,
+          "question": "How do you handle large data sets in VF?",
+          "options": {
+            "A": "Use pagination or Apex StandardSetController.",
+            "B": "Render all records and rely on browser memory.",
+            "C": "Store records in session for faster access.",
+            "D": "Use Streaming API to fetch records into VF."
+          },
+          "answer": "A",
+          "explanation": "StandardSetController and pagination patterns prevent overloading the page or hitting view state limits."
+        },
+        {
+          "id": 84,
+          "question": "How do you secure VF pages?",
+          "options": {
+            "A": "Set proper profiles/permission sets and enforce FLS/CRUD in Apex controller.",
+            "B": "Only rely on front-end validation.",
+            "C": "Make pages public to simplify access.",
+            "D": "Use Remote Site Settings to block users."
+          },
+          "answer": "A",
+          "explanation": "Enforce security at the controller level (FLS/CRUD checks) and control access via profiles and permissions for external exposure."
+        },
+        {
+          "id": 85,
+          "question": "How do you handle file download in VF?",
+          "options": {
+            "A": "Use <apex:commandLink> with ContentType and getContent() method in Apex.",
+            "B": "Use window.open for every file and hope it downloads.",
+            "C": "Attach files to emails only for downloads.",
+            "D": "Visualforce cannot serve file downloads."
+          },
+          "answer": "A",
+          "explanation": "getContent or getContentAsPdf along with appropriate headers allows VF to serve file downloads from controller methods."
+        },
+        {
+          "id": 86,
+          "question": "How do you auto-assign Cases to agents?",
+          "options": {
+            "A": "Use Assignment Rules or Omni-Channel routing based on criteria.",
+            "B": "Have agents pick cases manually only.",
+            "C": "Use static page layouts to assign cases.",
+            "D": "Use Data Loader to reassign cases daily."
+          },
+          "answer": "A",
+          "explanation": "Assignment Rules and Omni-Channel provide declarative and dynamic routing mechanisms to distribute cases to agents."
+        },
+        {
+          "id": 87,
+          "question": "How do you prioritize Cases in Service Cloud?",
+          "options": {
+            "A": "Use Case Milestones, Entitlements, or Service Level Agreements (SLAs).",
+            "B": "Sort cases alphabetically to prioritize.",
+            "C": "Use only manual flags in the description field.",
+            "D": "There is no way to prioritize cases in Service Cloud."
+          },
+          "answer": "A",
+          "explanation": "Entitlements and milestones allow SLA-based prioritization and tracking of response/resolution timelines."
+        },
+        {
+          "id": 88,
+          "question": "How do you send email notifications when Case status changes?",
+          "options": {
+            "A": "Use Workflow Rules, Process Builder, or Flow to send emails.",
+            "B": "Only Apex email services can send notifications.",
+            "C": "Use manual email sending by agents only.",
+            "D": "Use Streaming API to deliver emails externally."
+          },
+          "answer": "A",
+          "explanation": "Declarative automation tools can send emails based on record changes; Apex is an option for complex needs."
+        },
+        {
+          "id": 89,
+          "question": "How do you implement Omni-Channel in Salesforce?",
+          "options": {
+            "A": "Configure Presence Configurations, Routing Configurations, and assign agents to Queues.",
+            "B": "Install a third-party app only.",
+            "C": "Omni-Channel is enabled by default with no configuration.",
+            "D": "Use Page Layouts to route work."
+          },
+          "answer": "A",
+          "explanation": "Omni-Channel requires configuring presence, routing, and queue assignments to route work items to available agents."
+        },
+        {
+          "id": 90,
+          "question": "How do you prevent duplicate Cases?",
+          "options": {
+            "A": "Enable Duplicate Management rules or use custom Apex triggers.",
+            "B": "Delete similar cases manually every month.",
+            "C": "Use only standard case numbering to avoid duplicates.",
+            "D": "Disable case creation for all users."
+          },
+          "answer": "A",
+          "explanation": "Duplicate rules and matching rules provide declarative deduplication; triggers can enforce custom logic."
+        },
+        {
+          "id": 91,
+          "question": "How do you implement Knowledge articles for Cases?",
+          "options": {
+            "A": "Enable Knowledge, associate articles with Case record types, and use Quick Actions to link articles.",
+            "B": "Store articles as notes only.",
+            "C": "Use static documents outside Salesforce.",
+            "D": "Knowledge cannot be integrated with Cases."
+          },
+          "answer": "A",
+          "explanation": "Enable and configure Knowledge, then use UI features to surface and attach articles to cases for agent support."
+        },
+        {
+          "id": 92,
+          "question": "How do you escalate Cases automatically?",
+          "options": {
+            "A": "Use Escalation Rules to reassign Cases or notify managers based on criteria.",
+            "B": "Use reports to find cases and escalate manually.",
+            "C": "Only use manual status updates for escalation.",
+            "D": "Escalation is not supported in Service Cloud."
+          },
+          "answer": "A",
+          "explanation": "Escalation rules can detect time-based conditions and reassign or notify stakeholders automatically."
+        },
+        {
+          "id": 93,
+          "question": "How do you integrate chat with Service Cloud?",
+          "options": {
+            "A": "Use Live Agent / Omni-Channel Chat with LWC components or embedded service SDK.",
+            "B": "Use email as a chat replacement.",
+            "C": "Service Cloud cannot integrate chat.",
+            "D": "Use Visualforce only for chat integration."
+          },
+          "answer": "A",
+          "explanation": "Live Agent and Omni-Channel Chat provide integrated chat experiences; LWCs and embedded SDK support customization."
+        },
+        {
+          "id": 94,
+          "question": "How do you handle case merging?",
+          "options": {
+            "A": "Use Merge Cases standard functionality or custom Apex logic for specific criteria.",
+            "B": "Rename cases instead of merging.",
+            "C": "Merging is prohibited in Salesforce.",
+            "D": "Use data loader to delete duplicates only."
+          },
+          "answer": "A",
+          "explanation": "Salesforce provides merge functionality; complex rules may require Apex to consolidate related data properly."
+        },
+        {
+          "id": 95,
+          "question": "How do you automate Case closure based on resolution time?",
+          "options": {
+            "A": "Use Scheduled Flows or Time-Based Workflow with criteria on Case Milestones.",
+            "B": "Have agents manually close cases only.",
+            "C": "Use streaming API to close cases in real time.",
+            "D": "Automated closure is not allowed for cases."
+          },
+          "answer": "A",
+          "explanation": "Time-based automation and scheduled processes can check milestones and close cases automatically when criteria are met."
+        },
+        {
+          "id": 96,
+          "question": "How do you control portal user access?",
+          "options": {
+            "A": "Use Profiles, Permission Sets, and Sharing Rules for Experience Cloud users.",
+            "B": "Grant full System Administrator to portal users.",
+            "C": "Use only IP restrictions without permissions.",
+            "D": "Portal access cannot be restricted."
+          },
+          "answer": "A",
+          "explanation": "Apply least-privilege via profiles/permission sets and use sharing sets/rules to limit record access for external users."
+        },
+        {
+          "id": 97,
+          "question": "How do you customize Experience Cloud pages?",
+          "options": {
+            "A": "Use Experience Builder, LWC components, and Themes.",
+            "B": "Only modify HTML files on the server.",
+            "C": "Experience pages cannot be customized.",
+            "D": "Use Ant Migration Tool UI for page changes."
+          },
+          "answer": "A",
+          "explanation": "Experience Builder plus custom LWCs and theming lets admins and developers design branded portal pages."
+        },
+        {
+          "id": 98,
+          "question": "How do you expose Salesforce records to external users?",
+          "options": {
+            "A": "Use Sharing Sets, External Sharing, or Audience targeting in Experience Cloud.",
+            "B": "Make records public by changing OWD to Public Read/Write always.",
+            "C": "Export records to CSV and email to users.",
+            "D": "Use Visualforce to embed record lists only."
+          },
+          "answer": "A",
+          "explanation": "Sharing sets and targeted sharing allow secure external access to records related to the community user."
+        },
+        {
+          "id": 99,
+          "question": "How do you implement single sign-on (SSO) for portal users?",
+          "options": {
+            "A": "Use SAML / OAuth SSO with Identity Provider.",
+            "B": "Use basic authentication over HTTP.",
+            "C": "SSO is not supported for Experience Cloud.",
+            "D": "Use streaming API for authentication."
+          },
+          "answer": "A",
+          "explanation": "Implement SAML or OIDC OAuth flows with an IdP to support SSO for community/portal users."
+        },
+        {
+          "id": 100,
+          "question": "How do you implement self-service registration for external users?",
+          "options": {
+            "A": "Use Experience Cloud Registration Page and assign default Profile/Permission Set.",
+            "B": "Only administrators can create external users.",
+            "C": "Use Data Loader to import external users daily.",
+            "D": "Self-registration is disabled for security reasons."
+          },
+          "answer": "A",
+          "explanation": "Experience Builder supports self-registration flows that create community users with assigned profiles/permissions."
+        },
+        {
+          "id": 101,
+          "question": "How do you handle record visibility for external users?",
+          "options": {
+            "A": "Use Sharing Sets, Sharing Rules, and Manual Sharing depending on the object.",
+            "B": "Grant System Admin role to all external users.",
+            "C": "External users can never access records.",
+            "D": "Only use IP restrictions for visibility."
+          },
+          "answer": "A",
+          "explanation": "A combination of sharing mechanisms tailored for external users controls what records they can see and act upon."
+        },
+        {
+          "id": 102,
+          "question": "How do you show dynamic content based on user profile?",
+          "options": {
+            "A": "Use Audience targeting in Experience Builder.",
+            "B": "Create separate sites per user manually.",
+            "C": "Use CSS to hide content based on profile.",
+            "D": "Profiles cannot influence Experience content."
+          },
+          "answer": "A",
+          "explanation": "Audience targeting allows pages/components to be shown/hidden based on user attributes like profile, role, or custom criteria."
+        },
+        {
+          "id": 103,
+          "question": "How do you integrate Knowledge articles in Experience Cloud?",
+          "options": {
+            "A": "Enable Knowledge, expose articles via Components or LWC, and control visibility.",
+            "B": "Knowledge is incompatible with Experience Cloud.",
+            "C": "Export articles to static HTML only.",
+            "D": "Use Apex to copy articles to custom objects."
+          },
+          "answer": "A",
+          "explanation": "Configure Knowledge channels and use components or LWCs to surface articles with proper sharing and visibility settings."
+        },
+        {
+          "id": 104,
+          "question": "How do you track user activity in portal?",
+          "options": {
+            "A": "Enable Event Monitoring, Reports, and Dashboards.",
+            "B": "Use only Google Analytics for everything.",
+            "C": "Experience Cloud provides no activity tracking.",
+            "D": "Use email notifications for each user action."
+          },
+          "answer": "A",
+          "explanation": "Event Monitoring and standard reporting allow tracking login, clicks, page views and other user behavior in portals."
+        },
+        {
+          "id": 105,
+          "question": "How do you implement multi-language support in Experience Cloud?",
+          "options": {
+            "A": "Enable Translation Workbench and provide translations for labels, articles, and components.",
+            "B": "Only English is supported in Experience Cloud.",
+            "C": "Translate content manually by editing HTML per page.",
+            "D": "Use browser auto-translate exclusively."
+          },
+          "answer": "A",
+          "explanation": "Translation Workbench and language-enabled components/articles let you provide localized experiences for portal users."
+        },
+        {
+          "id": 106,
+          "question": "How do you enforce field-level security in Apex?",
+          "options": {
+            "A": "Use Schema.sObjectField.isAccessible() and isUpdateable() methods.",
+            "B": "Apex automatically enforces FLS; no code needed.",
+            "C": "Use Visualforce to bypass FLS checks.",
+            "D": "Grant extra permissions in tests to enforce FLS."
+          },
+          "answer": "A",
+          "explanation": "Apex should explicitly check CRUD/FLS before performing operations when running in system context to respect security."
+        },
+        {
+          "id": 107,
+          "question": "How do you enforce object-level security in Apex?",
+          "options": {
+            "A": "Use Schema.sObjectType.ObjectName.isAccessible() before performing DML operations.",
+            "B": "Object-level security is only for UI and not relevant in Apex.",
+            "C": "Use PermissionSets API calls in tests only.",
+            "D": "Disable profiles and assume full access."
+          },
+          "answer": "A",
+          "explanation": "Check sObjectType methods to ensure the running user has access to the object before DML to prevent security violations."
+        },
+        {
+          "id": 108,
+          "question": "How do you programmatically share a record?",
+          "options": {
+            "A": "Insert a record into the Share object (e.g., AccountShare, CustomObjectShare).",
+            "B": "Modify the ownerId to share records automatically.",
+            "C": "Call a REST endpoint to change sharing.",
+            "D": "Use reporting to expose records as shared."
+          },
+          "answer": "A",
+          "explanation": "Apex Managed Sharing inserts rows into <Object>Share tables specifying grantee, access level and row cause."
+        },
+        {
+          "id": 109,
+          "question": "How do you prevent users from updating certain records?",
+          "options": {
+            "A": "Use Validation Rules, Trigger logic, or Apex Sharing with readOnly access.",
+            "B": "Delete edit buttons from page layouts only.",
+            "C": "Lock records by renaming fields.",
+            "D": "Move records to another org."
+          },
+          "answer": "A",
+          "explanation": "Validation rules or addError in triggers and sharing settings can prevent updates while preserving security and audit trail."
+        },
+        {
+          "id": 110,
+          "question": "How do you implement row-level security for a large org?",
+          "options": {
+            "A": "Use Roles, OWD, Sharing Rules, and Criteria-Based Sharing to control access.",
+            "B": "Give all users View All Data permission for simplicity.",
+            "C": "Use page layouts to hide sensitive rows.",
+            "D": "Use Visualforce to secure records only."
+          },
+          "answer": "A",
+          "explanation": "Combine OWD baseline with role hierarchy and sharing rules to scale row-level access across large organizations."
+        },
+        {
+          "id": 111,
+          "question": "How do you handle large data volumes in Salesforce?",
+          "options": {
+            "A": "Use Batch Apex, Async SOQL, Skinny Tables, selective queries, and Indexes.",
+            "B": "Load all data into memory and process in one transaction.",
+            "C": "Avoid indexes to force full table scans.",
+            "D": "Use small record counts only to avoid complexities."
+          },
+          "answer": "A",
+          "explanation": "LDV strategies include async processing, optimized queries, and support from Salesforce (skinny tables, indexing) to maintain performance."
+        },
+        {
+          "id": 112,
+          "question": "How do you optimize Apex code performance?",
+          "options": {
+            "A": "Bulkify triggers, avoid unnecessary queries, cache frequently used data, and use collections efficiently.",
+            "B": "Write nested loops with queries inside.",
+            "C": "Use seeAllData=true everywhere for speed.",
+            "D": "Disable governor limits during development."
+          },
+          "answer": "A",
+          "explanation": "Follow bulk patterns, minimize queries and DML, use maps/sets for lookups, and cache where appropriate to improve performance."
+        },
+        {
+          "id": 113,
+          "question": "How do you debug production issues without affecting users?",
+          "options": {
+            "A": "Use Debug Logs, Checkpoints, Developer Console, and Sandboxes for testing.",
+            "B": "Make changes directly in production without logging.",
+            "C": "Disable users while debugging.",
+            "D": "Run destructive tests in production to reproduce issues."
+          },
+          "answer": "A",
+          "explanation": "Use logs and sandboxes to reproduce and analyze issues; enable detailed logging temporarily with caution to avoid performance impact."
+        },
+        {
+          "id": 114,
+          "question": "How do you migrate metadata between orgs safely?",
+          "options": {
+            "A": "Use SFDX, Change Sets, Unlocked Packages, CI/CD pipelines with validation deployments.",
+            "B": "Copy-paste XML files manually via Setup.",
+            "C": "Export metadata to Excel and re-import it.",
+            "D": "Make direct edits in production only and skip validation."
+          },
+          "answer": "A",
+          "explanation": "Source-driven deployments using SFDX and CI/CD with validation steps ensure safe, repeatable metadata migrations."
+        },
+        {
+          "id": 115,
+          "question": "How do you ensure code is maintainable for future developers?",
+          "options": {
+            "A": "Follow Apex Enterprise Patterns, use Trigger Handlers, comment code, write unit tests, and enforce naming conventions.",
+            "B": "Minify code and remove all comments for compactness.",
+            "C": "Avoid patterns and use copy-paste often for speed.",
+            "D": "Keep everything in a single large class to reduce files."
+          },
+          "answer": "A",
+          "explanation": "Adopt established architectural patterns, documentation, tests and coding standards to make code understandable and maintainable."
+        }
+      ]
+    }
+  }
+}

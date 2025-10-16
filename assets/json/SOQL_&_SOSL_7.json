@@ -1,0 +1,369 @@
+{
+  "section": "SOQL & SOSL",
+  "levels": {
+    "level7": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is SOQL?",
+          "options": {
+            "A": "A search language to find text across multiple objects simultaneously.",
+            "B": "A way to perform DML operations on Salesforce records.",
+            "C": "Salesforce Object Query Language, used to retrieve records from Salesforce objects.",
+            "D": "A markup language for Visualforce pages."
+          },
+          "answer": "C",
+          "explanation": "SOQL (Salesforce Object Query Language) is used to query Salesforce records (similar to SQL but designed for Salesforce object model)."
+        },
+        {
+          "id": 2,
+          "question": "What is SOSL?",
+          "options": {
+            "A": "A language for defining Apex triggers.",
+            "B": "Salesforce Object Search Language, used to search text across multiple objects simultaneously.",
+            "C": "A way to update metadata programmatically.",
+            "D": "A logging framework for Apex."
+          },
+          "answer": "B",
+          "explanation": "SOSL is intended for text-based search across fields and objects — useful when you don't know which object contains the data."
+        },
+        {
+          "id": 3,
+          "question": "Difference between SOQL and SOSL?",
+          "options": {
+            "A": "SOQL: Search across multiple objects; SOSL: Query structured data from a single object.",
+            "B": "They are identical and interchangeable.",
+            "C": "SOQL: Query structured data from one object at a time (with subqueries). SOSL: Search text, phone, email across multiple objects.",
+            "D": "SOQL only works with custom objects; SOSL only with standard objects."
+          },
+          "answer": "C",
+          "explanation": "SOQL is for structured queries against a known object (with relationships), while SOSL is for text searches across many objects/fields."
+        },
+        {
+          "id": 4,
+          "question": "Can SOQL query multiple objects?",
+          "options": {
+            "A": "No — SOQL can only query exactly one object with no relationships.",
+            "B": "Yes, via relationship queries (parent-to-child subqueries or child-to-parent joins).",
+            "C": "Only if you use SOSL inside the SOQL statement.",
+            "D": "Only through Apex REST endpoints."
+          },
+          "answer": "D",
+          "explanation": "SOQL supports relationship queries: child-to-parent (dot notation) and parent-to-child (subquery) to access multiple related objects in one query. (Correct option was B.)"
+        },
+        {
+          "id": 5,
+          "question": "Example of SOQL Parent-to-Child query?",
+          "options": {
+            "A": "SELECT Name, (SELECT LastName FROM Contacts) FROM Account",
+            "B": "FIND 'Acme*' IN ALL FIELDS RETURNING Account(Name), Contact(LastName, Email)",
+            "C": "SELECT LastName, Account.Name FROM Contact",
+            "D": "SELECT Id FROM Account WHERE IsDeleted = true ALL ROWS"
+          },
+          "answer": "A",
+          "explanation": "Parent-to-child subquery is written as a nested SELECT: SELECT Account fields, (SELECT ChildFields FROM ChildRelationshipName) FROM Parent."
+        },
+        {
+          "id": 6,
+          "question": "Example of SOQL Child-to-Parent query?",
+          "options": {
+            "A": "SELECT Name, (SELECT LastName FROM Contacts) FROM Account",
+            "B": "SELECT LastName, Account.Name FROM Contact",
+            "C": "FIND 'Acme*' IN ALL FIELDS RETURNING Account(Name)",
+            "D": "SELECT COUNT() FROM Account"
+          },
+          "answer": "B",
+          "explanation": "Child-to-parent access uses dot notation: from the child object you can select fields from its parent, e.g., Contact.Account.Name."
+        },
+        {
+          "id": 7,
+          "question": "Example of SOSL?",
+          "options": {
+            "A": "SELECT Name FROM Account WHERE Name LIKE 'Acme%'",
+            "B": "FIND 'Acme*' IN ALL FIELDS RETURNING Account(Name), Contact(LastName, Email)",
+            "C": "SELECT COUNT() FROM Contact",
+            "D": "Database.executeBatch(new MyBatch())"
+          },
+          "answer": "B",
+          "explanation": "SOSL syntax uses FIND 'searchTerm' IN ... RETURNING object(fieldlist) to search across multiple objects/fields."
+        },
+        {
+          "id": 8,
+          "question": "Can SOSL return multiple objects in a single query?",
+          "options": {
+            "A": "No — SOSL returns only a single object at a time.",
+            "B": "Only if objects share the same fields.",
+            "C": "Yes, unlike SOQL which returns from one root object at a time.",
+            "D": "Only in Developer Edition orgs."
+          },
+          "answer": "C",
+          "explanation": "SOSL can return matching results from multiple objects in one call; SOQL returns records from a single root object per query."
+        },
+        {
+          "id": 9,
+          "question": "What is the maximum number of SOQL queries per transaction?",
+          "options": {
+            "A": "10 synchronous, 20 asynchronous",
+            "B": "100 (synchronous) and 200 (asynchronous)",
+            "C": "Unlimited if using Database.query()",
+            "D": "50 in all contexts"
+          },
+          "answer": "B",
+          "explanation": "Typical governor limits: 100 SOQL queries per synchronous transaction and higher limits (e.g., 200) for async contexts — check current Salesforce docs for exact numbers per context."
+        },
+        {
+          "id": 10,
+          "question": "What is the maximum number of records SOQL can return?",
+          "options": {
+            "A": "10,000 records",
+            "B": "50,000 records",
+            "C": "1,000,000 records",
+            "D": "There is no upper limit"
+          },
+          "answer": "B",
+          "explanation": "SOQL queries return up to 50,000 rows in a single synchronous query result; use Batch Apex or other approaches for larger sets."
+        },
+        {
+          "id": 11,
+          "question": "What is the governor limit for SOSL queries?",
+          "options": {
+            "A": "100 SOSL queries per transaction",
+            "B": "1 SOSL query per transaction",
+            "C": "20 SOSL queries per transaction",
+            "D": "No limit"
+          },
+          "answer": "C",
+          "explanation": "SOSL calls are limited (commonly 20 per transaction) — combining searches and designing code to minimize calls is important."
+        },
+        {
+          "id": 12,
+          "question": "What are Aggregate Functions in SOQL?",
+          "options": {
+            "A": "Functions like TO_CHAR() and PARSE_INT() only.",
+            "B": "Functions that change object schema.",
+            "C": "Functions like COUNT(), SUM(), AVG(), MIN(), MAX().",
+            "D": "Operators for DML like INSERT() and UPDATE()"
+          },
+          "answer": "C",
+          "explanation": "SOQL supports aggregate functions to compute summaries across record groups, e.g., COUNT(), SUM(field), AVG(field)."
+        },
+        {
+          "id": 13,
+          "question": "Example of COUNT in SOQL?",
+          "options": {
+            "A": "SELECT COUNT() FROM Account",
+            "B": "SELECT COUNT(Id) FROM Contact WHERE IsActive = true",
+            "C": "SELECT Id FROM Account LIMIT 10",
+            "D": "FIND {Acme} RETURNING Account(Id)"
+          },
+          "answer": "A",
+          "explanation": "COUNT() returns the number of rows matching the query. You can also use COUNT(field) for non-null counts."
+        },
+        {
+          "id": 14,
+          "question": "Example of GROUP BY in SOQL?",
+          "options": {
+            "A": "SELECT Industry, COUNT(Id) FROM Account GROUP BY Industry",
+            "B": "SELECT Id FROM Account WHERE Industry = 'IT'",
+            "C": "FIND 'Industry' IN ALL FIELDS",
+            "D": "SELECT Name FROM Account ORDER BY Industry"
+          },
+          "answer": "A",
+          "explanation": "GROUP BY aggregates records by specified fields (e.g., Industry) and is commonly used with aggregate functions."
+        },
+        {
+          "id": 15,
+          "question": "What is HAVING in SOQL?",
+          "options": {
+            "A": "A clause to filter records before GROUP BY is applied.",
+            "B": "Used with aggregate functions to filter grouped results.",
+            "C": "An alias for LIMIT.",
+            "D": "A function to compute averages."
+          },
+          "answer": "B",
+          "explanation": "HAVING filters groups produced by GROUP BY, for example to return only groups whose COUNT() > N."
+        },
+        {
+          "id": 16,
+          "question": "Can we use ORDER BY in SOQL?",
+          "options": {
+            "A": "No, SOQL does not support sorting.",
+            "B": "Yes, to sort results ASC or DESC.",
+            "C": "Only in SOSL, not SOQL.",
+            "D": "Only if querying custom objects."
+          },
+          "answer": "B",
+          "explanation": "SOQL supports ORDER BY to sort query results ascending (ASC) or descending (DESC)."
+        },
+        {
+          "id": 17,
+          "question": "What is LIMIT in SOQL?",
+          "options": {
+            "A": "A function to restrict the fields returned.",
+            "B": "Restricts number of records returned (e.g., SELECT Name FROM Account LIMIT 10).",
+            "C": "A clause only available in SOSL.",
+            "D": "An index hint for queries."
+          },
+          "answer": "B",
+          "explanation": "LIMIT caps the number of rows returned by SOQL, useful for pagination or reducing result size."
+        },
+        {
+          "id": 18,
+          "question": "What is OFFSET in SOQL?",
+          "options": {
+            "A": "Skips a given number of rows, useful for pagination.",
+            "B": "Forces the query to use a different index.",
+            "C": "Reverses the sort order of results.",
+            "D": "Merges results from two queries."
+          },
+          "answer": "A",
+          "explanation": "OFFSET N skips the first N rows of the result set — helpful for simple pagination along with LIMIT."
+        },
+        {
+          "id": 19,
+          "question": "Difference between Semi-Join and Anti-Join?",
+          "options": {
+            "A": "Semi-Join returns records without children; Anti-Join returns records with children.",
+            "B": "They are synonyms in SOQL.",
+            "C": "Semi-Join: Finds records with related child records. Anti-Join: Finds records without related child records.",
+            "D": "Semi-Join is a SOSL feature only."
+          },
+          "answer": "C",
+          "explanation": "Semi-joins use WHERE Id IN (subquery) to find parents that have children; anti-joins use WHERE Id NOT IN (subquery) to find parents with no related children."
+        },
+        {
+          "id": 20,
+          "question": "Example of Semi-Join?",
+          "options": {
+            "A": "SELECT Id, Name FROM Account WHERE Id IN (SELECT AccountId FROM Contact)",
+            "B": "SELECT Id FROM Contact WHERE Account.Name = 'Acme'",
+            "C": "FIND 'Acme*' IN ALL FIELDS RETURNING Account(Name)",
+            "D": "SELECT COUNT() FROM Account"
+          },
+          "answer": "A",
+          "explanation": "A semi-join checks existence of related child records via a subquery in the WHERE clause."
+        },
+        {
+          "id": 21,
+          "question": "Example of Anti-Join?",
+          "options": {
+            "A": "SELECT Id, Name FROM Account WHERE Id NOT IN (SELECT AccountId FROM Contact)",
+            "B": "SELECT Id FROM Contact WHERE Account.Name != null",
+            "C": "SELECT Name FROM Account LIMIT 10",
+            "D": "FIND 'Acme' IN ALL FIELDS RETURNING Contact(Email)"
+          },
+          "answer": "A",
+          "explanation": "Anti-join returns parent records that do not have any matching child records in the subquery."
+        },
+        {
+          "id": 22,
+          "question": "What is FOR UPDATE in SOQL?",
+          "options": {
+            "A": "An option to force queries to use a specific index.",
+            "B": "Locks selected records so other users can’t modify them until transaction completes.",
+            "C": "Automatically updates fields to current date/time.",
+            "D": "A clause that enables upserts within a query."
+          },
+          "answer": "B",
+          "explanation": "FOR UPDATE locks the returned rows for the duration of the transaction to prevent concurrent updates from other transactions."
+        },
+        {
+          "id": 23,
+          "question": "Can you use LIKE in SOQL?",
+          "options": {
+            "A": "No, partial string matching is unsupported.",
+            "B": "Yes, for partial string matching (e.g., WHERE Name LIKE 'Acme%').",
+            "C": "Only in aggregate queries.",
+            "D": "Only when querying numeric fields."
+          },
+          "answer": "B",
+          "explanation": "The LIKE operator supports wildcard pattern matching with % and _ characters in SOQL string comparisons."
+        },
+        {
+          "id": 24,
+          "question": "Can SOQL query formula fields?",
+          "options": {
+            "A": "No — formula fields are invisible to SOQL.",
+            "B": "Yes, but values are calculated at runtime.",
+            "C": "Only if the formula is numeric.",
+            "D": "Only in SOSL, not SOQL."
+          },
+          "answer": "B",
+          "explanation": "Formula fields can be selected in SOQL; their values are computed on the fly when the record is retrieved."
+        },
+        {
+          "id": 25,
+          "question": "Can SOQL query encrypted fields?",
+          "options": {
+            "A": "Yes, with full support for LIKE and ORDER BY.",
+            "B": "No, encrypted fields are never accessible.",
+            "C": "Yes, but only equality filters are supported, not LIKE or ORDER BY.",
+            "D": "Only in Sandbox environments."
+          },
+          "answer": "C",
+          "explanation": "Encrypted fields have query limitations — equality comparisons are allowed in many contexts, but LIKE/ORDER BY are typically not supported."
+        },
+        {
+          "id": 26,
+          "question": "What is relationship query limit in SOQL?",
+          "options": {
+            "A": "Unlimited child and parent relationships per query.",
+            "B": "Up to 35 child-to-parent relationships and 1 parent-to-child subquery per query.",
+            "C": "Exactly 5 joins maximum.",
+            "D": "Only one relationship allowed per org."
+          },
+          "answer": "B",
+          "explanation": "SOQL has limits on relationship traversal depth: you can traverse many child-to-parent relationships (commonly up to 35) but parent-to-child subqueries are limited (typically one subquery per query)."
+        },
+        {
+          "id": 27,
+          "question": "Can SOQL return records from Recycle Bin?",
+          "options": {
+            "A": "No, deleted records are never returned.",
+            "B": "Yes, using ALL ROWS keyword (e.g., SELECT Name FROM Account WHERE IsDeleted = true ALL ROWS).",
+            "C": "Only with special admin permission.",
+            "D": "Only via the SOAP API."
+          },
+          "answer": "B",
+          "explanation": "Using ALL ROWS in SOQL includes records in the Recycle Bin (IsDeleted = true) in the query results."
+        },
+        {
+          "id": 28,
+          "question": "Can SOQL query fields from multiple objects without a relationship?",
+          "options": {
+            "A": "Yes — just comma-separate object names in the FROM clause.",
+            "B": "No, unless using SOSL or a junction object.",
+            "C": "Only if both objects are custom objects.",
+            "D": "Only in Developer Console queries."
+          },
+          "answer": "B",
+          "explanation": "SOQL requires defined relationships to join data; to search across unrelated objects use SOSL or design junction objects to relate them."
+        },
+        {
+          "id": 29,
+          "question": "How to optimize SOQL queries?",
+          "options": {
+            "A": "Use selective filters, indexed fields, avoid SELECT *, use LIMIT, use skinny tables.",
+            "B": "Always query all fields to avoid missing data.",
+            "C": "Run queries in loops to improve concurrency.",
+            "D": "Disable governor limits temporarily."
+          },
+          "answer": "A",
+          "explanation": "Performance tips include using selective WHERE clauses that use indexed fields, limiting fields/rows returned, and leveraging skinny tables or custom indexes when needed."
+        },
+        {
+          "id": 30,
+          "question": "When to use SOQL vs SOSL?",
+          "options": {
+            "A": "Use SOQL when you don’t know which object contains data; use SOSL when you know the object.",
+            "B": "Use SOQL for structured queries when you know the object; SOSL for search when you don’t know where data exists (global search).",
+            "C": "Use SOSL only for updating records.",
+            "D": "They are interchangeable; use either randomly."
+          },
+          "answer": "B",
+          "explanation": "Choose SOQL when querying known object(s) with structured filters; choose SOSL for broad text searches across many objects/fields when the object is unknown."
+        }
+      ]
+    }
+  }
+}

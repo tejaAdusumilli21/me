@@ -1,0 +1,369 @@
+{
+ "section": "Deployment & DevOps",
+  "levels": {
+    "level14": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What are the different deployment methods in Salesforce?",
+          "options": {
+            "A": "Change Sets, Ant Migration Tool, Salesforce DX (SFDX), Unmanaged/Managed Packages, Third-party DevOps tools (Gearset, Copado, Flosum).",
+            "B": "Only Change Sets and manual CSV exports.",
+            "C": "Only SFDX scratch orgs and Visualforce pages.",
+            "D": "Only Metadata API via the web UI."
+          },
+          "answer": "A",
+          "explanation": "Salesforce supports multiple deployment approaches: declarative Change Sets, Metadata API/Ant, SFDX and unlocked packages, managed/unmanaged packages, and third-party DevOps solutions."
+        },
+        {
+          "id": 2,
+          "question": "What is a Change Set?",
+          "options": {
+            "A": "A point-and-click deployment tool that allows metadata to be moved between connected Salesforce orgs (e.g., Sandbox → Production).",
+            "B": "A command-line utility for CI/CD only.",
+            "C": "A packaged managed app for AppExchange.",
+            "D": "A type of Apex test class."
+          },
+          "answer": "A",
+          "explanation": "Change Sets let admins select metadata in one connected org and deploy it to another related org without code."
+        },
+        {
+          "id": 3,
+          "question": "Limitations of Change Sets?",
+          "options": {
+            "A": "Only between related orgs; No rollback option; Manual dependency management; Not supported for all metadata types.",
+            "B": "They always rollback automatically on failure.",
+            "C": "They provide full CI/CD git integration out-of-the-box.",
+            "D": "They can deploy only Apex classes but not objects."
+          },
+          "answer": "A",
+          "explanation": "Change Sets are simple but limited: org pairing required, no native rollback, some metadata unsupported, and dependencies may need manual handling."
+        },
+        {
+          "id": 4,
+          "question": "What is Ant Migration Tool?",
+          "options": {
+            "A": "A Java-based command-line tool that uses the Metadata API to deploy metadata between Salesforce orgs.",
+            "B": "A GUI-based change management console.",
+            "C": "A Salesforce hosted CI tool.",
+            "D": "A mobile app for administrators."
+          },
+          "answer": "A",
+          "explanation": "Ant Migration Tool (based on Apache Ant) automates retrieve/deploy operations against the Metadata API via CLI scripts."
+        },
+        {
+          "id": 5,
+          "question": "What is Salesforce DX (SFDX)?",
+          "options": {
+            "A": "A modern CLI-based tool for source-driven development, version control, scratch orgs, and CI/CD automation.",
+            "B": "A replacement for Apex runtime.",
+            "C": "A Salesforce-specific database engine.",
+            "D": "A deprecated IDE plugin only."
+          },
+          "answer": "A",
+          "explanation": "SFDX provides a source-driven development model with CLI commands, scratch orgs, packaging, and integration with VCS/CI systems."
+        },
+        {
+          "id": 6,
+          "question": "What is a Scratch Org in SFDX?",
+          "options": {
+            "A": "A temporary, source-driven Salesforce org used for development and testing, usually with a lifespan of 1–30 days.",
+            "B": "A full copy of production with all data included permanently.",
+            "C": "A sandbox template that cannot be configured.",
+            "D": "A packaged managed app for AppExchange."
+          },
+          "answer": "A",
+          "explanation": "Scratch orgs are ephemeral, configurable orgs used to develop and validate changes in isolation, integrated with source control."
+        },
+        {
+          "id": 7,
+          "question": "Difference between Sandbox and Scratch Org?",
+          "options": {
+            "A": "Sandbox → Persistent copy of production used for testing. Scratch Org → Disposable, customizable org for development.",
+            "B": "They are identical in purpose and lifecycle.",
+            "C": "Scratch Orgs are only for production monitoring.",
+            "D": "Sandboxes are CLI-only while scratch orgs are UI-only."
+          },
+          "answer": "A",
+          "explanation": "Sandboxes are persistent environment copies (various types); scratch orgs are short-lived, source-configured environments for development workflows."
+        },
+        {
+          "id": 8,
+          "question": "What are the types of Sandboxes in Salesforce?",
+          "options": {
+            "A": "Developer, Developer Pro, Partial Copy, Full Copy.",
+            "B": "Scratch, Permanent, Temporary.",
+            "C": "Only Production and Test sandboxes exist.",
+            "D": "Lightweight and Heavyweight sandboxes."
+          },
+          "answer": "A",
+          "explanation": "Salesforce provides Developer, Developer Pro (more storage), Partial Copy (subset of data), and Full Copy (complete production replica) sandboxes."
+        },
+        {
+          "id": 9,
+          "question": "Difference between Developer Sandbox and Full Sandbox?",
+          "options": {
+            "A": "Developer → Limited storage, no production data. Full → Complete copy of production with all data.",
+            "B": "Developer → Contains full data; Full → empty org.",
+            "C": "Developer sandboxes are only for admins; Full sandboxes are for developers only.",
+            "D": "No difference; names are interchangeable."
+          },
+          "answer": "A",
+          "explanation": "Developer sandboxes are small and mainly metadata-only; Full sandboxes replicate production data and metadata for realistic testing."
+        },
+        {
+          "id": 10,
+          "question": "What is Continuous Integration (CI) in Salesforce?",
+          "options": {
+            "A": "A practice of automatically validating, testing, and merging code changes using tools like GitHub Actions, Jenkins, or GitLab CI.",
+            "B": "A manual deployment checklist used by admins.",
+            "C": "An API rate limiting feature.",
+            "D": "A Salesforce UI feature for creating reports."
+          },
+          "answer": "A",
+          "explanation": "CI automates build/validation/test steps each time code is committed to source control to catch regressions early."
+        },
+        {
+          "id": 11,
+          "question": "What is Continuous Deployment (CD)?",
+          "options": {
+            "A": "Automating the process of pushing validated code from version control into Salesforce environments.",
+            "B": "A manual sync of metadata between orgs.",
+            "C": "Only the process of creating packages, not deploying them.",
+            "D": "A deprecated feature replaced by Change Sets."
+          },
+          "answer": "A",
+          "explanation": "CD extends CI by automatically deploying validated changes to target orgs, potentially up to production if policies allow."
+        },
+        {
+          "id": 12,
+          "question": "What is the difference between Continuous Delivery vs Deployment?",
+          "options": {
+            "A": "Continuous Delivery → Automated testing, but deployment may still require approval. Continuous Deployment → Fully automated push to production with no manual intervention.",
+            "B": "They are the exact same concept.",
+            "C": "Delivery is only for metadata, deployment only for data.",
+            "D": "Delivery requires Ant; Deployment requires SFDX."
+          },
+          "answer": "A",
+          "explanation": "Continuous Delivery ensures code is always releasable (manual release decision), while Continuous Deployment automates the release step as well."
+        },
+        {
+          "id": 13,
+          "question": "What are Managed vs Unmanaged Packages?",
+          "options": {
+            "A": "Managed → For AppExchange, version-controlled, locked. Unmanaged → For distribution, open and editable.",
+            "B": "They are identical; only naming differs.",
+            "C": "Unmanaged packages support versioning; managed do not.",
+            "D": "Managed packages are only for Sandbox orgs."
+          },
+          "answer": "A",
+          "explanation": "Managed packages are intended for distributing apps (with upgrade/versioning and IP protection); unmanaged packages deliver metadata as editable source."
+        },
+        {
+          "id": 14,
+          "question": "What are unlocked packages?",
+          "options": {
+            "A": "A packaging option in SFDX that allows modular deployments with versioning for enterprise teams.",
+            "B": "A package type that restricts editing of metadata permanently.",
+            "C": "A legacy packaging format deprecated in all orgs.",
+            "D": "Only used for deploying static resources."
+          },
+          "answer": "A",
+          "explanation": "Unlocked packages provide modular, source-driven packaging for orgs that want upgradeable, editable metadata deployments."
+        },
+        {
+          "id": 15,
+          "question": "What is Git in Salesforce DevOps?",
+          "options": {
+            "A": "A version control system used to track changes to Salesforce metadata and coordinate among developers.",
+            "B": "A database replication engine.",
+            "C": "A Salesforce-specific scripting language.",
+            "D": "A UI-only admin tool for deployments."
+          },
+          "answer": "A",
+          "explanation": "Git (GitHub, GitLab, Bitbucket) is commonly used as the source of truth for Salesforce metadata in modern DevOps workflows."
+        },
+        {
+          "id": 16,
+          "question": "What is the difference between Metadata API and Tooling API?",
+          "options": {
+            "A": "Metadata API → Deploy and retrieve metadata. Tooling API → Manage developer-specific metadata like Apex classes, triggers, debug logs.",
+            "B": "They are the same with different names.",
+            "C": "Tooling API is used for production data loads only.",
+            "D": "Metadata API only works with scratch orgs."
+          },
+          "answer": "A",
+          "explanation": "Metadata API handles broad metadata operations; Tooling API exposes developer-focused objects and tooling capabilities."
+        },
+        {
+          "id": 17,
+          "question": "What is Rollback in Deployment?",
+          "options": {
+            "A": "Undoing a failed deployment; Salesforce doesn’t support native rollback, but metadata can be re-deployed from version control.",
+            "B": "An automatic snapshot restore provided by Change Sets.",
+            "C": "A feature that prevents deployments from ever failing.",
+            "D": "Only available for managed packages."
+          },
+          "answer": "A",
+          "explanation": "Salesforce deployments don't provide an automatic metadata rollback; teams maintain rollback strategies via source control and redeploy."
+        },
+        {
+          "id": 18,
+          "question": "What are Pre-Deployment and Post-Deployment steps?",
+          "options": {
+            "A": "Pre → Disable triggers, validation rules, workflows. Post → Re-enable them and run smoke tests.",
+            "B": "Pre → Only create reports. Post → Only delete logs.",
+            "C": "There are no recommended pre/post steps.",
+            "D": "Pre → Archive data; Post → Migrate users."
+          },
+          "answer": "A",
+          "explanation": "Deployment plans frequently include steps to reduce unintended side effects (disable automations) and post-deploy validation (smoke tests, re-enable rules)."
+        },
+        {
+          "id": 19,
+          "question": "What is a Deployment Validation?",
+          "options": {
+            "A": "Running a deployment simulation with all tests without committing changes to production.",
+            "B": "The process of opening a change set for editing.",
+            "C": "A manual code review performed after deployment.",
+            "D": "An automatic rollback trigger."
+          },
+          "answer": "A",
+          "explanation": "Validation runs simulate a deployment (including tests) to ensure it will succeed before actual commit to production."
+        },
+        {
+          "id": 20,
+          "question": "What is a Deployment Connection?",
+          "options": {
+            "A": "The trust relationship between Salesforce orgs that allows Change Set deployments.",
+            "B": "A VPN link for data integrations.",
+            "C": "A Git repository URL only.",
+            "D": "A local filesystem path used by Ant."
+          },
+          "answer": "A",
+          "explanation": "Change Sets require a deployment connection (org pair/trust) between source and target orgs to transfer metadata."
+        },
+        {
+          "id": 21,
+          "question": "What is a Deployment Plan?",
+          "options": {
+            "A": "A strategy for user onboarding only.",
+            "B": "A step-by-step strategy outlining components, dependencies, pre/post tasks, rollback plan, and testing strategy.",
+            "C": "A template for building Apex classes.",
+            "D": "A Salesforce-managed package manifest."
+          },
+          "answer": "B",
+          "explanation": "A deployment plan documents what to deploy, in what order, and what checks/rollback steps are required to minimize risk."
+        },
+        {
+          "id": 22,
+          "question": "What is Static Code Analysis in Salesforce?",
+          "options": {
+            "A": "Tools like PMD, SonarQube, CodeScan used to enforce best practices before deployment.",
+            "B": "A runtime profiler for Apex CPU time.",
+            "C": "A Salesforce UI feature that highlights unused fields.",
+            "D": "A database integrity checker."
+          },
+          "answer": "A",
+          "explanation": "Static analysis tools scan code for patterns, security issues, and style violations to improve code quality prior to deployment."
+        },
+        {
+          "id": 23,
+          "question": "What is Code Coverage requirement for deployment?",
+          "options": {
+            "A": "50% overall test coverage is sufficient.",
+            "B": "There is no code coverage requirement.",
+            "C": "75% overall test coverage is required to deploy Apex to production.",
+            "D": "100% coverage required for production deployment."
+          },
+          "answer": "C",
+          "explanation": "Salesforce requires at least 75% aggregate Apex test coverage and that each deployed class has some coverage to allow deployment to production."
+        },
+        {
+          "id": 24,
+          "question": "What is Test Level in Deployment?",
+          "options": {
+            "A": "Options: Run Local Tests, Run All Tests, Run Specified Tests. Used to control which test classes execute during deployment.",
+            "B": "A UI theme for the test runner.",
+            "C": "A measure of code complexity only.",
+            "D": "A way to skip validation entirely."
+          },
+          "answer": "A",
+          "explanation": "Deployment tools let you choose which tests to execute during deployment to balance speed and safety (local vs all vs specified)."
+        },
+        {
+          "id": 25,
+          "question": "Difference between \"Run Local Tests\" and \"Run All Tests\"?",
+          "options": {
+            "A": "Local Tests → Runs only org-specific test classes. All Tests → Runs managed package tests too.",
+            "B": "Local Tests → Runs tests only on sandboxes. All Tests → Runs tests only in production.",
+            "C": "They are identical and interchangeable.",
+            "D": "Local Tests includes managed package tests while All Tests excludes them."
+          },
+          "answer": "A",
+          "explanation": "Run Local Tests excludes managed package tests (faster), while Run All Tests includes managed package tests required by some deployment contexts."
+        },
+        {
+          "id": 26,
+          "question": "What is Test Isolation in Salesforce?",
+          "options": {
+            "A": "Test classes run independently with their own data context; test data is not shared across tests.",
+            "B": "All tests share the same data and state.",
+            "C": "Test isolation requires separate orgs per test.",
+            "D": "A deprecated testing mode only for Developer Edition."
+          },
+          "answer": "A",
+          "explanation": "Tests run with isolated contexts (see @isTest and seeAllData=false best practice) so they don't depend on org data and are repeatable."
+        },
+        {
+          "id": 27,
+          "question": "What is Metadata API format vs SFDX format?",
+          "options": {
+            "A": "Metadata API → Folder-based format for Change Sets and Ant. SFDX Format → Source-driven, modular folder structure for version control.",
+            "B": "They are the exact same file layout.",
+            "C": "SFDX format only stores binary data.",
+            "D": "Metadata API format cannot be used with version control."
+          },
+          "answer": "A",
+          "explanation": "SFDX organizes source into a modular package structure optimized for VCS; Metadata API format is the classic metadata folder layout used by Ant/Change Sets."
+        },
+        {
+          "id": 28,
+          "question": "What is the role of a DevOps Center in Salesforce?",
+          "options": {
+            "A": "Salesforce’s own DevOps tool for managing changes with pipelines, Git integration, and deployment tracking.",
+            "B": "A physical room in Salesforce offices.",
+            "C": "A third-party code linter service.",
+            "D": "Only a marketplace for managed packages."
+          },
+          "answer": "A",
+          "explanation": "DevOps Center provides a UI and pipeline for change management integrated with source control to simplify enterprise release processes."
+        },
+        {
+          "id": 29,
+          "question": "What are common DevOps tools used in Salesforce?",
+          "options": {
+            "A": "Copado, Gearset, AutoRABIT, Flosum, Jenkins, GitHub Actions.",
+            "B": "Only Salesforce CLI is used; no third-party tools exist.",
+            "C": "Only Microsoft Office tools for deployments.",
+            "D": "Only the Ant tool is supported officially."
+          },
+          "answer": "A",
+          "explanation": "Organizations use a mix of commercial DevOps platforms and CI tools to automate testing, validation, and deployments for Salesforce."
+        },
+        {
+          "id": 30,
+          "question": "Best practices for Salesforce Deployment?",
+          "options": {
+            "A": "Always deploy from version control; Use SFDX and unlocked packages; Validate deployments before release; Automate CI/CD pipelines; Maintain rollback strategy.",
+            "B": "Deploy directly from production UI only for speed.",
+            "C": "Avoid test automation to reduce deployment time.",
+            "D": "Never use version control for metadata."
+          },
+          "answer": "A",
+          "explanation": "Follow source-driven practices, validate changes, automate CI/CD, and maintain rollback plans to reduce risk and improve release quality."
+        }
+      ]
+    }
+  }
+}

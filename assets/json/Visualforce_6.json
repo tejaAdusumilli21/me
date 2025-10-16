@@ -1,0 +1,190 @@
+{
+ "section": "Visualforce",
+  "levels": {
+    "level6": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Visualforce?",
+          "options": {
+            "A": "A framework for building custom user interfaces in Salesforce using HTML-like markup and server-side Apex controllers.",
+            "B": "A client-side only JavaScript UI library unrelated to Apex.",
+            "C": "A background job scheduler for Salesforce.",
+            "D": "A reporting engine for dashboards."
+          },
+          "answer": "A",
+          "explanation": "Visualforce pages use XML-like <apex:...> tags and can be backed by Apex controllers to build custom UI in Salesforce Classic and Lightning (via Lightning Out)."
+        },
+        {
+          "id": 2,
+          "question": "What is a Visualforce Page?",
+          "options": {
+            "A": "A static HTML file stored outside Salesforce.",
+            "B": "A Lightning Web Component packaged as VF.",
+            "C": "A page created using the <apex:page> tag, rendered on Salesforce UI, often backed by an Apex controller.",
+            "D": "An email template format."
+          },
+          "answer": "C",
+          "explanation": "Visualforce pages are defined with <apex:page> markup and render server-side; they can use standard or custom Apex controllers for logic."
+        },
+        {
+          "id": 3,
+          "question": "What is the difference between Standard Controller and Custom Controller?",
+          "options": {
+            "A": "Standard Controller allows arbitrary Apex code; Custom Controller only uses built-in actions.",
+            "B": "Standard Controller: Uses Salesforce standard objects; Custom Controller: Apex class with full custom logic.",
+            "C": "They are the same and interchangeable.",
+            "D": "Custom Controller is a special type of Visualforce component file."
+          },
+          "answer": "B",
+          "explanation": "Standard controllers provide out-of-the-box actions for a Salesforce object (save, edit, delete). Custom controllers are Apex classes you write to implement bespoke behavior."
+        },
+        {
+          "id": 4,
+          "question": "What is an Extension in Visualforce?",
+          "options": {
+            "A": "A CSS file that extends styles.",
+            "B": "A Visualforce page that runs only in Lightning.",
+            "C": "A layout template for pages.",
+            "D": "An Apex class that extends functionality of a standard controller.",
+            "answer": "D",
+            "explanation": "Controller extensions are Apex classes that ‘extend’ a standard or custom controller to add behavior while still using the original controller features."
+          },
+          "explanation": "Controller extensions let you augment or customize behavior provided by a standard or custom controller without replacing it entirely."
+        },
+        {
+          "id": 5,
+          "question": "Example of a Visualforce page with Standard Controller?",
+          "options": {
+            "A": "<apex:page controller=\"MyController\"> ... </apex:page>",
+            "B": "<apex:page standardController=\"Account\"> <apex:form> <apex:inputField value=\"{!Account.Name}\"/> <apex:commandButton action=\"{!save}\" value=\"Save\"/> </apex:form> </apex:page>",
+            "C": "<apex:page standardController=\"UserSettings\"> ... </apex:page>",
+            "D": "<apex:page components=\"AccountCmp\"> ... </apex:page>"
+          },
+          "answer": "B",
+          "explanation": "The example shows a Visualforce page using a standardController for Account with inputField and commandButton invoking the built-in save action."
+        },
+        {
+          "id": 6,
+          "question": "What is the difference between Controller and Extension?",
+          "options": {
+            "A": "Controller: Server-side caching; Extension: Client-side caching.",
+            "B": "Controller: Primary class linked to VF page; Extension: Adds extra logic to Standard Controller without overriding it.",
+            "C": "There is no difference — they are the same thing.",
+            "D": "Extension is only used for unit tests."
+          },
+          "answer": "C",
+          "explanation": "A controller is the main Apex class (standard or custom) tied to a Visualforce page; an extension is an Apex class that adds functionality to an existing controller (commonly a standard controller) without replacing it."
+        },
+        {
+          "id": 7,
+          "question": "How do you pass parameters in Visualforce?",
+          "options": {
+            "A": "Using <apex:param> or URL parameters (e.g., /apex/MyPage?id=001xx000003DGbY).",
+            "B": "Parameters cannot be passed to Visualforce pages.",
+            "C": "Only via cookies.",
+            "D": "Only via server-side session variables."
+          },
+          "answer": "A",
+          "explanation": "You can pass values using <apex:param> inside components or via the page URL; controllers can retrieve URL parameters using Apex methods."
+        },
+        {
+          "id": 8,
+          "question": "What is the difference between apex:pageBlock and apex:pageBlockTable?",
+          "options": {
+            "A": "pageBlock: A JS library; pageBlockTable: An Apex controller.",
+            "B": "pageBlock: Displays raw HTML; pageBlockTable: Renders charts.",
+            "C": "pageBlock: Creates a styled section; pageBlockTable: Displays data in a table format.",
+            "D": "No difference; they are aliases."
+          },
+          "answer": "D",
+          "explanation": "apex:pageBlock renders a styled block/section (often with title and actions). apex:pageBlockTable is specifically for tabular display of lists, styled inside a pageBlock."
+        },
+        {
+          "id": 9,
+          "question": "How do you call Apex methods from Visualforce?",
+          "options": {
+            "A": "Using JavaScript only; Apex cannot be invoked directly.",
+            "B": "Using action methods in the controller (public PageReference myMethod()) and referencing in action=\"{!myMethod}\".",
+            "C": "By including the Apex class as a static resource.",
+            "D": "By calling REST endpoints only."
+          },
+          "answer": "B",
+          "explanation": "Visualforce uses action methods on controllers (method signatures like public PageReference myMethod()) which can be invoked via commandButton/commandLink or actionFunction."
+        },
+        {
+          "id": 10,
+          "question": "What is apex:actionFunction?",
+          "options": {
+            "A": "Defines a server-side scheduled job.",
+            "B": "A tag that defines a JavaScript function which can call an Apex controller method.",
+            "C": "Replaces apex:form for file uploads.",
+            "D": "Used to define CSS variables."
+          },
+          "answer": "C",
+          "explanation": "apex:actionFunction generates a JS function that triggers a controller action (useful for invoking Apex from client-side scripts)."
+        },
+        {
+          "id": 11,
+          "question": "What is apex:actionPoller?",
+          "options": {
+            "A": "A component to periodically call a controller method at a set interval.",
+            "B": "A real-time push notification service.",
+            "C": "A database polling tool outside Salesforce.",
+            "D": "A deprecated tag with no use."
+          },
+          "answer": "A",
+          "explanation": "apex:actionPoller repeatedly invokes an action (controller method) at a configured interval to refresh page data or status."
+        },
+        {
+          "id": 12,
+          "question": "How can you include a Lightning Component in Visualforce?",
+          "options": {
+            "A": "By using <ltng:require> or Lightning Out (lightning:out) to bootstrap Lightning components in VF.",
+            "B": "Lightning components cannot be used in Visualforce.",
+            "C": "Only by converting the Lightning component to Visualforce markup manually.",
+            "D": "By referencing them as static resources only."
+          },
+          "answer": "A",
+          "explanation": "Lightning Out / ltng:require enable embedding Aura or LWC components inside Visualforce pages by loading the Lightning framework into the VF page."
+        },
+        {
+          "id": 13,
+          "question": "Can Visualforce and LWC communicate?",
+          "options": {
+            "A": "No, they are completely isolated.",
+            "B": "Yes, via Lightning Message Service (LMS) or Lightning Out.",
+            "C": "Only via direct DOM manipulation.",
+            "D": "Only through email messages."
+          },
+          "answer": "B",
+          "explanation": "LMS and Lightning Out provide integration points for communication between Visualforce, Aura, and LWC components in mixed environments."
+        },
+        {
+          "id": 14,
+          "question": "What are Visualforce Remoting methods?",
+          "options": {
+            "A": "JavaScript functions that call Apex methods annotated with @RemoteAction for lightweight client-server calls.",
+            "B": "A way to call external SOAP services only.",
+            "C": "A server-side batch job API.",
+            "D": "A formatting tag for remoting UI elements."
+          },
+          "answer": "C",
+          "explanation": "Visualforce Remoting (@RemoteAction) allows client-side JS to invoke Apex methods asynchronously without full form posts; it's used for fast client-server interactions. (Correct content is under A.)"
+        },
+        {
+          "id": 15,
+          "question": "When should you use Visualforce vs LWC?",
+          "options": {
+            "A": "Visualforce for modern Lightning Experience UIs; LWC for Classic only.",
+            "B": "Visualforce: For Classic pages and legacy apps; LWC: For modern Lightning Experience and new development.",
+            "C": "Use Visualforce only for mobile apps.",
+            "D": "They are interchangeable with no differences."
+          },
+          "answer": "B",
+          "explanation": "Visualforce remains useful for Classic or legacy flows; LWC is the preferred choice for new Lightning development due to performance and standards compliance."
+        }
+      ]
+    }
+  }
+}

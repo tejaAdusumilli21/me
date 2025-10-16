@@ -1,0 +1,489 @@
+{
+  "section": "Salesforce Triggers",
+  "levels": {
+    "level2": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is a Trigger in Salesforce?",
+          "options": {
+            "A": "An Apex script that executes before or after DML operations on Salesforce records.",
+            "B": "A Lightning component event.",
+            "C": "A scheduled job that runs nightly.",
+            "D": "A metadata change listener only in Setup."
+          },
+          "answer": "A",
+          "explanation": "Triggers are Apex code that run in response to DML events (insert/update/delete/undelete). Example: Auto-populating a field when a record is created."
+        },
+        {
+          "id": 2,
+          "question": "What are the two types of Triggers?",
+          "options": {
+            "A": "Synchronous and Asynchronous triggers.",
+            "B": "UI triggers and API triggers.",
+            "C": "Pre-commit and Post-commit triggers.",
+            "D": "Before triggers and After triggers."
+          },
+          "answer": "D",
+          "explanation": "Triggers run either before DML (to validate/modify) or after DML (to perform actions that require record Ids)."
+        },
+        {
+          "id": 3,
+          "question": "What events can a Trigger run on?",
+          "options": {
+            "A": "only before insert and after update.",
+            "B": "before insert, before update, before delete, after insert, after update, after delete, after undelete.",
+            "C": "before save and after save only (no delete).",
+            "D": "only on schedule events."
+          },
+          "answer": "B",
+          "explanation": "Triggers support multiple events including undelete, allowing code to respond at many lifecycle moments."
+        },
+        {
+          "id": 4,
+          "question": "When should you use a Before Trigger?",
+          "options": {
+            "A": "When you need to send emails after records are saved.",
+            "B": "When you must call external web services synchronously.",
+            "C": "When you need to validate or update field values before they are committed.",
+            "D": "When you need to modify related child records after insert."
+          },
+          "answer": "C",
+          "explanation": "Before triggers let you change field values or perform validations prior to commit. Example: Setting BillingCity = ShippingCity."
+        },
+        {
+          "id": 5,
+          "question": "When should you use an After Trigger?",
+          "options": {
+            "A": "To modify the same record's fields before saving.",
+            "B": "When records already exist in the database and you need record IDs or related records.",
+            "C": "To run only validation rules.",
+            "D": "To update UI components in real time."
+          },
+          "answer": "B",
+          "explanation": "After triggers run after the record is saved so IDs are available and you can safely create related child records."
+        },
+        {
+          "id": 6,
+          "question": "What is Bulkification in Triggers?",
+          "options": {
+            "A": "Writing code that uses only single-record operations.",
+            "B": "A technique to increase heap size automatically.",
+            "C": "A tool to parallelize triggers across threads.",
+            "D": "Writing code to handle multiple records in a single transaction instead of one-by-one."
+          },
+          "answer": "D",
+          "explanation": "Bulkified triggers iterate over Trigger.new and perform set-based operations to handle many records efficiently."
+        },
+        {
+          "id": 7,
+          "question": "Why is Bulkification important?",
+          "options": {
+            "A": "To enable more user licenses.",
+            "B": "To avoid hitting governor limits and ensure performance in bulk operations (like Data Loader imports).",
+            "C": "To make triggers run faster in single-record UI edits only.",
+            "D": "To allow calls to external APIs synchronously."
+          },
+          "answer": "B",
+          "explanation": "Bulkified code reduces the number of SOQL/DML operations and resource usage per transaction, preventing governor limit exceptions."
+        },
+        {
+          "id": 8,
+          "question": "Which of the following is an example of a Bulkified Trigger?",
+          "options": {
+            "A": "trigger AccountTrigger on Account (before insert) { for (Account acc : Trigger.new) { if (acc.Industry == null) { acc.Industry = 'Default'; } } }",
+            "B": "trigger Acc on Account (before insert) { insert new Account(Name='A'); }",
+            "C": "trigger T on Account (after insert) { for (Account a : Trigger.new) { Database.insert(a); } }",
+            "D": "trigger T on Account (before insert) { Account a = Trigger.new[0]; a.Name = 'X'; }"
+          },
+          "answer": "A",
+          "explanation": "Example A iterates Trigger.new and modifies records in bulk without performing DML per record — correct bulkified pattern."
+        },
+        {
+          "id": 9,
+          "question": "What are Trigger Context Variables?",
+          "options": {
+            "A": "Custom settings to turn triggers on/off.",
+            "B": "Fields on the User object.",
+            "C": "Built-in variables that provide context like Trigger.new, Trigger.old, Trigger.isInsert.",
+            "D": "Session variables used only in Visualforce."
+          },
+          "answer": "C",
+          "explanation": "Context variables give the trigger information about the records and operation type so logic can branch appropriately."
+        },
+        {
+          "id": 10,
+          "question": "Difference between Trigger.new and Trigger.old?",
+          "options": {
+            "A": "Trigger.new: Old record values; Trigger.old: New record values.",
+            "B": "Trigger.new: New record values in insert/update; Trigger.old: Previous record values in update/delete.",
+            "C": "Trigger.old only exists on insert.",
+            "D": "They are identical structures always."
+          },
+          "answer": "B",
+          "explanation": "Trigger.new holds the new state for inserts/updates; Trigger.old holds prior values for updates/deletes."
+        },
+        {
+          "id": 11,
+          "question": "Can we modify Trigger.old?",
+          "options": {
+            "A": "Yes, in before and after triggers.",
+            "B": "Yes, but only in after triggers.",
+            "C": "Only in test classes.",
+            "D": "No, it’s read-only. Only Trigger.new (in before context) can be modified."
+          },
+          "answer": "D",
+          "explanation": "Trigger.old represents the original records and is read-only. To change values before commit, modify Trigger.new in a before trigger."
+        },
+        {
+          "id": 12,
+          "question": "What is Trigger.newMap and Trigger.oldMap?",
+          "options": {
+            "A": "Maps of record IDs to sObjects for new and old states.",
+            "B": "Lists of old/new records without IDs.",
+            "C": "Deprecated APIs for triggers.",
+            "D": "User-defined maps to store trigger state."
+          },
+          "answer": "A",
+          "explanation": "newMap and oldMap map record Ids to sObjects, useful for efficient lookup and comparisons: Trigger.newMap.get(acc.Id)."
+        },
+        {
+          "id": 13,
+          "question": "Difference between before insert and after insert?",
+          "options": {
+            "A": "There is no difference.",
+            "B": "before insert: Records saved and IDs are available; after insert: Records not committed yet.",
+            "C": "after insert is executed before validation rules.",
+            "D": "before insert: Records not committed yet, can modify values; after insert: Records saved, IDs available, can insert related records."
+          },
+          "answer": "D",
+          "explanation": "Before insert allows modification before commit; after insert runs after commit (IDs available) and is used for post-save actions."
+        },
+        {
+          "id": 14,
+          "question": "What is a Recursive Trigger?",
+          "options": {
+            "A": "A trigger defined in XML.",
+            "B": "A trigger that calls itself directly by name.",
+            "C": "When a trigger’s DML causes the same trigger to run again, creating a potential infinite loop.",
+            "D": "A trigger that runs only on weekends."
+          },
+          "answer": "C",
+          "explanation": "Recursive execution happens when trigger logic performs DML that re-invokes triggers; without protection this can loop indefinitely."
+        },
+        {
+          "id": 15,
+          "question": "How to prevent Recursive Triggers?",
+          "options": {
+            "A": "Use a static Boolean variable or Trigger Handler framework to guard execution.",
+            "B": "Use System.abortJob().",
+            "C": "Log the recursion and continue.",
+            "D": "Use multiple triggers on same object to avoid recursion."
+          },
+          "answer": "A",
+          "explanation": "Common pattern: a static flag (e.g., MyHandler.hasRun) prevents the same logic from executing multiple times in a transaction."
+        },
+        {
+          "id": 16,
+          "question": "What is the Trigger Order of Execution?",
+          "options": {
+            "A": "A random order decided at runtime.",
+            "B": "A sequence Salesforce follows (system validation → before triggers → validation rules → after triggers → workflow → assignment rules → processes → commit).",
+            "C": "Only triggers run; workflows do not.",
+            "D": "Workflow → triggers → validation rules."
+          },
+          "answer": "B",
+          "explanation": "Salesforce follows a defined order of execution including validations, triggers, workflows, processes, and final commit."
+        },
+        {
+          "id": 17,
+          "question": "What is a Trigger Handler Class?",
+          "options": {
+            "A": "A class that directly performs DML without trigger context.",
+            "B": "A built-in Salesforce utility.",
+            "C": "A separate Apex class that contains trigger logic, improving reusability and maintainability.",
+            "D": "A class that only runs in UI."
+          },
+          "answer": "C",
+          "explanation": "Handler classes centralize trigger logic, making code easier to test, reuse, and maintain."
+        },
+        {
+          "id": 18,
+          "question": "Why use Trigger Handler Pattern?",
+          "options": {
+            "A": "To hide trigger logic from admins.",
+            "B": "To automatically generate test data.",
+            "C": "To avoid hardcoding logic inside triggers, improve readability, and enforce best practices.",
+            "D": "To speed up DML operations by bypassing governor limits."
+          },
+          "answer": "C",
+          "explanation": "Handler pattern separates concerns and supports bulkification, testability, and single-trigger-per-object best practice."
+        },
+        {
+          "id": 19,
+          "question": "Example of Trigger Handler Pattern?",
+          "options": {
+            "A": "Using Workflow Rules instead of triggers.",
+            "B": "trigger AccountTrigger on Account (before insert) { // all logic inline here }",
+            "C": "Creating multiple triggers per object for each event.",
+            "D": "trigger AccountTrigger on Account (before insert) { AccountTriggerHandler.handleBeforeInsert(Trigger.new); }"
+          },
+          "answer": "D",
+          "explanation": "Delegating to a handler class (AccountTriggerHandler.handleBeforeInsert) keeps the trigger minimal and logic centralized."
+        },
+        {
+          "id": 20,
+          "question": "What is a Context-Specific Trigger?",
+          "options": {
+            "A": "A trigger written to handle only one specific event (e.g., after delete).",
+            "B": "A scheduled batch job.",
+            "C": "A trigger that is only executable by admins.",
+            "D": "A trigger that runs for every event on an object."
+          },
+          "answer": "A",
+          "explanation": "Context-specific triggers focus on a single event to simplify logic and reduce branching."
+        },
+        {
+          "id": 21,
+          "question": "Can we call a Future method inside a Trigger?",
+          "options": {
+            "A": "No, future methods are not allowed from triggers.",
+            "B": "Only in before triggers.",
+            "C": "Yes, but only from a non-batch context. Useful for callouts or async processing.",
+            "D": "Only if the trigger is running as System Administrator."
+          },
+          "answer": "C",
+          "explanation": "Triggers can invoke @future methods for async operations like callouts; be mindful of limit on future calls per transaction."
+        },
+        {
+          "id": 22,
+          "question": "Can we perform Callouts from Triggers?",
+          "options": {
+            "A": "Yes, directly within the trigger body synchronously.",
+            "B": "Only via Workflow Rules.",
+            "C": "Only if the org has a special permission enabled.",
+            "D": "Not directly. Must use @future or Queueable Apex."
+          },
+          "answer": "D",
+          "explanation": "Triggers cannot perform synchronous callouts; use asynchronous mechanisms (future/Queueable) to make external HTTP calls."
+        },
+        {
+          "id": 23,
+          "question": "Can we use DML inside a Trigger?",
+          "options": {
+            "A": "No, DML is prohibited in triggers.",
+            "B": "Only Database.insert is allowed.",
+            "C": "Yes, but should be bulkified and optimized.",
+            "D": "Only in after undelete triggers."
+          },
+          "answer": "C",
+          "explanation": "DML is allowed but must be used carefully — avoid per-record DML inside loops to prevent governor limits."
+        },
+        {
+          "id": 24,
+          "question": "What happens if a Trigger has unhandled exceptions?",
+          "options": {
+            "A": "Salesforce retries automatically later.",
+            "B": "Only the failing record is rolled back.",
+            "C": "Exceptions are ignored in production.",
+            "D": "The entire DML operation fails and no records are committed."
+          },
+          "answer": "D",
+          "explanation": "Unhandled exceptions roll back the entire transaction, so error handling is important to avoid data loss."
+        },
+        {
+          "id": 25,
+          "question": "Can we write multiple Triggers on the same object?",
+          "options": {
+            "A": "No, Salesforce enforces only one trigger per object.",
+            "B": "Yes, but not recommended. Execution order is unpredictable.",
+            "C": "Yes, and they always run in the order they were created.",
+            "D": "Only if they are in different namespaces."
+          },
+          "answer": "B",
+          "explanation": "Multiple triggers are allowed but ordering across them is not guaranteed, which can complicate logic—single trigger + handler is preferred."
+        },
+        {
+          "id": 26,
+          "question": "Best practice for multiple Triggers on same object?",
+          "options": {
+            "A": "Have only one trigger per object, and delegate logic to handler classes.",
+            "B": "Create one trigger for each field on the object.",
+            "C": "Use multiple triggers to avoid handler classes.",
+            "D": "Use only before triggers to simplify logic."
+          },
+          "answer": "A",
+          "explanation": "Single-trigger-per-object plus handler classes improves maintainability and predictable execution flow."
+        },
+        {
+          "id": 27,
+          "question": "Can we call a Batch class from a Trigger?",
+          "options": {
+            "A": "No, Batch Apex cannot be invoked from triggers.",
+            "B": "Only if Batch implements a special interface.",
+            "C": "Yes, but not recommended unless async processing is required.",
+            "D": "Only in sandbox orgs."
+          },
+          "answer": "C",
+          "explanation": "You can start a Batch from a trigger, but be cautious about limits and transaction context — use only when necessary."
+        },
+        {
+          "id": 28,
+          "question": "What is an After Undelete Trigger?",
+          "options": {
+            "A": "Trigger that fires before delete.",
+            "B": "Trigger that fires when records are restored from Recycle Bin.",
+            "C": "Trigger that runs only for archived records.",
+            "D": "A deprecated trigger type."
+          },
+          "answer": "B",
+          "explanation": "after undelete runs when a record is restored and is useful to re-establish related data or logs."
+        },
+        {
+          "id": 29,
+          "question": "Example use case of After Undelete Trigger?",
+          "options": {
+            "A": "Changing picklist values on the object definition.",
+            "B": "Updating the UI in Lightning Experience.",
+            "C": "Running validation rules.",
+            "D": "Restoring child records or logs when parent record is undeleted."
+          },
+          "answer": "D",
+          "explanation": "After undelete can recreate dependent data or reset statuses that were removed when the parent was deleted."
+        },
+        {
+          "id": 30,
+          "question": "What are Recursive DML Statements?",
+          "options": {
+            "A": "When a DML statement is executed only once per transaction.",
+            "B": "When DML operations are executed asynchronously by Salesforce.",
+            "C": "A feature that optimizes DML throughput.",
+            "D": "When DML in a trigger causes the same trigger to run repeatedly."
+          },
+          "answer": "D",
+          "explanation": "Recursive DML can lead to repeated trigger invocations and must be guarded against using static flags or proper design."
+        },
+        {
+          "id": 31,
+          "question": "Can you access Parent fields in a Trigger?",
+          "options": {
+            "A": "No, parent fields are not accessible from triggers.",
+            "B": "Only in before delete triggers.",
+            "C": "Yes, using relationship queries (SOQL) after querying the parent.",
+            "D": "Only if the parent is a standard object."
+          },
+          "answer": "C",
+          "explanation": "To access parent fields you typically query the related records and then reference parent fields."
+        },
+        {
+          "id": 32,
+          "question": "What is the difference between Trigger.new and Database.insert?",
+          "options": {
+            "A": "They are identical and interchangeable.",
+            "B": "Trigger.new performs DML and Database.insert only returns in-memory records.",
+            "C": "Database.insert is used only in tests.",
+            "D": "Trigger.new gives unsaved records in memory, while Database.insert performs actual DML."
+          },
+          "answer": "D",
+          "explanation": "Trigger.new holds the records being processed; Database.insert executes DML and persists records to the database."
+        },
+        {
+          "id": 33,
+          "question": "Can we write Triggers on Standard Objects?",
+          "options": {
+            "A": "No, triggers are only for custom objects.",
+            "B": "Yes (e.g., Account, Contact, Opportunity).",
+            "C": "Only for Account and Contact.",
+            "D": "Only in Developer Edition orgs."
+          },
+          "answer": "B",
+          "explanation": "Triggers can be written on most standard objects like Account, Contact, Opportunity, subject to platform constraints."
+        },
+        {
+          "id": 34,
+          "question": "Can we write Triggers on Custom Objects?",
+          "options": {
+            "A": "Yes, works the same as standard objects.",
+            "B": "No, custom objects use Process Builder only.",
+            "C": "Only if the custom object is API-enabled.",
+            "D": "Only for managed package objects."
+          },
+          "answer": "A",
+          "explanation": "Custom objects fully support triggers just like standard objects."
+        },
+        {
+          "id": 35,
+          "question": "Can we disable a Trigger temporarily?",
+          "options": {
+            "A": "Yes, there is a direct on/off toggle in Setup.",
+            "B": "Triggers cannot be bypassed ever.",
+            "C": "No direct toggle. Can use custom settings/metadata flags to conditionally bypass.",
+            "D": "Only via the Metadata API during deployment."
+          },
+          "answer": "C",
+          "explanation": "There is no UI toggle; developers implement conditional checks (custom setting/metadata flag) to skip trigger logic when needed."
+        },
+        {
+          "id": 36,
+          "question": "Can we run a Trigger only for a specific profile/user?",
+          "options": {
+            "A": "No, triggers run for all users without checks.",
+            "B": "Only in sandbox environments.",
+            "C": "Yes, by checking UserInfo.getProfileId() or custom logic to filter users.",
+            "D": "Only via permission sets."
+          },
+          "answer": "C",
+          "explanation": "Trigger code can inspect the running user's profile or other attributes and exit early if conditions aren't met."
+        },
+        {
+          "id": 37,
+          "question": "Can a Trigger call another Trigger?",
+          "options": {
+            "A": "Yes, triggers can call each other directly by invoking their names.",
+            "B": "Not directly, but recursive execution can cause re-invocation indirectly via DML.",
+            "C": "Triggers cannot interact at all.",
+            "D": "Only if both triggers are on different objects."
+          },
+          "answer": "B",
+          "explanation": "Triggers don't call each other, but performing DML in one trigger can cause triggers on the same or related objects to execute."
+        },
+        {
+          "id": 38,
+          "question": "How do you handle Mixed DML Error in Triggers?",
+          "options": {
+            "A": "Use @future/Queueable Apex when modifying setup and non-setup objects in same transaction.",
+            "B": "Perform DML on setup and non-setup objects in the same transaction without changes.",
+            "C": "Mixed DML errors cannot be handled.",
+            "D": "Only create separate triggers to avoid the error."
+          },
+          "answer": "A",
+          "explanation": "Mixed DML occurs when setup and non-setup objects are modified together; moving one operation to async avoids the restriction."
+        },
+        {
+          "id": 39,
+          "question": "Can you write Triggers on User object?",
+          "options": {
+            "A": "No, User object is read-only for triggers.",
+            "B": "Only if the User is not an admin.",
+            "C": "Yes, but be cautious of Mixed DML errors.",
+            "D": "Only in Production orgs."
+          },
+          "answer": "C",
+          "explanation": "Triggers on User are supported but often interact with setup objects which can cause Mixed DML; design accordingly."
+        },
+        {
+          "id": 40,
+          "question": "What is the maximum number of records Trigger.new can hold?",
+          "options": {
+            "A": "50 records per trigger execution.",
+            "B": "Up to 200 records per trigger execution (due to batch size).",
+            "C": "Unlimited.",
+            "D": "10,000 records per trigger execution."
+          },
+          "answer": "B",
+          "explanation": "Trigger execution processes up to 200 records per batch (default batch size), so code should be bulk-safe for that volume."
+        }
+      ]
+    }
+  }
+}

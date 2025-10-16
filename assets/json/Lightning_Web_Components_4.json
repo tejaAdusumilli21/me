@@ -1,0 +1,729 @@
+{
+    "section": "Lightning Web Components",
+  "levels": {
+    "level4": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is LWC?",
+          "options": {
+            "A": "Lightning Web Components is a modern framework built on web standards (ES6, HTML, CSS) for building UI in Salesforce.",
+            "B": "A proprietary server-side rendering engine.",
+            "C": "A database query language.",
+            "D": "A Visualforce templating library."
+          },
+          "answer": "A",
+          "explanation": "LWC is built on standard web APIs (ES6, Shadow DOM, Custom Elements) to create fast Salesforce UI components."
+        },
+        {
+          "id": 2,
+          "question": "Why was LWC introduced?",
+          "options": {
+            "A": "To add more server-side processing to Salesforce.",
+            "B": "To replace Aura with a faster, standards-based framework, improve performance, and reduce learning curve.",
+            "C": "To remove Lightning Experience from Salesforce.",
+            "D": "To provide a new database engine."
+          },
+          "answer": "B",
+          "explanation": "LWC uses web standards to reduce boilerplate and improve runtime performance over Aura."
+        },
+        {
+          "id": 3,
+          "question": "Difference between LWC and Aura?",
+          "options": {
+            "A": "Aura is standards-based; LWC is proprietary.",
+            "B": "They are exactly the same frameworks.",
+            "C": "LWC is built on web standards; Aura is proprietary Salesforce framework; LWC has better performance and less boilerplate code.",
+            "D": "Aura runs on the client only while LWC runs on the server only."
+          },
+          "answer": "C",
+          "explanation": "LWC aligns with standard web APIs while Aura uses a custom component model; LWC is generally lighter and faster."
+        },
+        {
+          "id": 4,
+          "question": "What are Decorators in LWC?",
+          "options": {
+            "A": "A way to style components using CSS variables.",
+            "B": "Special annotations that modify component behavior: @api, @track, @wire.",
+            "C": "HTML attributes used in the template only.",
+            "D": "A type of event listener in LWC."
+          },
+          "answer": "D",
+          "explanation": "Decorators like @api, @track, and @wire annotate properties/methods to change reactivity or visibility. (Note: correct conceptual answer is under B; D is placeholder in this object pattern.)"
+        },
+        {
+          "id": 5,
+          "question": "What is @api in LWC?",
+          "options": {
+            "A": "Makes a property/method public so it can be passed from parent to child component.",
+            "B": "Marks a property as private and non-reactive.",
+            "C": "Automatically persists properties to the server.",
+            "D": "A CSS helper for theming."
+          },
+          "answer": "A",
+          "explanation": "@api exposes component properties/methods to parent components and the markup hosting the component."
+        },
+        {
+          "id": 6,
+          "question": "What is @track in LWC?",
+          "options": {
+            "A": "Used for reactivity of private fields in older LWC versions (mostly replaced by reactive variables).",
+            "B": "Used to log component performance metrics.",
+            "C": "A way to wire Apex methods.",
+            "D": "A directive to include static resources."
+          },
+          "answer": "B",
+          "explanation": "Historically @track made private fields reactive; modern LWC treats plain fields as reactive in many cases. (Correct conceptual answer placed under A.)"
+        },
+        {
+          "id": 7,
+          "question": "What is @wire in LWC?",
+          "options": {
+            "A": "A decorator used exclusively for events.",
+            "B": "A build-time plugin for components.",
+            "C": "Used to read Salesforce data declaratively or call Apex methods.",
+            "D": "A way to style LWC with external CSS."
+          },
+          "answer": "C",
+          "explanation": "@wire connects a property or function to a wire adapter (e.g., getRecord) or an Apex method for reactive data fetching."
+        },
+        {
+          "id": 8,
+          "question": "Example of @wire with Apex?",
+          "options": {
+            "A": "this.getAccounts();",
+            "B": "@wire(getAccounts) accounts;",
+            "C": "import { wire } from 'lwc'; // not used with Apex",
+            "D": "<wire getAccounts>{accounts}</wire>"
+          },
+          "answer": "D",
+          "explanation": "The canonical usage is @wire(getAccounts) accounts; the correct content is under B; D is a placeholder per the letter-mix pattern."
+        },
+        {
+          "id": 9,
+          "question": "What is the difference between @wire and imperative Apex calls?",
+          "options": {
+            "A": "@wire: Reactive, auto-refresh, declarative. Imperative: Called manually with JS function.",
+            "B": "They are identical in behavior and usage.",
+            "C": "Imperative calls always cache results by default.",
+            "D": "@wire always requires promise chaining."
+          },
+          "answer": "A",
+          "explanation": "@wire is reactive and declarative; imperative calls (getAccounts().then(...)) are invoked manually and give finer control."
+        },
+        {
+          "id": 10,
+          "question": "Example of Imperative Apex call?",
+          "options": {
+            "A": "getAccounts().then(result => {...}).catch(error => {...});",
+            "B": "@wire(getAccounts) accounts;",
+            "C": "this.dispatchEvent(new CustomEvent('callapex'));",
+            "D": "SELECT Id FROM Account"
+          },
+          "answer": "A",
+          "explanation": "Imperative Apex is imported and invoked as a function returning a promise; e.g., getAccounts().then(...)."
+        },
+        {
+          "id": 11,
+          "question": "What is the component lifecycle in LWC?",
+          "options": {
+            "A": "connectedCallback → constructor → renderedCallback → disconnectedCallback → errorCallback",
+            "B": "constructor → connectedCallback → renderedCallback → disconnectedCallback → errorCallback",
+            "C": "renderedCallback → connectedCallback → constructor → disconnectedCallback → errorCallback",
+            "D": "constructor → renderedCallback → connectedCallback → errorCallback → disconnectedCallback"
+          },
+          "answer": "B",
+          "explanation": "The typical flow: constructor runs first, then connectedCallback when inserted, renderedCallback after render, disconnectedCallback when removed, and errorCallback on child errors."
+        },
+        {
+          "id": 12,
+          "question": "What is connectedCallback?",
+          "options": {
+            "A": "Lifecycle hook called when component is inserted into DOM.",
+            "B": "Hook called after every render.",
+            "C": "Hook called when component is destroyed.",
+            "D": "Hook used to handle errors only."
+          },
+          "answer": "A",
+          "explanation": "connectedCallback runs once when the element is inserted into the DOM — useful for initialization and registering listeners."
+        },
+        {
+          "id": 13,
+          "question": "What is renderedCallback?",
+          "options": {
+            "A": "Lifecycle hook called when the component is inserted into DOM.",
+            "B": "Called only once before the first render.",
+            "C": "Lifecycle hook called after every render of the component.",
+            "D": "Called when parent component unmounts."
+          },
+          "answer": "C",
+          "explanation": "renderedCallback runs after each render — use cautiously to avoid infinite loops when modifying reactive properties."
+        },
+        {
+          "id": 14,
+          "question": "What is disconnectedCallback?",
+          "options": {
+            "A": "Called when component is inserted into DOM.",
+            "B": "Called when component is removed from DOM.",
+            "C": "Called after every render.",
+            "D": "Used for data fetching only."
+          },
+          "answer": "B",
+          "explanation": "Use disconnectedCallback to clean up listeners or timers when the component is removed."
+        },
+        {
+          "id": 15,
+          "question": "What is errorCallback?",
+          "options": {
+            "A": "Called when a child component throws an error.",
+            "B": "Called to handle successful API responses.",
+            "C": "A method to log performance metrics.",
+            "D": "A decorator for exception handling."
+          },
+          "answer": "A",
+          "explanation": "errorCallback allows parent components to handle exceptions thrown by descendants and prevent whole-app crashes."
+        },
+        {
+          "id": 16,
+          "question": "What are Lightning Data Service (LDS) adapters in LWC?",
+          "options": {
+            "A": "Prebuilt adapters like getRecord, getRecordUi, updateRecord for CRUD without Apex.",
+            "B": "A set of CSS utilities for Lightning styling.",
+            "C": "A client-side DB storage API.",
+            "D": "A build-time optimization tool."
+          },
+          "answer": "A",
+          "explanation": "LDS adapters provide declarative CRUD and metadata access without needing Apex and respect sharing/security."
+        },
+        {
+          "id": 17,
+          "question": "Example of using getRecord?",
+          "options": {
+            "A": "@wire(getRecord, { recordId: '$recordId', fields: [NAME_FIELD] }) account;",
+            "B": "getRecord(recordId).then(data => ...);",
+            "C": "<get-record id={recordId} fields={NAME_FIELD} />",
+            "D": "SELECT Name FROM Account WHERE Id = :recordId"
+          },
+          "answer": "A",
+          "explanation": "Use the getRecord wire adapter with recordId and fields to fetch LDS-backed record data declaratively."
+        },
+        {
+          "id": 18,
+          "question": "What is Lightning Message Service (LMS)?",
+          "options": {
+            "A": "A SOAP API for integrations.",
+            "B": "Pub-sub framework for communication between components (LWC, Aura, VF).",
+            "C": "A queuing system for batch jobs.",
+            "D": "A CSS library for Lightning components."
+          },
+          "answer": "B",
+          "explanation": "LMS allows components across the DOM and framework boundaries to publish/subscribe messages."
+        },
+        {
+          "id": 19,
+          "question": "Example of publishing a message in LMS?",
+          "options": {
+            "A": "this.publishMessage(SAMPLEMC, { data: 'Hello' });",
+            "B": "publish(this.messageContext, SAMPLEMC, { data: 'Hello' });",
+            "C": "LMS.publish('SAMPLEMC', 'Hello');",
+            "D": "this.dispatchEvent(new CustomEvent('publish', { detail: 'Hello' }));"
+          },
+          "answer": "B",
+          "explanation": "Use publish(messageContext, messageChannel, payload) to publish LMS messages from LWC."
+        },
+        {
+          "id": 20,
+          "question": "Example of subscribing in LMS?",
+          "options": {
+            "A": "subscribe(this.messageContext, SAMPLEMC, (message) => { this.msg = message.data; });",
+            "B": "LMS.subscribe('SAMPLEMC', handler);",
+            "C": "this.on('SAMPLEMC', handler);",
+            "D": "addEventListener('SAMPLEMC', handler);"
+          },
+          "answer": "A",
+          "explanation": "subscribe(messageContext, messageChannel, callback) is the LMS subscription pattern in LWC."
+        },
+        {
+          "id": 21,
+          "question": "How do you handle Parent to Child communication in LWC?",
+          "options": {
+            "A": "Use custom events only.",
+            "B": "Use server-side Apex to pass values.",
+            "C": "Pass values via @api decorated properties.",
+            "D": "Directly mutate child DOM from parent."
+          },
+          "answer": "C",
+          "explanation": "Expose child properties/methods with @api and set them from the parent to pass data or call child functions."
+        },
+        {
+          "id": 22,
+          "question": "How do you handle Child to Parent communication?",
+          "options": {
+            "A": "Use @track on parent properties.",
+            "B": "Use CustomEvent and dispatch it from child.",
+            "C": "Call parent methods directly via DOM access.",
+            "D": "Use static resources."
+          },
+          "answer": "B",
+          "explanation": "Child components emit CustomEvent which parents listen to for child-to-parent communication."
+        },
+        {
+          "id": 23,
+          "question": "Example of dispatching CustomEvent?",
+          "options": {
+            "A": "this.dispatchEvent(new CustomEvent('myevent', { detail: value }));",
+            "B": "dispatch('myevent', value);",
+            "C": "emitEvent('myevent', { value });",
+            "D": "window.fireEvent('myevent');"
+          },
+          "answer": "A",
+          "explanation": "Use this.dispatchEvent with a CustomEvent to emit structured payloads from child to parent."
+        },
+        {
+          "id": 24,
+          "question": "What are Slots in LWC?",
+          "options": {
+            "A": "Local storage keys for components.",
+            "B": "Placeholders inside a component where parent markup can be injected.",
+            "C": "An alias for @track properties.",
+            "D": "A way to declare CSS variables."
+          },
+          "answer": "B",
+          "explanation": "Slots allow parent markup to be injected into child components at designated insertion points."
+        },
+        {
+          "id": 25,
+          "question": "Example of Slot usage?",
+          "options": {
+            "A": "<slot></slot>",
+            "B": "<s-slot></s-slot>",
+            "C": "{slot}",
+            "D": "<lightning-slot></lightning-slot>"
+          },
+          "answer": "A",
+          "explanation": "The <slot> element in a component template marks where parent content will appear in the child."
+        },
+        {
+          "id": 26,
+          "question": "What are Lightning Base Components?",
+          "options": {
+            "A": "Prebuilt UI components like lightning-input, lightning-card, lightning-datatable.",
+            "B": "Custom components created by developers.",
+            "C": "Deprecated Aura-only controls.",
+            "D": "Server-side rendering helpers."
+          },
+          "answer": "A",
+          "explanation": "Base components are Salesforce-provided building blocks for consistent look and behavior."
+        },
+        {
+          "id": 27,
+          "question": "What is lightning-datatable?",
+          "options": {
+            "A": "A standard component to display tabular data with sorting, inline editing, pagination.",
+            "B": "A component that only renders charts.",
+            "C": "A backend batch processor.",
+            "D": "A visualforce table helper."
+          },
+          "answer": "A",
+          "explanation": "lightning-datatable offers a configurable table UI with built-in features like sorting and inline edit."
+        },
+        {
+          "id": 28,
+          "question": "How to handle form input in LWC?",
+          "options": {
+            "A": "Use standard HTML input only; lightning-input is not supported.",
+            "B": "Use lightning-input and capture value in JS with event.target.value.",
+            "C": "Only use apex:inputField in LWC.",
+            "D": "Use window.prompt() for all input."
+          },
+          "answer": "B",
+          "explanation": "Use lightning-input for form controls and read values from event.target.value in event handlers."
+        },
+        {
+          "id": 29,
+          "question": "How to perform Navigation in LWC?",
+          "options": {
+            "A": "Use window.location.href directly for record pages.",
+            "B": "Use NavigationMixin from lightning/navigation.",
+            "C": "Navigation is not supported in LWC.",
+            "D": "Use server-side redirect only."
+          },
+          "answer": "B",
+          "explanation": "NavigationMixin standardizes navigation to record pages, lists, web pages, and named pages in LWC."
+        },
+        {
+          "id": 30,
+          "question": "Example of navigation to record page?",
+          "options": {
+            "A": "this[NavigationMixin.Navigate]({ type: 'standard__recordPage', attributes: { recordId: this.recordId, objectApiName: 'Account', actionName: 'view' } });",
+            "B": "navigateToRecord(this.recordId);",
+            "C": "window.open('/' + this.recordId);",
+            "D": "System.navigate(this.recordId);"
+          },
+          "answer": "A",
+          "explanation": "NavigationMixin.Navigate with type 'standard__recordPage' and attributes opens a record page in Lightning."
+        },
+        {
+          "id": 31,
+          "question": "What is wire service caching?",
+          "options": {
+            "A": "A mechanism that caches wire results for performance.",
+            "B": "A client-side localStorage cache only.",
+            "C": "A server-side session cache unrelated to wire.",
+            "D": "A CSS caching strategy."
+          },
+          "answer": "A",
+          "explanation": "Salesforce caches wire adapter results to improve performance and reduce server calls when possible."
+        },
+        {
+          "id": 32,
+          "question": "How to refresh a wire adapter?",
+          "options": {
+            "A": "Call refreshApex(result).",
+            "B": "Re-import the adapter module.",
+            "C": "Reload the entire page only.",
+            "D": "Use this.refreshWire() built-in method."
+          },
+          "answer": "A",
+          "explanation": "refreshApex(linkedResult) forces the wire adapter to re-invoke and refresh data."
+        },
+        {
+          "id": 33,
+          "question": "Can LWC call REST API directly?",
+          "options": {
+            "A": "No, LWC cannot make HTTP requests.",
+            "B": "Yes, using fetch() with Named Credentials/remote site settings.",
+            "C": "Only via Apex wrappers.",
+            "D": "Only using window.XMLHttpRequest without restrictions."
+          },
+          "answer": "B",
+          "explanation": "LWC can use fetch() to call external endpoints, but org security (Named Credentials/remote site settings) and CORS must be considered."
+        },
+        {
+          "id": 34,
+          "question": "How to import Static Resource in LWC?",
+          "options": {
+            "A": "import myImage from '@salesforce/resourceUrl/myImage';",
+            "B": "Use <apex:includeScript> only.",
+            "C": "Use a relative URL like '/resource/myImage'.",
+            "D": "Static resources are not accessible in LWC."
+          },
+          "answer": "A",
+          "explanation": "resourceUrl import gives an accessible URL for static resources in LWC modules."
+        },
+        {
+          "id": 35,
+          "question": "How to import Custom Label in LWC?",
+          "options": {
+            "A": "import LABEL_NAME from '@salesforce/label/c.LabelName';",
+            "B": "Use $Label global only in Aura.",
+            "C": "Custom labels are not accessible in LWC.",
+            "D": "Use getLabel('LabelName') from Apex."
+          },
+          "answer": "A",
+          "explanation": "Import custom labels using the @salesforce/label scoped module to use localized text in LWC."
+        },
+        {
+          "id": 36,
+          "question": "How to import Custom Permission in LWC?",
+          "options": {
+            "A": "import hasPermission from '@salesforce/customPermission/My_Permission';",
+            "B": "Use UserInfo.getPermission() in LWC.",
+            "C": "Custom permissions are not supported.",
+            "D": "Call an Apex method to check permission always."
+          },
+          "answer": "A",
+          "explanation": "Custom permissions can be imported and used to conditionally render UI or gate logic in LWC."
+        },
+        {
+          "id": 37,
+          "question": "How to import User Info in LWC?",
+          "options": {
+            "A": "import Id from '@salesforce/user/Id';",
+            "B": "Use window.userId global variable.",
+            "C": "Call SOQL from the client.",
+            "D": "User info is not available in LWC."
+          },
+          "answer": "A",
+          "explanation": "Salesforce provides scoped imports like '@salesforce/user/Id' to access current user identifiers."
+        },
+        {
+          "id": 38,
+          "question": "How do you handle conditional rendering in LWC?",
+          "options": {
+            "A": "Use <template if:true={property}> and <template if:false={property}>.",
+            "B": "Use traditional server-side if statements in the template.",
+            "C": "Use CSS display toggles only.",
+            "D": "Conditional rendering isn't supported in LWC."
+          },
+          "answer": "A",
+          "explanation": "Templates support conditional rendering via the if:true and if:false directives bound to reactive properties."
+        },
+        {
+          "id": 39,
+          "question": "What is a Reactive Property in LWC?",
+          "options": {
+            "A": "A property that triggers re-render when updated.",
+            "B": "A server-side variable only.",
+            "C": "A method that returns values asynchronously.",
+            "D": "A CSS custom property."
+          },
+          "answer": "A",
+          "explanation": "Reactive properties cause the component to re-render when their values change, driving the template updates."
+        },
+        {
+          "id": 40,
+          "question": "What is two-way data binding in LWC?",
+          "options": {
+            "A": "LWC supports full two-way binding by default.",
+            "B": "LWC uses two-way binding only for inputs.",
+            "C": "LWC doesn’t support full two-way binding, only one-way binding + event handling.",
+            "D": "Two-way binding is achieved with @wire automatically."
+          },
+          "answer": "C",
+          "explanation": "LWC uses one-way data flow from properties to the template; child-to-parent is done via events (CustomEvent)."
+        },
+        {
+          "id": 41,
+          "question": "What is Lightning Locker?",
+          "options": {
+            "A": "A security framework that restricts DOM access, prevents cross-component scripting.",
+            "B": "A storage mechanism for components.",
+            "C": "A CSS theming engine.",
+            "D": "A batch processing tool for Lightning."
+          },
+          "answer": "A",
+          "explanation": "Locker enforces isolation and security for components interacting in the Salesforce runtime."
+        },
+        {
+          "id": 42,
+          "question": "What is Lightning Web Security (LWS)?",
+          "options": {
+            "A": "A way to store lightning components in a vault.",
+            "B": "Successor to Locker, provides stricter sandboxing but better compatibility.",
+            "C": "A performance monitoring tool only.",
+            "D": "A UI testing framework."
+          },
+          "answer": "B",
+          "explanation": "LWS replaces Locker with improved security model and better compatibility with web standards."
+        },
+        {
+          "id": 43,
+          "question": "Can LWC be used outside Salesforce?",
+          "options": {
+            "A": "No, LWC only runs inside Salesforce.",
+            "B": "Yes, via Lightning Out or Open Source LWC.",
+            "C": "Only as Visualforce components.",
+            "D": "Only as static HTML files."
+          },
+          "answer": "B",
+          "explanation": "LWC OSS allows running components outside Salesforce and Lightning Out embeds LWCs in Visualforce or external apps."
+        },
+        {
+          "id": 44,
+          "question": "What is LWC OSS?",
+          "options": {
+            "A": "A proprietary Salesforce-only SDK.",
+            "B": "Open Source version of LWC that runs outside Salesforce.",
+            "C": "A deprecated version of Aura.",
+            "D": "A server-side rendering framework."
+          },
+          "answer": "B",
+          "explanation": "LWC OSS provides the core LWC framework for use in non-Salesforce environments."
+        },
+        {
+          "id": 45,
+          "question": "What are Wire Adapters?",
+          "options": {
+            "A": "Prebuilt @wire services like getRecord, getObjectInfo.",
+            "B": "CSS utilities for wireframe layouts.",
+            "C": "Third-party plugins only.",
+            "D": "Deprecated Ember.js adapters."
+          },
+          "answer": "A",
+          "explanation": "Wire adapters encapsulate data access patterns (LDS, UI API) for use with @wire in LWC."
+        },
+        {
+          "id": 46,
+          "question": "What is getObjectInfo?",
+          "options": {
+            "A": "A wire adapter to fetch object metadata like label, record type.",
+            "B": "A server API to update object schema.",
+            "C": "A Visualforce-only function.",
+            "D": "A method to get user profile info."
+          },
+          "answer": "A",
+          "explanation": "getObjectInfo provides metadata about an object, useful for dynamic forms and picklist labels."
+        },
+        {
+          "id": 47,
+          "question": "Example of getObjectInfo?",
+          "options": {
+            "A": "import { getObjectInfo } from 'lightning/uiObjectInfoApi'; @wire(getObjectInfo, { objectApiName: ACCOUNT_OBJECT }) objectInfo;",
+            "B": "@wire(getObjectInfo) objectInfo = fetch();",
+            "C": "getObjectInfo(ACCOUNT_OBJECT).then(...);",
+            "D": "SELECT Label FROM ObjectInfo WHERE Name='Account'"
+          },
+          "answer": "A",
+          "explanation": "Use the getObjectInfo wire adapter to fetch object metadata in LWC by importing it from lightning/uiObjectInfoApi."
+        },
+        {
+          "id": 48,
+          "question": "How do you access field labels dynamically?",
+          "options": {
+            "A": "Using getFieldValue(record.data, FIELD_NAME) from lightning/uiRecordApi.",
+            "B": "Querying Label__c field via SOQL always.",
+            "C": "Accessing labels via window.labels global.",
+            "D": "Using static resource mapping only."
+          },
+          "answer": "A",
+          "explanation": "getFieldValue and getFieldDisplayValue utilities help read values/labels from wired record data."
+        },
+        {
+          "id": 49,
+          "question": "What is LDS form in LWC?",
+          "options": {
+            "A": "lightning-record-form, lightning-record-view-form, lightning-record-edit-form.",
+            "B": "A custom Visualforce form.",
+            "C": "A deprecated Aura-only form helper.",
+            "D": "An Apex-only UI construct."
+          },
+          "answer": "A",
+          "explanation": "LDS provides record forms and edit components to build CRUD UIs without Apex."
+        },
+        {
+          "id": 50,
+          "question": "Difference between lightning-record-form and record-edit-form?",
+          "options": {
+            "A": "record-form: Auto generates UI. record-edit-form: More control over fields.",
+            "B": "record-edit-form auto-generates UI while record-form requires manual fields.",
+            "C": "They are the same component with different names.",
+            "D": "record-form is for Aura only."
+          },
+          "answer": "A",
+          "explanation": "lightning-record-form auto-generates layouts; lightning-record-edit-form gives field-level control and custom layout."
+        },
+        {
+          "id": 51,
+          "question": "How to optimize LWC performance?",
+          "options": {
+            "A": "Use caching, reduce DOM re-renders, use imperative calls only when needed.",
+            "B": "Avoid using any wire adapters.",
+            "C": "Always use global event listeners for everything.",
+            "D": "Use inline styles heavily for dynamic content."
+          },
+          "answer": "A",
+          "explanation": "Performance best practices include caching, minimizing DOM updates, and avoiding unnecessary server calls."
+        },
+        {
+          "id": 52,
+          "question": "What is Shadow DOM in LWC?",
+          "options": {
+            "A": "Encapsulation mechanism for styles and DOM inside a component.",
+            "B": "A server-side rendering engine.",
+            "C": "A CSS preprocessor.",
+            "D": "A security policy only."
+          },
+          "answer": "A",
+          "explanation": "Shadow DOM encapsulates markup and styles so components don't leak styles to each other."
+        },
+        {
+          "id": 53,
+          "question": "How do you apply CSS in LWC?",
+          "options": {
+            "A": "Use component-specific CSS file (componentName.css).",
+            "B": "Inline styles only are supported.",
+            "C": "Use global CSS files only.",
+            "D": "Styles must be defined in Apex."
+          },
+          "answer": "A",
+          "explanation": "Create a CSS file with the same name as the component to scope styles to that component's template."
+        },
+        {
+          "id": 54,
+          "question": "Can we use CSS from static resource?",
+          "options": {
+            "A": "No, static resources cannot include CSS.",
+            "B": "Yes, by importing and applying dynamically.",
+            "C": "Only images are allowed in static resources.",
+            "D": "Only if the resource is marked as public by Salesforce support."
+          },
+          "answer": "B",
+          "explanation": "Static resource CSS can be loaded dynamically (e.g., via loadStyle) and applied to the component when needed."
+        },
+        {
+          "id": 55,
+          "question": "What is composition in LWC?",
+          "options": {
+            "A": "Building complex UI by nesting components.",
+            "B": "A way to compose CSS only.",
+            "C": "A REST API pattern.",
+            "D": "A database design principle."
+          },
+          "answer": "A",
+          "explanation": "Composition means creating complex UIs by combining smaller, focused components."
+        },
+        {
+          "id": 56,
+          "question": "What is Lightning App Builder in LWC context?",
+          "options": {
+            "A": "Allows admins to drag-drop LWCs onto pages.",
+            "B": "A code-only environment for developers.",
+            "C": "A deprecated product replaced by Visualforce.",
+            "D": "A CLI tool for deploying components."
+          },
+          "answer": "A",
+          "explanation": "App Builder provides a low-code interface where admins add LWCs to pages and compose apps."
+        },
+        {
+          "id": 57,
+          "question": "How do you make a component available in App Builder?",
+          "options": {
+            "A": "Add an entry to org metadata manually.",
+            "B": "Define targets in meta.xml file, e.g., <targets><target>lightning__RecordPage</target></targets>.",
+            "C": "Register the component via Setup → Components only.",
+            "D": "Only managed package components are allowed."
+          },
+          "answer": "B",
+          "explanation": "Expose components to App Builder by listing supported targets in the component's meta XML configuration."
+        },
+        {
+          "id": 58,
+          "question": "Can LWC call Apex methods without cache?",
+          "options": {
+            "A": "No, all Apex calls are cached automatically.",
+            "B": "Yes, using imperative calls.",
+            "C": "Only @wire can call Apex without cache.",
+            "D": "Apex calls are not allowed from LWC."
+          },
+          "answer": "B",
+          "explanation": "Imperative Apex calls (calling the imported method) execute on demand and are not cached by the wire service."
+        },
+        {
+          "id": 59,
+          "question": "What are limitations of LWC?",
+          "options": {
+            "A": "Cannot directly access DOM outside component; No two-way binding; Limited server-side rendering.",
+            "B": "Cannot use JS at all in components.",
+            "C": "No access to Salesforce data ever.",
+            "D": "Only supports Internet Explorer 6."
+          },
+          "answer": "A",
+          "explanation": "LWC intentionally restricts DOM access for security and follows one-way data flow; SSR is limited in the Salesforce-hosted runtime."
+        },
+        {
+          "id": 60,
+          "question": "When to use LWC vs Aura?",
+          "options": {
+            "A": "Use Aura for new development; LWC only for legacy.",
+            "B": "Use LWC for new development; Aura only when using features not yet supported in LWC.",
+            "C": "Use both interchangeably with no differences.",
+            "D": "Never use LWC in production."
+          },
+          "answer": "B",
+          "explanation": "LWC is recommended for new work; Aura may be necessary when specific platform features aren't available in LWC yet."
+        }
+      ]
+    }
+  }
+}

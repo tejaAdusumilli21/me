@@ -1,0 +1,489 @@
+{
+  "section": "Asynchronous Apex",
+  "levels": {
+    "level3": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Asynchronous Apex?",
+          "options": {
+            "A": "Apex code that runs in the background, outside the main transaction.",
+            "B": "A synchronous callout executed during DML.",
+            "C": "A library for building Lightning UI.",
+            "D": "A scheduled job only for tests."
+          },
+          "answer": "A",
+          "explanation": "Asynchronous Apex runs outside the foreground transaction for long-running or resource-heavy tasks like callouts, batch processing, or large data updates."
+        },
+        {
+          "id": 2,
+          "question": "Why do we use Asynchronous Apex?",
+          "options": {
+            "A": "To make UI components render faster only.",
+            "B": "To avoid governor limits in synchronous transactions and improve performance.",
+            "C": "To bypass all security checks.",
+            "D": "To deploy metadata automatically."
+          },
+          "answer": "B",
+          "explanation": "Async Apex moves heavy or long-running work out of the main transaction to reduce risk of hitting synchronous governor limits."
+        },
+        {
+          "id": 3,
+          "question": "What are the types of Asynchronous Apex?",
+          "options": {
+            "A": "Visualforce, Lightning, Aura, LWC.",
+            "B": "Triggers, Workflows, Process Builder, Flows.",
+            "C": "Future Methods, Batch Apex, Queueable Apex, Schedulable Apex.",
+            "D": "Custom Settings, Custom Metadata, Static Resources, Labels."
+          },
+          "answer": "C",
+          "explanation": "Salesforce supports future methods, Queueable, Batch, and scheduled (Schedulable) Apex for async processing."
+        },
+        {
+          "id": 4,
+          "question": "What is a Future Method?",
+          "options": {
+            "A": "A batch class stub.",
+            "B": "A scheduled job type for nightly runs only.",
+            "C": "A synchronous method invoked by triggers.",
+            "D": "A method annotated with @future that runs asynchronously."
+          },
+          "answer": "D",
+          "explanation": "@future methods run asynchronously and are commonly used for callouts or post-DML processing that shouldn't block the main transaction."
+        },
+        {
+          "id": 5,
+          "question": "Which of these is a correct syntax snippet for a future method?",
+          "options": {
+            "A": "@future(callout=true) public static void updateContact(String name) { /* logic */ }",
+            "B": "public void updateContact(String name) { /* logic */ }",
+            "C": "@Schedulable public static void updateContact() { /* logic */ }",
+            "D": "global class MyFuture { public void updateContact(String name) {} }"
+          },
+          "answer": "A",
+          "explanation": "Future methods use @future (optionally callout=true) and must be static and void-returning."
+        },
+        {
+          "id": 6,
+          "question": "Limitations of Future Methods include:",
+          "options": {
+            "A": "Unlimited callouts and unlimited parallelism.",
+            "B": "Cannot return values; Max 50 calls per transaction; Cannot chain future methods.",
+            "C": "They always run synchronously.",
+            "D": "Can return complex objects and chain jobs unlimitedly."
+          },
+          "answer": "B",
+          "explanation": "Future methods cannot return values, are limited to a certain number per transaction, and cannot be chained."
+        },
+        {
+          "id": 7,
+          "question": "What is Queueable Apex?",
+          "options": {
+            "A": "A UI component in Lightning.",
+            "B": "An async job type similar to future methods but supports complex data types and chaining.",
+            "C": "A scheduled batch job only.",
+            "D": "A synchronous replacement for triggers."
+          },
+          "answer": "B",
+          "explanation": "Queueable Apex (implementing Queueable) supports richer parameters, chaining, and provides a job ID for tracking."
+        },
+        {
+          "id": 8,
+          "question": "Choose the correct Queueable class structure:",
+          "options": {
+            "A": "public queue MyQueueable { void run() {} }",
+            "B": "public class MyQueueable implements Schedulable { public void execute(SchedulableContext sc) {} }",
+            "C": "global class MyQueueable implements Database.Batchable<sObject> { }",
+            "D": "public class MyQueueable implements Queueable { public void execute(QueueableContext context) { /* logic */ } }"
+          },
+          "answer": "D",
+          "explanation": "Queueable classes implement the Queueable interface and define an execute(QueueableContext) method."
+        },
+        {
+          "id": 9,
+          "question": "Benefits of Queueable Apex over Future methods include:",
+          "options": {
+            "A": "No limits apply to Queueable Apex.",
+            "B": "Queueable can only run once per org.",
+            "C": "Queueable methods must return boolean.",
+            "D": "Can chain jobs, pass complex objects, and provides job ID for monitoring."
+          },
+          "answer": "D",
+          "explanation": "Queueable supports chaining, complex types, and returns an ID to track the job status."
+        },
+        {
+          "id": 10,
+          "question": "Can we call a Future method inside a Queueable class?",
+          "options": {
+            "A": "Yes, and it is the recommended pattern.",
+            "B": "No, chaining future methods is not allowed but you can call future from Queueable if limits permit.",
+            "C": "Only if the Queueable is executed synchronously.",
+            "D": "No, it is not permitted to call future methods from Queueable."
+          },
+          "answer": "D",
+          "explanation": "Future methods chaining rules are strict; it's best to use queueable chaining rather than calling future from queueable."
+        },
+        {
+          "id": 11,
+          "question": "What is Batch Apex?",
+          "options": {
+            "A": "A mechanism to run small synchronous tasks only.",
+            "B": "Apex designed to process large volumes of data asynchronously in chunks.",
+            "C": "A UI refresher for lists.",
+            "D": "A way to schedule Apex but not process records."
+          },
+          "answer": "B",
+          "explanation": "Batch Apex processes large datasets in manageable chunks (batches) and is suitable for millions of records."
+        },
+        {
+          "id": 12,
+          "question": "Which is the correct basic Batch Apex skeleton?",
+          "options": {
+            "A": "public class MyBatch { public void run() {} }",
+            "B": "global batch MyBatch implements Schedulable { }",
+            "C": "public class MyBatch implements Queueable { public void execute(QueueableContext qc) {} }",
+            "D": "global class MyBatch implements Database.Batchable<sObject> { global Database.QueryLocator start(Database.BatchableContext bc) { return Database.getQueryLocator('SELECT Id FROM Account'); } global void execute(Database.BatchableContext bc, List<Account> scope) { /* process */ } global void finish(Database.BatchableContext bc) { /* post-processing */ } }"
+          },
+          "answer": "D",
+          "explanation": "Batch classes implement Database.Batchable and provide start, execute, and finish methods."
+        },
+        {
+          "id": 13,
+          "question": "How to run a Batch Apex job programmatically?",
+          "options": {
+            "A": "System.scheduleBatch(new MyBatch());",
+            "B": "QueueableJob.enqueue(new MyBatch());",
+            "C": "System.runBatch(MyBatch.class);",
+            "D": "Database.executeBatch(new MyBatch(), 200);"
+          },
+          "answer": "D",
+          "explanation": "Database.executeBatch(jobInstance, batchSize) starts a batch job; batch size often defaults to 200 if omitted."
+        },
+        {
+          "id": 14,
+          "question": "What is the default batch size for Batch Apex?",
+          "options": {
+            "A": "50 records per execution.",
+            "B": "10 records per execution.",
+            "C": "1000 records per execution.",
+            "D": "200 records per execution."
+          },
+          "answer": "D",
+          "explanation": "The default batch size is 200 records per execute() invocation unless overridden."
+        },
+        {
+          "id": 15,
+          "question": "What is the maximum batch size you can specify for Batch Apex?",
+          "options": {
+            "A": "50 records.",
+            "B": "10,000 records.",
+            "C": "There is no limit.",
+            "D": "2000 records per execution."
+          },
+          "answer": "D",
+          "explanation": "Salesforce allows batch sizes up to 2,000 records per execute() call, but smaller sizes are common for limits handling."
+        },
+        {
+          "id": 16,
+          "question": "Can we call Future methods in Batch Apex execute()?",
+          "options": {
+            "A": "Yes, unlimited future calls are allowed inside execute().",
+            "B": "Yes, but only in finish().",
+            "C": "No, but you can call Queueable Apex instead from execute().",
+            "D": "No, neither future nor queueable can be called."
+          },
+          "answer": "C",
+          "explanation": "Best practice is to use Queueable from batch execute when async chaining is required; future has restrictions and is not ideal inside batch."
+        },
+        {
+          "id": 17,
+          "question": "What is the maximum number of Batch jobs that can be queued or active at one time?",
+          "options": {
+            "A": "1 active/queued job.",
+            "B": "50 active/queued jobs.",
+            "C": "Unlimited.",
+            "D": "5 active/queued batch jobs at a time."
+          },
+          "answer": "D",
+          "explanation": "By default, an org can have up to 5 active or queued batch jobs at the same time."
+        },
+        {
+          "id": 18,
+          "question": "What is Database.Stateful in Batch Apex used for?",
+          "options": {
+            "A": "To enable database transactions inside execute().",
+            "B": "To schedule batch jobs automatically.",
+            "C": "To encrypt batch job data.",
+            "D": "Interface that maintains variable state across batch executions."
+          },
+          "answer": "D",
+          "explanation": "Implementing Database.Stateful preserves instance member variable values between execute() calls, useful for accumulating totals."
+        },
+        {
+          "id": 19,
+          "question": "Can Batch Apex perform callouts?",
+          "options": {
+            "A": "No, callouts are never allowed in Batch Apex.",
+            "B": "Only in the start() method.",
+            "C": "Only in sandbox environments.",
+            "D": "Yes, by implementing Database.AllowsCallouts."
+          },
+          "answer": "D",
+          "explanation": "Batch classes that implement Database.AllowsCallouts can make external HTTP callouts during execution."
+        },
+        {
+          "id": 20,
+          "question": "Can Batch Apex be scheduled to run at specific times?",
+          "options": {
+            "A": "Only via external cron systems.",
+            "B": "Yes, via Schedulable Apex or System.scheduleBatch.",
+            "C": "No, Batch jobs cannot be scheduled.",
+            "D": "Only during deployments."
+          },
+          "answer": "B",
+          "explanation": "Batch Apex can be scheduled by wrapping execution in a Schedulable class or using System.scheduleBatch."
+        },
+        {
+          "id": 21,
+          "question": "What is Schedulable Apex?",
+          "options": {
+            "A": "Apex that runs at a specific time/interval using CRON expressions.",
+            "B": "A mechanism to process large data sets in parallel.",
+            "C": "A replacement for Queueable Apex.",
+            "D": "A synchronous API for webhooks."
+          },
+          "answer": "A",
+          "explanation": "Schedulable Apex runs on a schedule defined by a CRON expression to perform periodic tasks like nightly cleanups."
+        },
+        {
+          "id": 22,
+          "question": "Which of the following is a Schedulable Apex structure?",
+          "options": {
+            "A": "public class MyScheduler implements Queueable { public void execute(QueueableContext qc) {} }",
+            "B": "global class MyScheduler implements Schedulable { global void execute(SchedulableContext sc) { System.debug('Scheduled job running'); } }",
+            "C": "global class MyScheduler implements Database.Batchable { }",
+            "D": "@future public static void myJob() {}"
+          },
+          "answer": "B",
+          "explanation": "Schedulable classes implement Schedulable and define an execute(SchedulableContext) method."
+        },
+        {
+          "id": 23,
+          "question": "How do you schedule an Apex job programmatically with a CRON expression?",
+          "options": {
+            "A": "System.run('DailyJob', cron, new MyScheduler());",
+            "B": "Database.scheduleBatch(new MyScheduler());",
+            "C": "Queueable.schedule(new MyScheduler(), cron);",
+            "D": "System.schedule('DailyJob', cron, new MyScheduler());"
+          },
+          "answer": "D",
+          "explanation": "System.schedule(jobName, cronExpression, schedulableInstance) registers a scheduled Apex job."
+        },
+        {
+          "id": 24,
+          "question": "What does a CRON expression in Salesforce define?",
+          "options": {
+            "A": "A permission set for scheduled jobs.",
+            "B": "The sequence of batch chunk sizes.",
+            "C": "A log filter for asynchronous jobs.",
+            "D": "String that defines schedule timing (seconds, minutes, hours, day, month, weekday, optional year)."
+          },
+          "answer": "D",
+          "explanation": "CRON expressions specify scheduled execution times using defined fields (sec min hour day month weekday [year])."
+        },
+        {
+          "id": 25,
+          "question": "Can you schedule an Apex job from the Salesforce UI?",
+          "options": {
+            "A": "No, scheduling must be done only via code.",
+            "B": "Yes, via Setup → Apex Classes → Schedule Apex.",
+            "C": "Only via the Metadata API.",
+            "D": "Only in Developer Console."
+          },
+          "answer": "B",
+          "explanation": "Salesforce Setup has a Schedule Apex UI to register Schedulable classes for execution."
+        },
+        {
+          "id": 26,
+          "question": "What is the limit for the number of scheduled Apex jobs per org by default?",
+          "options": {
+            "A": "10 scheduled jobs per org.",
+            "B": "Unlimited scheduled jobs.",
+            "C": "1 scheduled job per developer.",
+            "D": "100 scheduled jobs per org."
+          },
+          "answer": "D",
+          "explanation": "An org can have up to 100 scheduled Apex jobs by default; this may vary with Salesforce editions or settings."
+        },
+        {
+          "id": 27,
+          "question": "Can Queueable jobs be chained?",
+          "options": {
+            "A": "No, Queueable does not support chaining.",
+            "B": "Yes, but only one additional job per execution.",
+            "C": "Yes, unlimited chaining is allowed.",
+            "D": "Only if jobs are batchable."
+          },
+          "answer": "B",
+          "explanation": "Queueable supports chaining by enqueueing another queueable job from execute(), but best practice limits chaining depth and counts."
+        },
+        {
+          "id": 28,
+          "question": "What is a primary difference between Queueable and Batch Apex?",
+          "options": {
+            "A": "Queueable cannot be monitored.",
+            "B": "Queueable is for large datasets; Batch is for small tasks.",
+            "C": "They are functionally identical.",
+            "D": "Queueable: Small async tasks, chainable. Batch: Large datasets, divided into chunks."
+          },
+          "answer": "D",
+          "explanation": "Queueable is ideal for medium/small async tasks and supports chaining; Batch is designed to handle large volumes in chunks."
+        },
+        {
+          "id": 29,
+          "question": "Can Queueable Apex be scheduled directly?",
+          "options": {
+            "A": "No, never.",
+            "B": "Only via UI configuration.",
+            "C": "Only when enqueued via Database.executeBatch.",
+            "D": "Yes, by calling it inside a Schedulable class."
+          },
+          "answer": "D",
+          "explanation": "You can schedule a Schedulable that enqueues a Queueable job to run at a specific time."
+        },
+        {
+          "id": 30,
+          "question": "What is a One-Off Batch Execution?",
+          "options": {
+            "A": "A batch that is scheduled daily.",
+            "B": "A batch that only runs in production.",
+            "C": "A batch job that runs indefinitely.",
+            "D": "Running a batch once using Database.executeBatch."
+          },
+          "answer": "D",
+          "explanation": "One-off batch execution means programmatically invoking a batch job to run immediately via Database.executeBatch."
+        },
+        {
+          "id": 31,
+          "question": "Can Batch Apex run indefinitely?",
+          "options": {
+            "A": "Yes, it can run forever until manually stopped.",
+            "B": "Only if the org has unlimited processing time.",
+            "C": "Batch jobs cannot run longer than 1 hour.",
+            "D": "No, limited to around 5 days execution."
+          },
+          "answer": "D",
+          "explanation": "Batch jobs have execution time limitations and cannot run indefinitely; very long jobs may be interrupted (practically limited to days)."
+        },
+        {
+          "id": 32,
+          "question": "What is the maximum CPU time for a Queueable job?",
+          "options": {
+            "A": "Up to 60 seconds CPU time.",
+            "B": "No CPU limit.",
+            "C": "5 seconds only.",
+            "D": "Up to 10 minutes."
+          },
+          "answer": "A",
+          "explanation": "Queueable jobs are subject to async execution limits, including CPU time which is typically up to 60 seconds."
+        },
+        {
+          "id": 33,
+          "question": "Can we use Database.Savepoint in Async Apex?",
+          "options": {
+            "A": "Yes, savepoints work in all async contexts.",
+            "B": "Only in Queueable execute().",
+            "C": "Only in Batch finish().",
+            "D": "No, savepoints and rollbacks are not supported in async jobs."
+          },
+          "answer": "D",
+          "explanation": "Savepoints and Database.rollback are not supported in asynchronous contexts like future, queueable, or batch execute."
+        },
+        {
+          "id": 34,
+          "question": "How can you monitor asynchronous Apex jobs?",
+          "options": {
+            "A": "Only using debug logs.",
+            "B": "There is no monitoring available.",
+            "C": "By checking user activity history.",
+            "D": "Via Setup → Apex Jobs or querying the AsyncApexJob object."
+          },
+          "answer": "D",
+          "explanation": "Async jobs are visible in Apex Jobs in Setup and programmatically via the AsyncApexJob object for status/errors."
+        },
+        {
+          "id": 35,
+          "question": "What is the AsyncApexJob object?",
+          "options": {
+            "A": "A custom object used by some packages.",
+            "B": "A deprecated way to run async code.",
+            "C": "A UI page listing jobs.",
+            "D": "Standard object that stores info about async jobs (status, completion, errors)."
+          },
+          "answer": "D",
+          "explanation": "AsyncApexJob stores metadata and status about asynchronous executions such as batch, queueable, and future jobs."
+        },
+        {
+          "id": 36,
+          "question": "How should you handle errors inside Batch Apex execute()?",
+          "options": {
+            "A": "Let exceptions bubble so the entire job stops without logging.",
+            "B": "Use try-catch inside execute() and log failed records separately.",
+            "C": "Rely on automatic retries without capturing context.",
+            "D": "Throw System.abortJob() for each failed record."
+          },
+          "answer": "B",
+          "explanation": "Use try-catch to handle per-record failures and record failure details for later inspection instead of failing entire batches."
+        },
+        {
+          "id": 37,
+          "question": "Can you chain Batch Apex jobs?",
+          "options": {
+            "A": "No, batch jobs cannot invoke other batch jobs.",
+            "B": "Only by using future methods.",
+            "C": "Only in managed packages.",
+            "D": "Yes, by calling another batch inside the finish() method."
+          },
+          "answer": "D",
+          "explanation": "Chaining batches is commonly done by starting another batch from the finish() method of the previous batch."
+        },
+        {
+          "id": 38,
+          "question": "Difference between Future and Batch Apex?",
+          "options": {
+            "A": "They are identical in behavior.",
+            "B": "Future is used only for scheduling.",
+            "C": "Batch cannot process records.",
+            "D": "Future: Lightweight, simple async tasks. Batch: Heavy, large data processing in chunks."
+          },
+          "answer": "D",
+          "explanation": "Future is for small async tasks; Batch is designed for large-volume processing with chunking and state management."
+        },
+        {
+          "id": 39,
+          "question": "Difference between Batch and Scheduled Apex?",
+          "options": {
+            "A": "They are the same thing.",
+            "B": "Scheduled Apex always runs synchronously.",
+            "C": "Batch Apex only runs in UI.",
+            "D": "Batch: Processes large data. Scheduled: Runs jobs at specific times (can trigger batch inside)."
+          },
+          "answer": "D",
+          "explanation": "Batch processes data in chunks; scheduled Apex triggers logic (including starting a batch) at scheduled intervals."
+        },
+        {
+          "id": 40,
+          "question": "When would you choose Queueable Apex over Batch Apex?",
+          "options": {
+            "A": "When processing millions of records only.",
+            "B": "When you need unlimited parallelism.",
+            "C": "When you need to run code in the user’s browser.",
+            "D": "For medium-volume tasks needing chaining or complex parameter passing that don’t require chunking."
+          },
+          "answer": "D",
+          "explanation": "Queueable is ideal for medium-sized async work requiring complex parameters and chaining; Batch is better for very large datasets that need chunking."
+        }
+      ]
+    }
+  }
+}

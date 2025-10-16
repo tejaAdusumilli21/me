@@ -1,0 +1,369 @@
+{
+ "section": "OmniStudio",
+  "levels": {
+    "level9": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is OmniStudio in Salesforce?",
+          "options": {
+            "A": "A low-level Apex framework for batch processing.",
+            "B": "A data warehousing product outside Salesforce.",
+            "C": "A digital engagement suite that allows developers and admins to build guided interactions, integrations, and UI without heavy coding.",
+            "D": "A Visualforce-only UI toolkit."
+          },
+          "answer": "C",
+          "explanation": "OmniStudio is a suite (OmniScripts, DataRaptors, FlexCards, Integration Procedures, etc.) for building guided, declarative interactions and integrations with minimal custom code."
+        },
+        {
+          "id": 2,
+          "question": "What are the main components of OmniStudio?",
+          "options": {
+            "A": "Triggers, Batch Jobs, Queueables.",
+            "B": "Apex Controllers, Visualforce, Static Resources.",
+            "C": "OmniScripts, DataRaptors, Integration Procedures, FlexCards, and Expression Sets.",
+            "D": "Reports, Dashboards, and List Views."
+          },
+          "answer": "A",
+          "explanation": "Main OmniStudio components include OmniScripts, DataRaptors, Integration Procedures, FlexCards and Expression Sets (correct content is under C)."
+        },
+        {
+          "id": 3,
+          "question": "What is an OmniScript?",
+          "options": {
+            "A": "A server-side batch for heavy ETL.",
+            "B": "A metadata-only object used for permissions.",
+            "C": "A UI widget to render charts.",
+            "D": "A guided flow that walks users step-by-step through business processes (like wizards)."
+          },
+          "answer": "D",
+          "explanation": "OmniScript is a step-by-step, declarative guided interaction for users to complete processes such as onboarding or claims."
+        },
+        {
+          "id": 4,
+          "question": "What are the advantages of OmniScripts?",
+          "options": {
+            "A": "They require custom LWC for every step.",
+            "B": "They are only usable in Classic UI.",
+            "C": "Declarative, reusable, configurable, reduces need for custom LWC/Apex.",
+            "D": "They always require middleware for simple tasks."
+          },
+          "answer": "B",
+          "explanation": "OmniScripts are declarative, reusable, and configurable which reduces custom development effort (correct content is under C)."
+        },
+        {
+          "id": 5,
+          "question": "What is a DataRaptor?",
+          "options": {
+            "A": "A Salesforce connector for Kafka streams.",
+            "B": "A UI layout manager.",
+            "C": "A mapping tool to extract, transform, and load (ETL) Salesforce data.",
+            "D": "A type of Apex trigger."
+          },
+          "answer": "C",
+          "explanation": "DataRaptors are declarative ETL-like tools in OmniStudio for extracting, transforming, and loading Salesforce data without custom Apex."
+        },
+        {
+          "id": 6,
+          "question": "Types of DataRaptors?",
+          "options": {
+            "A": "Extract, Load, Transform, Turbo Extract.",
+            "B": "Inbound, Outbound, Middleware, Connector.",
+            "C": "Visualforce, Aura, LWC.",
+            "D": "SOAP, REST, Bulk."
+          },
+          "answer": "D",
+          "explanation": "Common DataRaptor types are Extract (fetch), Load (insert/update), Transform (format/manipulate), and Turbo Extract for high-performance reads (correct content under A)."
+        },
+        {
+          "id": 7,
+          "question": "What is an Integration Procedure?",
+          "options": {
+            "A": "A client-side styling file for FlexCards.",
+            "B": "A server-side process to perform multiple actions (DataRaptors, Apex, HTTP callouts) in one call.",
+            "C": "A scheduling mechanism limited to nightly runs.",
+            "D": "An Apex class only used for authentication."
+          },
+          "answer": "B",
+          "explanation": "Integration Procedures execute server-side chains of actions (DataRaptors, HTTP actions, Apex, etc.) to reduce client-server roundtrips."
+        },
+        {
+          "id": 8,
+          "question": "Why use Integration Procedures?",
+          "options": {
+            "A": "To ensure every client makes multiple roundtrips.",
+            "B": "To replace Salesforce Connect completely.",
+            "C": "To optimize performance by reducing multiple client-server calls into one.",
+            "D": "They are required for creating FlexCards."
+          },
+          "answer": "C",
+          "explanation": "Integration Procedures bundle multiple operations into a single server call to improve performance and reduce latency."
+        },
+        {
+          "id": 9,
+          "question": "What is a FlexCard?",
+          "options": {
+            "A": "A server-side batch job.",
+            "B": "A UI component that displays Salesforce/external data in a customizable card layout.",
+            "C": "A type of DataRaptor for updates only.",
+            "D": "A formula field type."
+          },
+          "answer": "B",
+          "explanation": "FlexCards provide configurable card-based UI to surface data from Salesforce or external systems in a concise layout."
+        },
+        {
+          "id": 10,
+          "question": "Use cases of FlexCards?",
+          "options": {
+            "A": "Only for scheduling jobs.",
+            "B": "Display account summary, case history, policy details, billing information.",
+            "C": "Only for Apex unit testing.",
+            "D": "Replace all Lightning Base Components."
+          },
+          "answer": "B",
+          "explanation": "FlexCards are ideal for presenting summaries like account overviews, case lists, policy info, and billing data in compact cards."
+        },
+        {
+          "id": 11,
+          "question": "What is the difference between FlexCards and OmniScripts?",
+          "options": {
+            "A": "FlexCard → Guided user inputs; OmniScript → Data visualization only.",
+            "B": "They are the same component with different names.",
+            "C": "FlexCard → Display data; OmniScript → Guided process for user input.",
+            "D": "OmniScript is used only for integrations; FlexCard only for ETL."
+          },
+          "answer": "C",
+          "explanation": "FlexCards are primarily for displaying data; OmniScripts orchestrate guided interactions and user input flows."
+        },
+        {
+          "id": 12,
+          "question": "Can FlexCards be embedded in LWC?",
+          "options": {
+            "A": "No — FlexCards run only in standalone pages.",
+            "B": "Yes, FlexCards can be deployed inside LWCs, Communities, or as standalone.",
+            "C": "Only in Visualforce pages using iframe.",
+            "D": "Only via Apex controllers."
+          },
+          "answer": "B",
+          "explanation": "FlexCards are designed to be embedded in various host environments including LWCs, Experience Cloud pages, or standalone deployments."
+        },
+        {
+          "id": 13,
+          "question": "What is Expression Set in OmniStudio?",
+          "options": {
+            "A": "A set of CSS variables for FlexCards.",
+            "B": "A scheduler for Integration Procedures.",
+            "C": "A configuration to evaluate conditions and return true/false, often used for branching logic.",
+            "D": "An external data connector."
+          },
+          "answer": "C",
+          "explanation": "Expression Sets let designers define conditional logic (evaluations) used for branching, UI visibility, or decisioning in OmniStudio assets."
+        },
+        {
+          "id": 14,
+          "question": "How do you pass data between OmniScript and Integration Procedure?",
+          "options": {
+            "A": "Only via Apex global variables.",
+            "B": "Using URL query params only.",
+            "C": "Using XML files stored in static resources.",
+            "D": "Using JSON data structures."
+          },
+          "answer": "D",
+          "explanation": "OmniScripts and Integration Procedures exchange data as JSON payloads; JSON is the canonical data format in OmniStudio."
+        },
+        {
+          "id": 15,
+          "question": "How do you optimize DataRaptor performance?",
+          "options": {
+            "A": "Use Turbo Extract, filter at query level, minimize fields, avoid nested structures.",
+            "B": "Always extract all fields to reduce future queries.",
+            "C": "Run DataRaptors only in the browser.",
+            "D": "Use one giant DataRaptor for all processes."
+          },
+          "answer": "A",
+          "explanation": "Performance tips include using Turbo Extract for high-performance reads, selecting only required fields, and applying filters to reduce payloads."
+        },
+        {
+          "id": 16,
+          "question": "What are OmniStudio Actions?",
+          "options": {
+            "A": "Prebuilt functionalities like navigate, save, post message, call integration.",
+            "B": "Apex triggers executed by OmniScripts.",
+            "C": "Only CSS animation hooks.",
+            "D": "A type of user permission."
+          },
+          "answer": "A",
+          "explanation": "OmniStudio Actions are ready-made operations (navigate, save, call Integration Procedures, post messages) used inside OmniScripts and FlexCards."
+        },
+        {
+          "id": 17,
+          "question": "How does versioning work in OmniStudio?",
+          "options": {
+            "A": "Only the latest asset is ever retained; no versions.",
+            "B": "Each OmniScript, FlexCard, or DataRaptor can have multiple versions, ensuring safe changes without affecting production.",
+            "C": "Versions are automatically deleted after 24 hours.",
+            "D": "Only Integration Procedures support versions."
+          },
+          "answer": "B",
+          "explanation": "OmniStudio assets support versioning so you can create and test new versions without impacting currently published versions."
+        },
+        {
+          "id": 18,
+          "question": "What is OmniStudio Designer?",
+          "options": {
+            "A": "A CLI tool for generating Apex classes.",
+            "B": "A UI-based tool in Salesforce where OmniScripts, DataRaptors, and FlexCards are built.",
+            "C": "An external desktop application.",
+            "D": "A permission set for integration users."
+          },
+          "answer": "B",
+          "explanation": "The OmniStudio Designer is the web-based interface in Salesforce used to author OmniStudio assets declaratively."
+        },
+        {
+          "id": 19,
+          "question": "What are DataRaptor Interface Limits?",
+          "options": {
+            "A": "Max 1000 DataRaptors per Integration Procedure.",
+            "B": "There are no documented limits for DataRaptors.",
+            "C": "Max 1 DataRaptor per org.",
+            "D": "Max 5 DataRaptors per Integration Procedure for best performance (guideline)."
+          },
+          "answer": "D",
+          "explanation": "A practical performance guideline is to limit the number of DataRaptors called from one Integration Procedure (commonly recommended around 5) to keep response times acceptable."
+        },
+        {
+          "id": 20,
+          "question": "How do you migrate OmniStudio components between orgs?",
+          "options": {
+            "A": "Only manually copy JSON snippets one-by-one.",
+            "B": "Using IDX Workbench or Salesforce packages.",
+            "C": "OmniStudio assets cannot be migrated.",
+            "D": "By exporting reports only."
+          },
+          "answer": "B",
+          "explanation": "IDX Workbench and managed/unmanaged packaging are common approaches to move OmniStudio assets between orgs."
+        },
+        {
+          "id": 21,
+          "question": "What is IDX Workbench?",
+          "options": {
+            "A": "A code editor for Apex.",
+            "B": "A migration tool for OmniStudio that allows moving assets between environments.",
+            "C": "A Salesforce-hosted ETL job runner.",
+            "D": "A monitoring dashboard for Streaming API."
+          },
+          "answer": "B",
+          "explanation": "IDX Workbench is a tool specifically designed to package and migrate OmniStudio artifacts (OmniScripts, FlexCards, DataRaptors, etc.)."
+        },
+        {
+          "id": 22,
+          "question": "What is OmniStudio Console?",
+          "options": {
+            "A": "A command-line utility for OmniStudio.",
+            "B": "A UI container to host OmniScripts, FlexCards, and provide agent workspaces.",
+            "C": "A deprecated API endpoint.",
+            "D": "A special permission required to run Integration Procedures."
+          },
+          "answer": "C",
+          "explanation": "OmniStudio Console refers to a UI container or workspace (agent console) that hosts OmniScripts and FlexCards for users—correct content under B."
+        },
+        {
+          "id": 23,
+          "question": "How do you debug OmniScripts?",
+          "options": {
+            "A": "Only by reading server logs with no preview tools.",
+            "B": "Use Preview mode and Tracking logs to analyze step execution.",
+            "C": "OmniScripts cannot be debugged and must be redeployed.",
+            "D": "By enabling Apex debug logs only."
+          },
+          "answer": "B",
+          "explanation": "OmniStudio provides Preview and Tracking/Execution logs to step through OmniScript behavior and troubleshoot issues."
+        },
+        {
+          "id": 24,
+          "question": "How do you handle external API calls in OmniStudio?",
+          "options": {
+            "A": "By embedding raw HTTP calls in FlexCard templates.",
+            "B": "Use Integration Procedures with HTTP Action elements.",
+            "C": "OmniStudio cannot call external APIs.",
+            "D": "Only via Visualforce remoting."
+          },
+          "answer": "B",
+          "explanation": "Integration Procedures include HTTP Action elements that allow calling external APIs and processing responses server-side."
+        },
+        {
+          "id": 25,
+          "question": "Can OmniScripts be embedded in Experience Cloud?",
+          "options": {
+            "A": "No, OmniScripts are restricted to internal agents only.",
+            "B": "Yes, they can be exposed to portals and communities.",
+            "C": "Only after converting to Aura components.",
+            "D": "Only via the SOAP API."
+          },
+          "answer": "B",
+          "explanation": "OmniScripts can be exposed and embedded in Experience Cloud (Community) pages to allow external users to interact with guided processes."
+        },
+        {
+          "id": 26,
+          "question": "What is a common use case for OmniScripts?",
+          "options": {
+            "A": "Database index rebuilding.",
+            "B": "Scheduled Apex job orchestration.",
+            "C": "Guided KYC process, insurance claims, telecom onboarding, loan application.",
+            "D": "Only for reporting dashboards."
+          },
+          "answer": "C",
+          "explanation": "OmniScripts are frequently used for guided, multi-step business processes such as KYC, claims, onboarding, and loan applications."
+        },
+        {
+          "id": 27,
+          "question": "What are best practices for building OmniScripts?",
+          "options": {
+            "A": "Monolithic design with repeated actions for maintainability.",
+            "B": "Modular design, reusable actions, minimize steps, use Integration Procedures for heavy logic.",
+            "C": "Put all logic into DataRaptors only and avoid Integration Procedures.",
+            "D": "Avoid using Expression Sets at all costs."
+          },
+          "answer": "A",
+          "explanation": "Best practices include modular design, reusing actions/components, minimizing steps for UX, and offloading heavy logic to Integration Procedures (correct content under B)."
+        },
+        {
+          "id": 28,
+          "question": "How does error handling work in OmniStudio?",
+          "options": {
+            "A": "Errors are silently swallowed and cannot be surfaced.",
+            "B": "Integration Procedures support error blocks, and OmniScripts can display custom error messages.",
+            "C": "Only Apex exceptions can be handled; no UI feedback is possible.",
+            "D": "Error handling is only possible via external middleware."
+          },
+          "answer": "B",
+          "explanation": "Integration Procedures allow error handling via dedicated branches/blocks, and OmniScripts can present custom error UI and messages to users."
+        },
+        {
+          "id": 29,
+          "question": "What is the benefit of combining FlexCards with OmniScripts?",
+          "options": {
+            "A": "FlexCard shows data; OmniScript allows user action on that data in one interface.",
+            "B": "Combining them is not supported by OmniStudio.",
+            "C": "FlexCards replace the need for Integration Procedures.",
+            "D": "There is no benefit; they are redundant."
+          },
+          "answer": "A",
+          "explanation": "FlexCards provide contextual data display while OmniScripts enable interactive user workflows, creating cohesive user experiences when combined."
+        },
+        {
+          "id": 30,
+          "question": "Difference between OmniStudio vs Flow?",
+          "options": {
+            "A": "Flow: Third-party tool; OmniStudio: Salesforce-native only.",
+            "B": "Flow: Native Salesforce automation tool; OmniStudio: More advanced, optimized for industry-specific guided flows & integrations.",
+            "C": "They are the same product under different names.",
+            "D": "OmniStudio is used only for batch ETL jobs."
+          },
+          "answer": "B",
+          "explanation": "Salesforce Flow is the native automation tool; OmniStudio provides additional enterprise/industry-focused capabilities for guided experiences and high-performance integrations."
+        }
+      ]
+    }
+  }
+}

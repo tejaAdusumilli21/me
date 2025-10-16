@@ -1,0 +1,309 @@
+{
+  "section": "Service Cloud",
+  "levels": {
+    "level11": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Service Cloud in Salesforce?",
+          "options": {
+            "A": "A Salesforce solution designed for customer service and support, providing tools for case management, omni-channel routing, and knowledge management.",
+            "B": "A marketing automation product focused on email campaigns.",
+            "C": "A data warehousing product for analytics outside CRM.",
+            "D": "A developer tool for building custom Apex frameworks."
+          },
+          "answer": "A",
+          "explanation": "Service Cloud is Salesforce's product for customer support with cases, routing, knowledge, and agent workspace features."
+        },
+        {
+          "id": 2,
+          "question": "What is a Case in Service Cloud?",
+          "options": {
+            "A": "A knowledge article used by support agents.",
+            "B": "A record that tracks customer issues, questions, or requests.",
+            "C": "A report for service KPIs.",
+            "D": "A marketing campaign member record."
+          },
+          "answer": "D",
+          "explanation": "Cases capture customer issues and are the primary record type for support processes."
+        },
+        {
+          "id": 3,
+          "question": "What are Case Assignment Rules?",
+          "options": {
+            "A": "Manual steps agents take to close cases.",
+            "B": "Rules that automatically assign cases to users or queues based on predefined criteria.",
+            "C": "Email templates for case notifications.",
+            "D": "A special report type for case distribution."
+          },
+          "answer": "B",
+          "explanation": "Assignment rules evaluate case fields and route new cases to the correct user or queue automatically."
+        },
+        {
+          "id": 4,
+          "question": "What is a Case Queue?",
+          "options": {
+            "A": "An automation that closes cases after SLA breach.",
+            "B": "A permission set used for agents.",
+            "C": "A holding area where unassigned cases are stored until an agent takes ownership.",
+            "D": "A kind of knowledge article classification."
+          },
+          "answer": "C",
+          "explanation": "Queues let teams share work by holding unassigned records which members can claim."
+        },
+        {
+          "id": 5,
+          "question": "What is Omni-Channel in Service Cloud?",
+          "options": {
+            "A": "A feature that intelligently routes work items (cases, chats, tasks) to the right agent based on skills, capacity, and availability.",
+            "B": "A UI layout tool for the Service Console.",
+            "C": "A workflow engine for approval processes.",
+            "D": "A reporting dashboard for case trends."
+          },
+          "answer": "A",
+          "explanation": "Omni-Channel routes incoming work in real time to agents based on capacity and routing/configuration rules."
+        },
+        {
+          "id": 6,
+          "question": "Difference between Omni-Channel and Case Assignment Rules?",
+          "options": {
+            "A": "Both are identical features and interchangeable.",
+            "B": "Case Assignment Rules → Assign cases to users/queues at creation. Omni-Channel → Routes real-time work dynamically based on agent workload.",
+            "C": "Omni-Channel only works for email; Assignment Rules only for phone.",
+            "D": "Assignment Rules are only available in Sandbox."
+          },
+          "answer": "B",
+          "explanation": "Assignment Rules run at creation to set owners; Omni-Channel actively routes and balances work items by agent capacity/skills."
+        },
+        {
+          "id": 7,
+          "question": "What are Entitlements in Service Cloud?",
+          "options": {
+            "A": "A visual theme for the console.",
+            "B": "An event streaming mechanism.",
+            "C": "A report type for CSAT scores.",
+            "D": "Define the level of support customers are entitled to, such as response times and resolution times."
+          },
+          "answer": "D",
+          "explanation": "Entitlements formalize promised support levels and are enforced via milestones/SLA tracking."
+        },
+        {
+          "id": 8,
+          "question": "What is a Milestone in Service Cloud?",
+          "options": {
+            "A": "A type of case status used only in Communities.",
+            "B": "A Chatter post on case progress.",
+            "C": "A measurable step within an entitlement process, e.g., 'First Response within 2 hours.'",
+            "D": "A Salesforce license category."
+          },
+          "answer": "C",
+          "explanation": "Milestones are timed checkpoints used with entitlements to ensure SLA commitments are met."
+        },
+        {
+          "id": 9,
+          "question": "What is a Service Level Agreement (SLA) in Salesforce?",
+          "options": {
+            "A": "A dashboard that visualizes agent activity.",
+            "B": "An agreement defining the time frame within which a case must be responded to or resolved, implemented using entitlements and milestones.",
+            "C": "A security policy for API access.",
+            "D": "A template for email notifications."
+          },
+          "answer": "B",
+          "explanation": "SLAs define expected response and resolution windows and are enforced with entitlements and milestone tracking."
+        },
+        {
+          "id": 10,
+          "question": "What is a Knowledge Base in Service Cloud?",
+          "options": {
+            "A": "A repository of articles and FAQs that help agents and customers resolve issues quickly.",
+            "B": "A list of open cases for an account.",
+            "C": "A queue of unresolved cases.",
+            "D": "A tool for scheduling service jobs."
+          },
+          "answer": "A",
+          "explanation": "Knowledge stores structured articles that agents and customers can search to find solutions."
+        },
+        {
+          "id": 11,
+          "question": "Difference between Salesforce Knowledge and Solution?",
+          "options": {
+            "A": "Solution → Advanced knowledge base; Knowledge → Legacy Q&A.",
+            "B": "They are both identical names for the same feature.",
+            "C": "Solution (Legacy) → Simple Q&A for cases. Knowledge → Advanced knowledge base with publishing workflows, versioning, and multi-channel access.",
+            "D": "Knowledge is only available in Classic UI."
+          },
+          "answer": "C",
+          "explanation": "Knowledge replaces legacy Solutions with richer content lifecycle, channels, and versioning capabilities."
+        },
+        {
+          "id": 12,
+          "question": "What is a Service Console?",
+          "options": {
+            "A": "A command-line tool to manage cases.",
+            "B": "A unified workspace for agents that allows handling multiple cases, chats, and customer interactions in one view.",
+            "C": "A separate mobile-only app for reporting.",
+            "D": "A template library for page layouts."
+          },
+          "answer": "B",
+          "explanation": "The Service Console provides an agent-focused UI to efficiently handle multiple interactions and related data."
+        },
+        {
+          "id": 13,
+          "question": "What is a Case Escalation Rule?",
+          "options": {
+            "A": "A rule that permanently deletes old cases.",
+            "B": "A way to assign cases to campaigns.",
+            "C": "Rules that automatically escalate cases to higher support levels if they remain unresolved within a certain time.",
+            "D": "A deprecated feature replaced by queues."
+          },
+          "answer": "C",
+          "explanation": "Escalation rules monitor milestone/time thresholds and reassign or notify stakeholders when SLAs are breached."
+        },
+        {
+          "id": 14,
+          "question": "What are Macros in Service Cloud?",
+          "options": {
+            "A": "Automated actions that let agents perform repetitive tasks (like sending standard responses) in one click.",
+            "B": "A type of Apex trigger used for cases.",
+            "C": "A format for knowledge article versions.",
+            "D": "A rule-based routing engine."
+          },
+          "answer": "A",
+          "explanation": "Macros automate sequences of actions an agent would normally perform manually to speed case handling."
+        },
+        {
+          "id": 15,
+          "question": "What is Live Agent (Chat) in Salesforce?",
+          "options": {
+            "A": "A batch process for closing cases overnight.",
+            "B": "A back-end API for knowledge articles.",
+            "C": "A real-time chat feature that connects customers with support agents through websites or apps.",
+            "D": "A reporting snapshot tool."
+          },
+          "answer": "C",
+          "explanation": "Live Agent enables real-time web chat between customers and agents for immediate support."
+        },
+        {
+          "id": 16,
+          "question": "What is Einstein Bots in Service Cloud?",
+          "options": {
+            "A": "A manual chat script stored as a text file.",
+            "B": "A visual theme manager for the Service Console.",
+            "C": "AI-powered chatbots that handle routine customer queries before handing them off to live agents.",
+            "D": "A deprecated integration for SMS only."
+          },
+          "answer": "B",
+          "explanation": "Einstein Bots automate common interactions using AI and can escalate to human agents when needed (correct content under C)."
+        },
+        {
+          "id": 17,
+          "question": "What is Case Feed?",
+          "options": {
+            "A": "A real-time newsfeed of company announcements.",
+            "B": "A scheduled export of case data.",
+            "C": "A dashboard widget for SLA metrics.",
+            "D": "A Chatter-based collaboration feature that allows agents to communicate and update case details in real-time."
+          },
+          "answer": "D",
+          "explanation": "Case Feed provides a timeline and collaboration tools (Chatter, emails, updates) for each case record."
+        },
+        {
+          "id": 18,
+          "question": "What is Email-to-Case?",
+          "options": {
+            "A": "A feature that automatically converts customer emails into cases.",
+            "B": "A tool for sending mass emails to customers.",
+            "C": "An Apex library for parsing emails in tests.",
+            "D": "A way to export emails to CSV."
+          },
+          "answer": "A",
+          "explanation": "Email-to-Case creates case records from incoming emails so support can manage requests centrally."
+        },
+        {
+          "id": 19,
+          "question": "What is Web-to-Case?",
+          "options": {
+            "A": "A feature allowing customers to submit cases directly from a website form.",
+            "B": "A connector for external social networks.",
+            "C": "A data extraction tool for knowledge articles.",
+            "D": "A method to convert web pages to PDF."
+          },
+          "answer": "C",
+          "explanation": "Web-to-Case generates HTML forms that submit case data to Salesforce, creating cases from website submissions (correct content under A)."
+        },
+        {
+          "id": 20,
+          "question": "What is Social Customer Service?",
+          "options": {
+            "A": "A tool to schedule social posts for marketing.",
+            "B": "A feature that lets companies respond to customer inquiries from social media (Twitter, Facebook, etc.).",
+            "C": "A reporting plugin for social KPIs only.",
+            "D": "A legacy feature retired from Salesforce."
+          },
+          "answer": "B",
+          "explanation": "Social Customer Service connects social channels to Service Cloud so agents can respond to and track social inquiries as cases."
+        },
+        {
+          "id": 21,
+          "question": "What are Service Contracts in Salesforce?",
+          "options": {
+            "A": "A type of lead status.",
+            "B": "A dashboard for service metrics.",
+            "C": "Agreements that define support terms and cover customers, often linked with entitlements.",
+            "D": "A permission set for external partners."
+          },
+          "answer": "D",
+          "explanation": "Service Contracts formalize the support agreement with a customer and are typically associated with entitlements and milestones (correct content under C)."
+        },
+        {
+          "id": 22,
+          "question": "What is Field Service Lightning (FSL)?",
+          "options": {
+            "A": "A Salesforce product that extends Service Cloud for managing mobile workforce, scheduling, and field operations.",
+            "B": "A tool for building Lightning pages only.",
+            "C": "A schema modeling tool for service objects.",
+            "D": "A deprecated mobile app for agents."
+          },
+          "answer": "A",
+          "explanation": "FSL provides dispatch, scheduling, mobile workforce management, and offline capabilities for field technicians."
+        },
+        {
+          "id": 23,
+          "question": "How does Knowledge Base integrate with Cases?",
+          "options": {
+            "A": "Agents can search and attach knowledge articles directly to case records for quick resolutions.",
+            "B": "Knowledge Base is unrelated to case resolution.",
+            "C": "Knowledge articles are automatically converted to cases.",
+            "D": "Cases are archived inside the Knowledge Base."
+          },
+          "answer": "B",
+          "explanation": "Agents use the knowledge search to find articles and attach or link them to cases to help resolve issues quickly (correct content under A)."
+        },
+        {
+          "id": 24,
+          "question": "What is the use of Service Analytics?",
+          "options": {
+            "A": "Provides dashboards and reports on KPIs like case resolution time, first contact resolution, agent productivity.",
+            "B": "A tool to schedule Omni-Channel routes only.",
+            "C": "A code profiler for Apex in the Service Console.",
+            "D": "A component for embedding marketing analytics."
+          },
+          "answer": "C",
+          "explanation": "Service analytics offers reporting and dashboards focused on service KPIs to measure team performance and SLA adherence (correct content under A)."
+        },
+        {
+          "id": 25,
+          "question": "Best practices in Service Cloud implementation?",
+          "options": {
+            "A": "Automate case routing and escalation; use macros for efficiency; enable Omni-Channel for workload balancing; leverage Knowledge Base for faster resolutions.",
+            "B": "Avoid using entitlements or SLAs to keep processes flexible.",
+            "C": "Force agents to handle all channels manually without routing.",
+            "D": "Disable Case Feed and collaboration to reduce noise."
+          },
+          "answer": "A",
+          "explanation": "Implementing automation, routing, knowledge, and collaboration improves agent productivity and customer outcomes; the other options reduce effectiveness."
+        }
+      ]
+    }
+  }
+}

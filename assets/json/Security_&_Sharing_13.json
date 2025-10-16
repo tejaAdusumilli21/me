@@ -1,0 +1,369 @@
+{
+    "section": "Security & Sharing",
+  "levels": {
+    "level13": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What are the different levels of data security in Salesforce?",
+          "options": {
+            "A": "IP-based, Two-factor, Single Sign-On.",
+            "B": "Row-level only using sharing rules.",
+            "C": "Object-level → Profiles/Permission Sets; Field-level → Field-Level Security (FLS); Record-level → OWD, Roles, Sharing Rules, Manual Sharing.",
+            "D": "Only profile-level access controls exist."
+          },
+          "answer": "C",
+          "explanation": "Salesforce enforces security at object (profiles/permission sets), field (FLS), and record (OWD/roles/sharing) levels."
+        },
+        {
+          "id": 2,
+          "question": "What is Organization-Wide Default (OWD)?",
+          "options": {
+            "A": "Defines the baseline level of access to records for all users in the org (Private, Public Read Only, Public Read/Write, Controlled by Parent).",
+            "B": "A per-record manual sharing mechanism.",
+            "C": "A permission set that grants admin rights.",
+            "D": "A visual theme for Lightning pages."
+          },
+          "answer": "A",
+          "explanation": "OWD sets the default visibility for each object; other mechanisms (roles, sharing rules) can open access further."
+        },
+        {
+          "id": 3,
+          "question": "What is the difference between Profile and Permission Set?",
+          "options": {
+            "A": "Permission Set replaces Role Hierarchy for visibility.",
+            "B": "Profiles are optional; Permission Sets are mandatory.",
+            "C": "Both are identical and interchangeable.",
+            "D": "Profile → Defines baseline permissions (mandatory for a user). Permission Set → Grants additional access without changing profile."
+          },
+          "answer": "D",
+          "explanation": "Every user has one profile which defines base privileges; permission sets add extra permissions without changing profile assignment."
+        },
+        {
+          "id": 4,
+          "question": "Can a user exist without a Profile in Salesforce?",
+          "options": {
+            "A": "Yes — only if they are a portal user.",
+            "B": "Yes — if they have only permission sets assigned.",
+            "C": "Only in Developer Edition.",
+            "D": "No, every user must be assigned exactly one Profile."
+          },
+          "answer": "D",
+          "explanation": "A Salesforce user always has exactly one profile; profile is required to define baseline permissions."
+        },
+        {
+          "id": 5,
+          "question": "Can a user have multiple Permission Sets?",
+          "options": {
+            "A": "Yes, a user can have multiple permission sets.",
+            "B": "No, a user is limited to one permission set.",
+            "C": "Only one permission set per object is allowed.",
+            "D": "Permission sets are deprecated."
+          },
+          "answer": "A",
+          "explanation": "Users may be assigned any number of permission sets to incrementally expand privileges beyond their profile."
+        },
+        {
+          "id": 6,
+          "question": "What is a Role in Salesforce?",
+          "options": {
+            "A": "A grouping of permission sets for object access.",
+            "B": "A license type assigned to a user.",
+            "C": "A type of profile used for external users.",
+            "D": "Defines a user’s position in the role hierarchy and determines record visibility via role-based sharing."
+          },
+          "answer": "D",
+          "explanation": "Roles model organizational hierarchy and influence record visibility when 'Grant Access Using Hierarchies' is enabled and via role-based sharing."
+        },
+        {
+          "id": 7,
+          "question": "Difference between Role Hierarchy and Sharing Rules?",
+          "options": {
+            "A": "Role Hierarchy → Opens access across peers; Sharing Rules → Opens access vertically.",
+            "B": "Role Hierarchy → Opens access vertically (upward visibility). Sharing Rules → Opens access horizontally (across peers).",
+            "C": "They both restrict access, never grant it.",
+            "D": "Sharing Rules are only used for reports."
+          },
+          "answer": "B",
+          "explanation": "Role hierarchy grants access up the chain (managers see subordinates' records); sharing rules grant access across users/roles/groups based on criteria."
+        },
+        {
+          "id": 8,
+          "question": "What is Manual Sharing?",
+          "options": {
+            "A": "Automatically sharing records based on criteria.",
+            "B": "Sharing records only via automation tools.",
+            "C": "A deprecated feature replaced by permission sets.",
+            "D": "A record owner or admin can manually share a record with another user."
+          },
+          "answer": "D",
+          "explanation": "Owners and admins can explicitly share a single record with another user, group, or role via the sharing UI or API."
+        },
+        {
+          "id": 9,
+          "question": "What is Apex Managed Sharing?",
+          "options": {
+            "A": "A declarative sharing rule type.",
+            "B": "A UI-only feature for admins.",
+            "C": "An event-based sharing mechanism.",
+            "D": "Programmatic sharing of records using Apex to insert into Share tables."
+          },
+          "answer": "D",
+          "explanation": "Apex Managed Sharing lets developers create sharing entries by inserting records into <Object>Share tables for fine-grained control."
+        },
+        {
+          "id": 10,
+          "question": "What are Share Tables?",
+          "options": {
+            "A": "Temporary caches for query results.",
+            "B": "Tables for storing audit logs.",
+            "C": "Objects that store user profile settings.",
+            "D": "Special tables (e.g., AccountShare, OpportunityShare) that store record-level sharing information."
+          },
+          "answer": "D",
+          "explanation": "Share objects persist explicit sharing entries (grantee, access level, row cause) for record-level access control."
+        },
+        {
+          "id": 11,
+          "question": "Can we share records via SOQL/DML directly?",
+          "options": {
+            "A": "Yes — use SOQL to create shared access automatically.",
+            "B": "Yes — insert rows into UserRecordAccess to grant access.",
+            "C": "Yes — use standard DML on the record to change visibility.",
+            "D": "No, but we can insert/update records in Share objects for programmatic sharing."
+          },
+          "answer": "D",
+          "explanation": "You cannot change sharing via SOQL, but you can create Share object records (e.g., AccountShare) via DML to grant access programmatically."
+        },
+        {
+          "id": 12,
+          "question": "What is Criteria-Based Sharing Rule?",
+          "options": {
+            "A": "Grants record access automatically based on field values (e.g., share all Cases where Priority = High with a group).",
+            "B": "Grants access based on a user's login IP.",
+            "C": "Shares all records with everyone in the org.",
+            "D": "Only applies to sandbox orgs."
+          },
+          "answer": "A",
+          "explanation": "Criteria-based sharing opens access to records that match specified field conditions, useful for dynamic sharing scenarios."
+        },
+        {
+          "id": 13,
+          "question": "What is the difference between “With Sharing” and “Without Sharing” in Apex?",
+          "options": {
+            "A": "With Sharing → Always runs as System Administrator; Without Sharing → Always runs as the current user.",
+            "B": "They are deprecated keywords replaced by permission sets.",
+            "C": "With Sharing → Only applies to Visualforce controllers; Without Sharing → Only for batch jobs.",
+            "D": "With Sharing → Enforces the sharing rules of the user. Without Sharing → Runs in system mode, ignoring sharing rules."
+          },
+          "answer": "A",
+          "explanation": "Declaring a class 'with sharing' enforces record-level sharing; 'without sharing' executes in system context and bypasses sharing settings."
+        },
+        {
+          "id": 14,
+          "question": "What is System Mode in Salesforce?",
+          "options": {
+            "A": "Execution mode where Apex code ignores user permissions and sharing rules.",
+            "B": "A UI theme for admin users.",
+            "C": "A Salesforce org type for testing only.",
+            "D": "A special license for integrations."
+          },
+          "answer": "A",
+          "explanation": "System mode allows code to run with elevated privileges; developers should enforce FLS/CRUD checks explicitly when needed."
+        },
+        {
+          "id": 15,
+          "question": "Difference between Sharing Rules and Permission Sets?",
+          "options": {
+            "A": "Sharing Rules control object/field-level access; Permission Sets control record-level access.",
+            "B": "Sharing Rules → Control record-level access. Permission Sets → Control object/field-level access.",
+            "C": "They are the same mechanism with different names.",
+            "D": "Permission Sets are only for external users."
+          },
+          "answer": "B",
+          "explanation": "Sharing rules grant record visibility; permission sets grant additional object and field permissions to users."
+        },
+        {
+          "id": 16,
+          "question": "Can we restrict access using Sharing Rules?",
+          "options": {
+            "A": "Yes — Sharing Rules can be used to restrict access by default.",
+            "B": "Yes — they both restrict and grant access as needed.",
+            "C": "No, sharing rules only grant additional access; restrictions must be done using OWD.",
+            "D": "Only permission sets can restrict access."
+          },
+          "answer": "C",
+          "explanation": "Sharing rules only open access beyond the baseline; to restrict visibility you set a stricter OWD and then open access selectively."
+        },
+        {
+          "id": 17,
+          "question": "What is a Public Group in Salesforce?",
+          "options": {
+            "A": "A list of external email addresses for integrations.",
+            "B": "A collection of users, roles, and subgroups used to simplify sharing rules.",
+            "C": "A private queue for admins only.",
+            "D": "A type of Apex class."
+          },
+          "answer": "B",
+          "explanation": "Public Groups let admins group users/roles/other groups to target sharing rules, folder access, and manual sharing more easily."
+        },
+        {
+          "id": 18,
+          "question": "What is a Queue in Salesforce?",
+          "options": {
+            "A": "A shared location where records (like Cases, Leads) are assigned until a user takes ownership.",
+            "B": "A way to store user sessions.",
+            "C": "A debugging tool for async jobs.",
+            "D": "A field-level permission grouping."
+          },
+          "answer": "A",
+          "explanation": "Queues hold unassigned records so teams can claim ownership; useful for workload distribution of leads, cases, custom objects."
+        },
+        {
+          "id": 19,
+          "question": "Difference between Public Group and Queue?",
+          "options": {
+            "A": "Public Group → Used for API integrations; Queue → used for sharing rules only.",
+            "B": "Public Group → Used for record sharing. Queue → Used for record ownership assignment.",
+            "C": "They are identical and interchangeable.",
+            "D": "Queues are only available in Classic UI."
+          },
+          "answer": "B",
+          "explanation": "Public Groups are collections for sharing and permissions; Queues store unowned records for assignment/claiming by members."
+        },
+        {
+          "id": 20,
+          "question": "What is Implicit Sharing?",
+          "options": {
+            "A": "Manual sharing done by record owners.",
+            "B": "Sharing based solely on permission sets.",
+            "C": "Automatic record sharing by Salesforce, such as parent-child record access (e.g., Contact to Account).",
+            "D": "Only available for Cases."
+          },
+          "answer": "C",
+          "explanation": "Implicit sharing is automatic system sharing (e.g., owner-based access to related records) and not visible in Share tables."
+        },
+        {
+          "id": 21,
+          "question": "What is Enterprise Territory Management (ETM)?",
+          "options": {
+            "A": "A reporting feature for sales quotas.",
+            "B": "A feature for controlling field-level security only.",
+            "C": "A plugin for external ERP systems.",
+            "D": "A feature to control access to Accounts and Opportunities based on territories like geography or product line."
+          },
+          "answer": "A",
+          "explanation": "ETM provides territory-based sharing and assignment models to route accounts/opportunities to appropriate sales teams (correct content under D)."
+        },
+        {
+          "id": 22,
+          "question": "What is “Grant Access Using Hierarchies”?",
+          "options": {
+            "A": "A setting that prevents managers from seeing subordinates' records.",
+            "B": "A way to apply permission sets automatically.",
+            "C": "A setting that ensures higher roles in hierarchy automatically get access to lower-level records.",
+            "D": "A deprecated profile option."
+          },
+          "answer": "B",
+          "explanation": "When enabled, users higher in role hierarchy inherit access to records owned by users below them; for standard objects this is always enforced (correct content under C)."
+        },
+        {
+          "id": 23,
+          "question": "Can “Grant Access Using Hierarchies” be disabled?",
+          "options": {
+            "A": "Yes — for standard objects only.",
+            "B": "No — it cannot be disabled for any object.",
+            "C": "Only via Apex code at runtime.",
+            "D": "For standard objects → Always enforced (cannot disable). For custom objects → Can be disabled."
+          },
+          "answer": "D",
+          "explanation": "Hierarchy-based access cannot be turned off for standard objects (it's enforced), but custom objects can opt out of hierarchy sharing."
+        },
+        {
+          "id": 24,
+          "question": "What is Profile vs Role difference?",
+          "options": {
+            "A": "Profile → Defines what records a user can see. Role → Defines what a user can do (permissions).",
+            "B": "They are synonyms in Salesforce security.",
+            "C": "Profile only applies to communities; Role only to internal users.",
+            "D": "Profile → Defines what a user can do (permissions). Role → Defines what records a user can see (visibility)."
+          },
+          "answer": "C",
+          "explanation": "Profiles control object/field-level permissions and other capabilities; roles define record visibility via the role hierarchy."
+        },
+        {
+          "id": 25,
+          "question": "What is Field-Level Security (FLS)?",
+          "options": {
+            "A": "Controls visibility (read/edit) of specific fields at the profile or permission set level.",
+            "B": "Only applies to formula fields.",
+            "C": "A way to encrypt entire objects.",
+            "D": "A deprecated feature replaced by page layouts."
+          },
+          "answer": "B",
+          "explanation": "FLS is used to hide or make fields read-only for profiles/permission sets, independent of page layout visibility (correct content under A)."
+        },
+        {
+          "id": 26,
+          "question": "What is Record Ownership?",
+          "options": {
+            "A": "The user who creates a record is typically its owner and controls who else can see/edit it.",
+            "B": "A system-generated ID that cannot be changed.",
+            "C": "A field that stores the account type.",
+            "D": "Only relevant for archived records."
+          },
+          "answer": "A",
+          "explanation": "Record owner determines default access and can manually share the record; ownership influences queues, assignment, and sharing behavior."
+        },
+        {
+          "id": 27,
+          "question": "What is Row-Level Security?",
+          "options": {
+            "A": "A way to secure database servers only.",
+            "B": "A deprecated term not used in Salesforce.",
+            "C": "Security applied by profiles at the object level only.",
+            "D": "Another term for record-level access, managed through OWD, sharing rules, and manual sharing."
+          },
+          "answer": "D",
+          "explanation": "Row-level security refers to controls determining which individual records (rows) users can access; in Salesforce this is handled by OWD, roles, sharing, etc."
+        },
+        {
+          "id": 28,
+          "question": "Can we use Apex to bypass FLS and CRUD?",
+          "options": {
+            "A": "No — Apex always enforces FLS and CRUD automatically.",
+            "B": "Only in managed packages.",
+            "C": "Yes, Apex runs in system mode, so explicit checks (Schema.sObjectType.Account.fields.Name.isAccessible()) are needed.",
+            "D": "Only in sandbox orgs for testing."
+          },
+          "answer": "C",
+          "explanation": "Because Apex runs in system context by default, developers should explicitly check CRUD/FLS where appropriate to respect security constraints."
+        },
+        {
+          "id": 29,
+          "question": "What is a Sharing Set in Experience Cloud?",
+          "options": {
+            "A": "A way to publish knowledge articles to the community.",
+            "B": "A feature that grants community users general admin rights.",
+            "C": "A configuration for branding and themes.",
+            "D": "A feature that grants community users access to records associated with their account/contact."
+          },
+          "answer": "B",
+          "explanation": "Sharing Sets allow external community users to access records related to their account or contact without needing role-based access (correct content under D)."
+        },
+        {
+          "id": 30,
+          "question": "Best practices for Security & Sharing in Salesforce?",
+          "options": {
+            "A": "Follow principle of least privilege; Use Permission Sets instead of cloning profiles; Prefer OWD + Sharing Rules over Apex sharing; Check FLS and CRUD in Apex for compliance.",
+            "B": "Grant System Administrator to all users for simplicity.",
+            "C": "Avoid using permission sets and only clone profiles.",
+            "D": "Rely solely on Apex for enforcing security."
+          },
+          "answer": "A",
+          "explanation": "Adopt least-privilege access, favor declarative controls (OWD + sharing rules), use permission sets for flexibility, and enforce FLS/CRUD checks in code."
+        }
+      ]
+    }
+  }
+}

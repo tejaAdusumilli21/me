@@ -1,0 +1,249 @@
+{
+  "section": "Aura Components & Migration to LWC",
+  "levels": {
+    "level5": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Aura?",
+          "options": {
+            "A": "Aura is Salesforce’s legacy component framework used before LWC, based on proprietary programming model.",
+            "B": "A headless API for background jobs.",
+            "C": "A Salesforce database indexing engine.",
+            "D": "A server-side templating language."
+          },
+          "answer": "A",
+          "explanation": "Aura is the older, proprietary component framework from Salesforce that preceded LWC and uses its own component/event model."
+        },
+        {
+          "id": 2,
+          "question": "Difference between Aura and LWC?",
+          "options": {
+            "A": "Aura uses web standards; LWC is proprietary.",
+            "B": "Aura → Proprietary, slower, more boilerplate; LWC → Web standards, faster, better performance.",
+            "C": "Aura is a database, LWC is a UI library.",
+            "D": "There is no difference; they are identical."
+          },
+          "answer": "B",
+          "explanation": "Aura is Salesforce-specific and more verbose; LWC is built on modern web standards (ES6, Shadow DOM) and generally performs better."
+        },
+        {
+          "id": 3,
+          "question": "What is an Aura Component bundle?",
+          "options": {
+            "A": "A set of database triggers for Aura apps.",
+            "B": "A collection of static resources only.",
+            "C": "A set of files including .cmp, .controller.js, .helper.js, .css, .design, .svg, .auradoc.",
+            "D": "A single .cmp file only."
+          },
+          "answer": "C",
+          "explanation": "An Aura component bundle contains multiple files (.cmp markup, controller/helper JS, CSS, design metadata, docs, icons) that make up the component."
+        },
+        {
+          "id": 4,
+          "question": "What is Application Event in Aura?",
+          "options": {
+            "A": "An event for communication between unrelated components (pub-sub style).",
+            "B": "A local DOM event only inside a component.",
+            "C": "A scheduled job type.",
+            "D": "A form validation mechanism."
+          },
+          "answer": "D",
+          "explanation": "Application events are broadcast-style events that any component can handle—used to communicate across the component hierarchy. (Correct content is under A.)"
+        },
+        {
+          "id": 5,
+          "question": "What is Component Event in Aura?",
+          "options": {
+            "A": "An event used only by the server.",
+            "B": "An event for communication between parent and child components.",
+            "C": "A CSS animation trigger.",
+            "D": "A database trigger wrapper."
+          },
+          "answer": "B",
+          "explanation": "Component events are designed for DOM-like propagation between child and parent components (handled within a component containment hierarchy)."
+        },
+        {
+          "id": 6,
+          "question": "What are the phases of Event propagation in Aura?",
+          "options": {
+            "A": "Bubble → Capture",
+            "B": "Only Capture",
+            "C": "Capture → Bubble",
+            "D": "Direct → Broadcast"
+          },
+          "answer": "C",
+          "explanation": "Aura event propagation has two phases: capture (down the containment hierarchy) then bubble (upwards)."
+        },
+        {
+          "id": 7,
+          "question": "What is Aura Handler?",
+          "options": {
+            "A": "A server-side Apex handler.",
+            "B": "<aura:handler> tag used to listen to component or application events.",
+            "C": "A background worker for Aura components.",
+            "D": "A CSS helper for Aura."
+          },
+          "answer": "C",
+          "explanation": "<aura:handler> is the markup tag used in Aura components to register event handlers for component/application events. (Correct content is under B.)"
+        },
+        {
+          "id": 8,
+          "question": "Example of Aura component event?",
+          "options": {
+            "A": "<aura:event type=\"APPLICATION\" name=\"appEvent\"/>",
+            "B": "<aura:event type=\"COMPONENT\" name=\"cmpEvent\"/>",
+            "C": "<event type=\"DOM\" name=\"domEvent\"/>",
+            "D": "<aura:event type=\"SCHEDULE\" name=\"schedEvent\"/>"
+          },
+          "answer": "B",
+          "explanation": "Component events are declared with <aura:event type=\"COMPONENT\" .../>. APPLICATION type declares application events."
+        },
+        {
+          "id": 9,
+          "question": "What are Attributes in Aura?",
+          "options": {
+            "A": "Server-only configuration objects.",
+            "B": "Properties defined in <aura:attribute> used to store values in component.",
+            "C": "A type of event handler.",
+            "D": "A CSS class naming convention."
+          },
+          "answer": "A",
+          "explanation": "Attributes are component properties declared with <aura:attribute name=\"...\" type=\"...\"/> to hold state. (Correct content is under B.)"
+        },
+        {
+          "id": 10,
+          "question": "Example of defining Aura attribute?",
+          "options": {
+            "A": "<aura:attribute name=\"accName\" type=\"String\" default=\"Test\"/>",
+            "B": "var accName = 'Test';",
+            "C": "<attribute name=\"accName\" value=\"Test\"/>",
+            "D": "<aura:set attribute=\"accName\">Test</aura:set>"
+          },
+          "answer": "B",
+          "explanation": "The standard syntax to declare an attribute in Aura is <aura:attribute name=\"accName\" type=\"String\" default=\"Test\"/>. (Correct content is under A.)"
+        },
+        {
+          "id": 11,
+          "question": "How does Data Binding work in Aura?",
+          "options": {
+            "A": "Uses expression syntax {!v.attribute} for one-way and {#v.attribute} for two-way binding.",
+            "B": "Only supports one-way binding with $A expressions.",
+            "C": "Uses standard JS template literals.",
+            "D": "Does not support binding."
+          },
+          "answer": "C",
+          "explanation": "Aura uses {!v.attribute} for value expressions and supports two-way binding patterns; the common notation is {!v.attr} (correct content is under A)."
+        },
+        {
+          "id": 12,
+          "question": "What is difference between Aura Controller and Helper?",
+          "options": {
+            "A": "Controller.js handles UI events; Helper.js contains reusable functions for business logic.",
+            "B": "Controller is server-side only; Helper is client-side only.",
+            "C": "They are identical files with different names.",
+            "D": "Helper files are deprecated in Aura."
+          },
+          "answer": "A",
+          "explanation": "Controller functions are event entry points (wiring to markup), while helper functions encapsulate reusable logic called by controllers."
+        },
+        {
+          "id": 13,
+          "question": "How to call Apex from Aura?",
+          "options": {
+            "A": "Use @AuraEnabled in Apex, then call via component.get(\"c.methodName\").",
+            "B": "Call Apex directly via fetch('/apex/Method').",
+            "C": "Apex cannot be invoked from Aura.",
+            "D": "Use $A.runApex('methodName')."
+          },
+          "answer": "B",
+          "explanation": "Aura calls Apex methods that are annotated @AuraEnabled by obtaining the action via component.get('c.methodName') and enqueueing it. (Correct content is under A.)"
+        },
+        {
+          "id": 14,
+          "question": "Example of calling Apex in Aura?",
+          "options": {
+            "A": "var action = component.get(\"c.getAccounts\"); action.setCallback(this, function(response) {...}); $A.enqueueAction(action);",
+            "B": "Apex.getAccounts().then(...);",
+            "C": "this.callApex('getAccounts');",
+            "D": "Apex calls are automatic; no code needed."
+          },
+          "answer": "A",
+          "explanation": "The standard pattern is to get the server action, set a callback, and enqueue it with $A.enqueueAction(action)."
+        },
+        {
+          "id": 15,
+          "question": "Why migrate from Aura to LWC?",
+          "options": {
+            "A": "Because Aura is faster and more modern.",
+            "B": "Better performance, easier maintenance, uses standard JS, better future support.",
+            "C": "Because LWC has fewer features than Aura.",
+            "D": "Aura cannot be used in production."
+          },
+          "answer": "C",
+          "explanation": "Organizations migrate to LWC for performance and alignment with web standards; the primary benefits are better performance and maintainability (correct content under B)."
+        },
+        {
+          "id": 16,
+          "question": "Can Aura and LWC work together?",
+          "options": {
+            "A": "No, they are incompatible.",
+            "B": "Yes, LWC can be embedded inside Aura using <c:myLwcComp/>.",
+            "C": "Only with a middleware server.",
+            "D": "Only in sandbox orgs."
+          },
+          "answer": "D",
+          "explanation": "You can embed LWC in Aura and vice versa in many scenarios. The typical pattern is to include an LWC inside an Aura component (correct content under B)."
+        },
+        {
+          "id": 17,
+          "question": "Can Aura listen to events from LWC?",
+          "options": {
+            "A": "No, cross-framework events are impossible.",
+            "B": "Yes, LWC CustomEvent can be caught in Aura with <aura:handler>.",
+            "C": "Only via server-side Apex bridging.",
+            "D": "Only if both components are in the same namespace and marked as compatible."
+          },
+          "answer": "A",
+          "explanation": "Aura can handle CustomEvents dispatched by LWC using <aura:handler> or other integration patterns; the correct content is under B."
+        },
+        {
+          "id": 18,
+          "question": "Can LWC use Aura Events?",
+          "options": {
+            "A": "Yes, LWC natively supports Aura application events.",
+            "B": "No, LWC cannot directly use Aura events (must use LMS or custom communication).",
+            "C": "Yes, but only in managed packages.",
+            "D": "Only via global window events."
+          },
+          "answer": "B",
+          "explanation": "LWC doesn't directly consume Aura application/component events; use Lightning Message Service or CustomEvent patterns for cross-framework communication."
+        },
+        {
+          "id": 19,
+          "question": "Migration challenges from Aura to LWC?",
+          "options": {
+            "A": "No challenges — migration is automatic.",
+            "B": "Rewriting events (Aura → CustomEvent / LMS); CSS isolation differences; Some missing APIs in LWC.",
+            "C": "Only database schema changes are needed.",
+            "D": "LWC requires moving all business logic to triggers."
+          },
+          "answer": "C",
+          "explanation": "Common migration challenges include reworking event patterns, handling CSS/shadow DOM differences, and replacing APIs not present in LWC (correct content under B)."
+        },
+        {
+          "id": 20,
+          "question": "Best practices for migrating Aura to LWC?",
+          "options": {
+            "A": "Start with simple reusable components; Replace component events with CustomEvent; Replace application events with LMS; Use LWC for new features, Aura for legacy until fully migrated.",
+            "B": "Rewrite everything to Visualforce first.",
+            "C": "Keep using Aura forever without changes.",
+            "D": "Convert Apex to Java before migration."
+          },
+          "answer": "D",
+          "explanation": "A practical migration approach is to incrementally replace components, use CustomEvent/LMS for event translation, and adopt LWC for new development (correct content under A)."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,249 @@
+{
+"section": "Design Patterns & Frameworks",
+  "levels": {
+    "level17": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What are design patterns in Salesforce?",
+          "options": {
+            "A": "Standardized coding solutions to common problems (e.g., Trigger Handler, Singleton, Factory, Strategy) that improve maintainability and scalability.",
+            "B": "Only UI-related templates used for styling LWC components.",
+            "C": "System-enforced Apex classes created by Salesforce automatically.",
+            "D": "Special code snippets that bypass governor limits."
+          },
+          "answer": "A",
+          "explanation": "Design patterns provide reusable solutions to common software design problems, helping build scalable and maintainable applications."
+        },
+        {
+          "id": 2,
+          "question": "What is the Trigger Framework pattern?",
+          "options": {
+            "A": "A structure that organizes trigger logic by delegating operations to a handler class, preventing multiple triggers per object.",
+            "B": "A batch job for handling multiple triggers simultaneously.",
+            "C": "A naming convention for Apex triggers only.",
+            "D": "A tool used to generate triggers automatically in Setup."
+          },
+          "answer": "A",
+          "explanation": "Trigger frameworks centralize logic handling, promote one-trigger-per-object policy, and simplify maintenance."
+        },
+        {
+          "id": 3,
+          "question": "Why is a Trigger Framework important?",
+          "options": {
+            "A": "Ensures one trigger per object, improves readability and maintainability, supports bulkification and recursion handling.",
+            "B": "Allows multiple triggers per object to run in random order.",
+            "C": "Eliminates the need for writing test classes.",
+            "D": "Improves UI rendering speed in Lightning components."
+          },
+          "answer": "A",
+          "explanation": "Frameworks structure trigger logic cleanly and avoid problems like recursion, performance issues, and logic duplication."
+        },
+        {
+          "id": 4,
+          "question": "Can you explain the Trigger Handler pattern?",
+          "options": {
+            "A": "A class with methods like beforeInsert, beforeUpdate, afterInsert, etc., that contains trigger logic separated from the trigger itself.",
+            "B": "A mechanism to disable triggers permanently.",
+            "C": "A standard Salesforce tool for debugging triggers.",
+            "D": "A method to dynamically generate trigger metadata."
+          },
+          "answer": "A",
+          "explanation": "A trigger handler organizes trigger logic by operation type and centralizes control flow in one Apex class."
+        },
+        {
+          "id": 5,
+          "question": "How do you prevent recursion in triggers?",
+          "options": {
+            "A": "Use a static Boolean variable or a trigger framework with recursion control.",
+            "B": "Write multiple triggers for each event to reset recursion.",
+            "C": "Disable validation rules in Setup.",
+            "D": "Use Workflow Rules instead of triggers."
+          },
+          "answer": "A",
+          "explanation": "Static flags and frameworks are used to prevent infinite loops in triggers that re-invoke themselves."
+        },
+        {
+          "id": 6,
+          "question": "What is the Singleton design pattern?",
+          "options": {
+            "A": "Ensures only one instance of a class is created and shared. Useful for managing shared resources like configuration data.",
+            "B": "A pattern that allows creating multiple copies of the same object.",
+            "C": "Used for creating dynamic Apex classes during runtime.",
+            "D": "A pattern for asynchronous callouts."
+          },
+          "answer": "A",
+          "explanation": "Singleton ensures global state consistency by maintaining one instance across the transaction."
+        },
+        {
+          "id": 7,
+          "question": "How is Singleton implemented in Apex?",
+          "options": {
+            "A": "By using a private constructor and a static method that returns a single instance.",
+            "B": "By using public constructors and multiple instances.",
+            "C": "By extending the Database.Batchable interface.",
+            "D": "By implementing the Callable interface."
+          },
+          "answer": "A",
+          "explanation": "Singleton uses a private constructor and static instance getter to control object instantiation."
+        },
+        {
+          "id": 8,
+          "question": "What is the Factory design pattern?",
+          "options": {
+            "A": "A pattern that creates objects without exposing the creation logic, useful for dynamic instantiation.",
+            "B": "A pattern that deletes objects dynamically.",
+            "C": "A UI template engine for LWC components.",
+            "D": "A database storage mechanism for Apex classes."
+          },
+          "answer": "A",
+          "explanation": "Factory encapsulates object creation logic, allowing runtime selection of object type without changing client code."
+        },
+        {
+          "id": 9,
+          "question": "Example use case of Factory pattern in Salesforce?",
+          "options": {
+            "A": "Creating different payment gateway integrations (PayPal, Stripe, Razorpay) based on configuration.",
+            "B": "Scheduling Apex jobs dynamically.",
+            "C": "Generating Visualforce pages dynamically.",
+            "D": "Performing DML operations without SOQL."
+          },
+          "answer": "A",
+          "explanation": "Factory allows selection of implementation (e.g., PayPal/Stripe) based on configuration or context."
+        },
+        {
+          "id": 10,
+          "question": "What is the Strategy design pattern?",
+          "options": {
+            "A": "Defines a family of algorithms and lets the client choose one at runtime, promoting flexibility.",
+            "B": "Used for managing static resources dynamically.",
+            "C": "A database strategy to optimize queries.",
+            "D": "A way to compress Apex classes into a single file."
+          },
+          "answer": "A",
+          "explanation": "Strategy pattern encapsulates interchangeable algorithms that can be swapped dynamically at runtime."
+        },
+        {
+          "id": 11,
+          "question": "Example use case of Strategy pattern in Salesforce?",
+          "options": {
+            "A": "Different discount calculation strategies (student discount, seasonal discount, bulk discount) applied dynamically.",
+            "B": "Defining trigger order execution.",
+            "C": "Storing metadata in static resources.",
+            "D": "Executing DML asynchronously."
+          },
+          "answer": "A",
+          "explanation": "Strategy is ideal for interchangeable business rules like discounts or tax calculations."
+        },
+        {
+          "id": 12,
+          "question": "What is the Command design pattern?",
+          "options": {
+            "A": "Encapsulates a request as an object, allowing execution, queuing, or logging of commands — often used in batch or async processing.",
+            "B": "A method for defining trigger events in metadata.",
+            "C": "Used to queue LWC actions from Apex.",
+            "D": "A way to lock records in Salesforce."
+          },
+          "answer": "A",
+          "explanation": "Command pattern encapsulates operations, making it easy to queue, log, or undo them."
+        },
+        {
+          "id": 13,
+          "question": "What is the Observer design pattern?",
+          "options": {
+            "A": "A pattern where one object (subject) notifies multiple dependent objects (observers) when its state changes, e.g., Platform Events.",
+            "B": "Used to hide class dependencies.",
+            "C": "For creating one-to-one data relationships.",
+            "D": "Used for combining multiple queries."
+          },
+          "answer": "A",
+          "explanation": "Observer allows subscribers to react automatically to state changes in a subject, similar to event-based architecture."
+        },
+        {
+          "id": 14,
+          "question": "What is the Decorator design pattern?",
+          "options": {
+            "A": "Adds new functionality to an existing object dynamically without modifying its structure, e.g., adding logging or auditing.",
+            "B": "A UI component for page decoration.",
+            "C": "Used to override Salesforce standard UI themes.",
+            "D": "Combines multiple Apex classes into one."
+          },
+          "answer": "A",
+          "explanation": "Decorator attaches additional behaviors (logging, validation) dynamically without altering base class code."
+        },
+        {
+          "id": 15,
+          "question": "What is the Adapter design pattern?",
+          "options": {
+            "A": "Converts the interface of one class into another expected by clients, e.g., wrapping an external REST API response.",
+            "B": "Used to combine multiple database connections.",
+            "C": "A way to merge DML operations together.",
+            "D": "Used for file compression in Salesforce."
+          },
+          "answer": "A",
+          "explanation": "Adapter helps incompatible interfaces work together — for example, mapping an external API’s structure to Salesforce objects."
+        },
+        {
+          "id": 16,
+          "question": "What is the Repository design pattern?",
+          "options": {
+            "A": "Provides a centralized location for data access logic, separating business logic from SOQL queries.",
+            "B": "Stores metadata for batch Apex jobs.",
+            "C": "Used to log trigger execution steps.",
+            "D": "Manages static resources dynamically."
+          },
+          "answer": "A",
+          "explanation": "Repository centralizes SOQL/DML logic, keeping service and business layers clean and focused on logic."
+        },
+        {
+          "id": 17,
+          "question": "What is the Unit of Work pattern?",
+          "options": {
+            "A": "Groups multiple DML operations into a single transaction, reducing governor limit usage; available in Apex Enterprise Patterns.",
+            "B": "Used to create multiple async jobs automatically.",
+            "C": "A UI pattern for batching form inputs.",
+            "D": "A design used only for callouts."
+          },
+          "answer": "A",
+          "explanation": "Unit of Work batches related DML actions, committing them efficiently together while tracking changes."
+        },
+        {
+          "id": 18,
+          "question": "What is Dependency Injection in Apex?",
+          "options": {
+            "A": "Passing dependencies (objects or services) into a class rather than hardcoding them, promoting testability and flexibility.",
+            "B": "A mechanism for creating database connections.",
+            "C": "Used to inject data into records after save.",
+            "D": "A method for limiting static variables."
+          },
+          "answer": "A",
+          "explanation": "Dependency injection decouples components, simplifying testing and promoting modular design."
+        },
+        {
+          "id": 19,
+          "question": "What are Apex Enterprise Patterns?",
+          "options": {
+            "A": "A set of design patterns (by Andrew Fawcett) that includes Service, Domain, Selector, and Unit of Work layers for scalable Apex applications.",
+            "B": "A Salesforce-managed package for logging events.",
+            "C": "A pattern for Lightning component styling.",
+            "D": "A deprecated trigger framework for legacy orgs."
+          },
+          "answer": "A",
+          "explanation": "Apex Enterprise Patterns formalize architecture layers to improve code organization and maintainability."
+        },
+        {
+          "id": 20,
+          "question": "What are best practices for using design patterns in Salesforce?",
+          "options": {
+            "A": "Use trigger frameworks, apply Singleton for config caching, use Factory for dynamic instantiation, apply Unit of Work for bulk DML, and avoid over-engineering.",
+            "B": "Use as many design patterns as possible in every class.",
+            "C": "Avoid using design patterns for performance reasons.",
+            "D": "Rely only on Workflow Rules and skip Apex patterns."
+          },
+          "answer": "A",
+          "explanation": "Use patterns selectively — frameworks, Singleton, Factory, and Unit of Work — to enhance design without unnecessary complexity."
+        }
+      ]
+    }
+  }
+}

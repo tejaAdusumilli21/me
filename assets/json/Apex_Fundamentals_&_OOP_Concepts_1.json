@@ -1,0 +1,609 @@
+{
+  "section": "Apex Fundamentals & OOP Concepts",
+  "levels": {
+    "level1": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Apex?",
+          "options": {
+            "A": "A strongly typed, object-oriented programming language used to execute flow and transaction control statements on Salesforce servers.",
+            "B": "A front-end framework for building Salesforce pages.",
+            "C": "A scripting language used only for Salesforce UI customization.",
+            "D": "A relational database used by Salesforce."
+          },
+          "answer": "A",
+          "explanation": "Apex is like Java but runs natively on the Salesforce platform and respects governor limits."
+        },
+        {
+          "id": 2,
+          "question": "How is Apex similar to Java?",
+          "options": {
+            "A": "Apex runs on JVM just like Java.",
+            "B": "Apex uses Java bytecode directly.",
+            "C": "Syntax, OOP principles (inheritance, polymorphism), exception handling, and data types are similar.",
+            "D": "Same deployment model and platform as Java."
+          },
+          "answer": "C",
+          "explanation": "Developers from Java background can easily adapt to Apex because of similar syntax and OOP principles."
+        },
+        {
+          "id": 3,
+          "question": "Difference between Apex and Java?",
+          "options": {
+            "A": "Apex is a front-end library while Java is a database.",
+            "B": "Apex is cloud-hosted, has governor limits, and is tightly coupled with Salesforce objects, while Java is general-purpose and runs on JVM.",
+            "C": "Apex is compiled to JVM bytecode and runs anywhere JVM is available.",
+            "D": "Java has governor limits but Apex does not."
+          },
+          "answer": "B",
+          "explanation": "Apex runs on Salesforce infrastructure with governor limits and direct mapping to Salesforce data; Java is general-purpose and runs on JVM."
+        },
+        {
+          "id": 4,
+          "question": "What are collections in Apex?",
+          "options": {
+            "A": "File storage objects in Salesforce.",
+            "B": "UI components for grouping fields.",
+            "C": "Apex classes that represent external services.",
+            "D": "Types that hold multiple values: List, Set, Map."
+          },
+          "answer": "D",
+          "explanation": "Collections in Apex include List, Set, and Map for holding multiple values."
+        },
+        {
+          "id": 5,
+          "question": "Difference between List, Set, and Map?",
+          "options": {
+            "A": "List: Ordered, allows duplicates; Set: Unordered, no duplicates; Map: Key-value pairs.",
+            "B": "List: Unordered; Set: Ordered; Map: Single value.",
+            "C": "List and Set are the same; Map is for files.",
+            "D": "Set allows duplicates while List does not."
+          },
+          "answer": "A",
+          "explanation": "List is ordered and allows duplicates, Set is unordered with no duplicates, Map holds key-value pairs."
+        },
+        {
+          "id": 6,
+          "question": "What is a sObject?",
+          "options": {
+            "A": "A server-side script file.",
+            "B": "A Salesforce UI component.",
+            "C": "A generic data type that represents Salesforce records (standard/custom objects).",
+            "D": "A database index in Salesforce."
+          },
+          "answer": "C",
+          "explanation": "sObject is the generic Apex type for Salesforce records (e.g., Account, Contact)."
+        },
+        {
+          "id": 7,
+          "question": "How do you create a new record in Apex?",
+          "options": {
+            "A": "By calling HTTP POST to Salesforce UI.",
+            "B": "Using insert DML.",
+            "C": "Using createRecord client-side only.",
+            "D": "By modifying the schema directly."
+          },
+          "answer": "B",
+          "explanation": "In Apex you create records using DML statements such as insert. Example: Account acc = new Account(Name='Test'); insert acc;"
+        },
+        {
+          "id": 8,
+          "question": "What is DML in Apex?",
+          "options": {
+            "A": "A method to debug logs.",
+            "B": "A UI rendering engine in Salesforce.",
+            "C": "A networking protocol used by Apex.",
+            "D": "Data Manipulation Language operations: insert, update, delete, merge, undelete, upsert."
+          },
+          "answer": "D",
+          "explanation": "DML stands for Data Manipulation Language used to perform record operations in Apex."
+        },
+        {
+          "id": 9,
+          "question": "What is SOQL?",
+          "options": {
+            "A": "Salesforce Object Query Language, used to query data from Salesforce objects.",
+            "B": "A language to update Salesforce metadata.",
+            "C": "A UI layout language.",
+            "D": "A testing framework for Apex."
+          },
+          "answer": "A",
+          "explanation": "SOQL is used to query records in Salesforce, e.g., SELECT Id, Name FROM Account WHERE Industry='IT'."
+        },
+        {
+          "id": 10,
+          "question": "What is SOSL?",
+          "options": {
+            "A": "A language for batch jobs only.",
+            "B": "A schema definition language.",
+            "C": "Salesforce Object Search Language, used to search across multiple objects and fields.",
+            "D": "A visualization language for reports."
+          },
+          "answer": "C",
+          "explanation": "SOSL is useful for text searches across multiple objects and fields. Example: FIND 'Test' IN ALL FIELDS RETURNING Account(Id, Name), Contact(Id, Name)."
+        },
+        {
+          "id": 11,
+          "question": "What are Governor Limits?",
+          "options": {
+            "A": "Limits set by the user in their profile.",
+            "B": "Limits that only apply to UI components.",
+            "C": "Hard limits on storage only, not runtime.",
+            "D": "Salesforce-imposed runtime limits to ensure efficient multi-tenant performance."
+          },
+          "answer": "D",
+          "explanation": "Governor limits control resources like SOQL count, heap size, and DML to protect the shared Salesforce environment."
+        },
+        {
+          "id": 12,
+          "question": "Example of a governor limit?",
+          "options": {
+            "A": "Max 5000 HTTP callouts per transaction.",
+            "B": "Max 100 SOQL queries per transaction.",
+            "C": "Max 1 user per org.",
+            "D": "No limits exist."
+          },
+          "answer": "B",
+          "explanation": "One common governor limit is a maximum of 100 SOQL queries in synchronous transactions (context-dependent) to enforce bulkification."
+        },
+        {
+          "id": 13,
+          "question": "What is a Static variable?",
+          "options": {
+            "A": "A variable that changes with each instance creation.",
+            "B": "A variable stored only in the database.",
+            "C": "A variable tied to the class instead of instances; retains value for transaction.",
+            "D": "A variable used only in tests."
+          },
+          "answer": "C",
+          "explanation": "Static variables are class-level and persist for the duration of the transaction. Example: public static Boolean hasRun = false;"
+        },
+        {
+          "id": 14,
+          "question": "Difference between Static and Final?",
+          "options": {
+            "A": "Static: Class-level scope; Final: Value cannot be changed after initialization.",
+            "B": "Static: Instance-level scope; Final: Class-level scope.",
+            "C": "Static: Read-only; Final: Writable at runtime.",
+            "D": "No difference at all."
+          },
+          "answer": "A",
+          "explanation": "Static affects scope (class-level), while final prevents reassignment after initialization."
+        },
+        {
+          "id": 15,
+          "question": "What are Access Modifiers in Apex?",
+          "options": {
+            "A": "Methods that control user access to records.",
+            "B": "UI settings only available in Setup.",
+            "C": "Labels used in reports.",
+            "D": "Keywords like public, private, protected, global to determine visibility."
+          },
+          "answer": "D",
+          "explanation": "Access modifiers control visibility of classes, methods, and variables in Apex."
+        },
+        {
+          "id": 16,
+          "question": "What is the use of the with sharing keyword?",
+          "options": {
+            "A": "To bypass sharing rules and access all records.",
+            "B": "Enforces sharing rules (record-level security) in Apex classes.",
+            "C": "To prevent class inheritance.",
+            "D": "To encrypt class data automatically."
+          },
+          "answer": "B",
+          "explanation": "'with sharing' ensures Apex respects the running user's record-level access."
+        },
+        {
+          "id": 17,
+          "question": "Difference between with sharing and without sharing?",
+          "options": {
+            "A": "with sharing: Ignores sharing; without sharing: Respects sharing.",
+            "B": "They are identical in behavior.",
+            "C": "with sharing: Respects user’s record-level access; without sharing: Ignores record access restrictions.",
+            "D": "One is used only in test classes."
+          },
+          "answer": "C",
+          "explanation": "Use 'with sharing' to enforce sharing; 'without sharing' runs in system context ignoring record-level sharing."
+        },
+        {
+          "id": 18,
+          "question": "What is Inheritance in Apex?",
+          "options": {
+            "A": "Apex feature to store data across sessions.",
+            "B": "A method to transfer ownership of records.",
+            "C": "A way to call external APIs.",
+            "D": "Mechanism where one class derives properties/methods of another."
+          },
+          "answer": "D",
+          "explanation": "Inheritance allows a child class to extend a parent class and reuse or override behavior. Example: class Child extends Parent { }"
+        },
+        {
+          "id": 19,
+          "question": "What is Polymorphism in Apex?",
+          "options": {
+            "A": "A way to store multiple data types in a single variable forever.",
+            "B": "A method that duplicates objects in the database.",
+            "C": "A serialization protocol.",
+            "D": "Same method name but different implementations (e.g., overriding)."
+          },
+          "answer": "D",
+          "explanation": "Polymorphism allows multiple implementations of the same method name, often via method overriding in subclasses."
+        },
+        {
+          "id": 20,
+          "question": "What is Encapsulation?",
+          "options": {
+            "A": "A technique to wrap data and methods together, controlling access via access modifiers.",
+            "B": "A method to compress data in Salesforce.",
+            "C": "An integration pattern for APIs.",
+            "D": "A UI component for grouping fields."
+          },
+          "answer": "A",
+          "explanation": "Encapsulation bundles data and behavior and restricts direct access, typically using private variables and getters/setters."
+        },
+        {
+          "id": 21,
+          "question": "Difference between Abstract and Virtual class?",
+          "options": {
+            "A": "Abstract: Can be instantiated; Virtual: Cannot be instantiated.",
+            "B": "They are the same in Apex.",
+            "C": "Abstract: Cannot be instantiated, may contain abstract methods; Virtual: Can be instantiated, but methods can be overridden.",
+            "D": "Virtual classes cannot have methods."
+          },
+          "answer": "C",
+          "explanation": "Abstract classes define a contract (may have abstract methods) and cannot be instantiated; virtual classes can be instantiated and allow method overriding."
+        },
+        {
+          "id": 22,
+          "question": "What is an Interface in Apex?",
+          "options": {
+            "A": "A concrete class with all method implementations.",
+            "B": "A built-in Apex logger.",
+            "C": "A data storage type.",
+            "D": "A contract that defines methods without implementation."
+          },
+          "answer": "D",
+          "explanation": "An interface declares method signatures that implementing classes must define. Example: interface MyInterface { void doSomething(); }"
+        },
+        {
+          "id": 23,
+          "question": "Difference between Interface and Abstract class?",
+          "options": {
+            "A": "Interface: Can have state and constructors; Abstract: Cannot.",
+            "B": "There is no difference in Apex.",
+            "C": "Abstract classes can implement multiple interfaces automatically.",
+            "D": "Interface: Only method signatures; Abstract: Can have both abstract and concrete methods."
+          },
+          "answer": "D",
+          "explanation": "Interfaces only declare method signatures; abstract classes can include both implemented and unimplemented methods and some state."
+        },
+        {
+          "id": 24,
+          "question": "What is a Constructor in Apex?",
+          "options": {
+            "A": "A special method called automatically when an object is created.",
+            "B": "A method to delete objects.",
+            "C": "A static block executed when Apex code is compiled.",
+            "D": "A database trigger only."
+          },
+          "answer": "A",
+          "explanation": "Constructors initialize new instances of a class and run when using new ClassName()."
+        },
+        {
+          "id": 25,
+          "question": "Can we overload constructors in Apex?",
+          "options": {
+            "A": "Yes, multiple constructors can exist with different parameters.",
+            "B": "No, Apex does not support constructor overloading.",
+            "C": "Only in test classes.",
+            "D": "Only for interfaces."
+          },
+          "answer": "A",
+          "explanation": "Apex supports multiple constructors with different parameter lists (overloading)."
+        },
+        {
+          "id": 26,
+          "question": "What is Exception Handling in Apex?",
+          "options": {
+            "A": "A way to make code run faster automatically.",
+            "B": "A logging framework for UI errors.",
+            "C": "Handling runtime errors using try-catch-finally blocks.",
+            "D": "A feature to block DML operations."
+          },
+          "answer": "C",
+          "explanation": "Use try-catch-finally to manage runtime exceptions and ensure cleanup or alternative flows."
+        },
+        {
+          "id": 27,
+          "question": "What is a Custom Exception?",
+          "options": {
+            "A": "An exception type defined by Salesforce only.",
+            "B": "A system exception that cannot be caught.",
+            "C": "A web service fault only.",
+            "D": "User-defined exception extending Exception class."
+          },
+          "answer": "D",
+          "explanation": "Custom exceptions let you define application-specific error types. Example: class MyException extends Exception {}"
+        },
+        {
+          "id": 28,
+          "question": "What is a Null Pointer Exception?",
+          "options": {
+            "A": "An error that only occurs in database queries.",
+            "B": "When accessing a property or method of a null object.",
+            "C": "A compile-time error only.",
+            "D": "An exception thrown for invalid field types."
+          },
+          "answer": "B",
+          "explanation": "A Null Pointer Exception happens when code attempts to access members of a null reference."
+        },
+        {
+          "id": 29,
+          "question": "What is the difference between Primitive and Non-Primitive data types?",
+          "options": {
+            "A": "Primitive: int, boolean, String, Double; Non-Primitive: sObjects, collections, custom classes.",
+            "B": "Primitive: sObjects and collections; Non-Primitive: int, boolean, String.",
+            "C": "There is no difference in Apex.",
+            "D": "Primitive types cannot be used in methods."
+          },
+          "answer": "A",
+          "explanation": "Primitive types are basic (int, boolean, String); non-primitives include sObjects, collections, and user-defined classes."
+        },
+        {
+          "id": 30,
+          "question": "Can Apex support Multiple Inheritance?",
+          "options": {
+            "A": "Yes, Apex supports multiple inheritance of classes.",
+            "B": "Only if classes are virtual.",
+            "C": "No, but can implement multiple interfaces.",
+            "D": "Only for test code."
+          },
+          "answer": "C",
+          "explanation": "Apex does not allow multiple class inheritance, but a class can implement multiple interfaces."
+        },
+        {
+          "id": 31,
+          "question": "What are Enums in Apex?",
+          "options": {
+            "A": "Variables that can change type at runtime.",
+            "B": "A type of exception.",
+            "C": "A database object type.",
+            "D": "Special data type representing constants."
+          },
+          "answer": "D",
+          "explanation": "Enums are named constants. Example: public enum Status { NEW, INPROGRESS, CLOSED }"
+        },
+        {
+          "id": 32,
+          "question": "What are Transient variables?",
+          "options": {
+            "A": "Variables not saved during serialization (mainly in Visualforce controllers).",
+            "B": "Variables that persist between HTTP requests automatically.",
+            "C": "A special type of static variable.",
+            "D": "Variables used only in triggers."
+          },
+          "answer": "A",
+          "explanation": "Transient variables are not serialized during view state save, used in Visualforce to reduce view state size."
+        },
+        {
+          "id": 33,
+          "question": "What is the difference between == and equals() in Apex?",
+          "options": {
+            "A": "== checks for logical equality; equals() checks for reference equality.",
+            "B": "They are identical in Apex.",
+            "C": "== checks for reference and primitive equality; .equals() checks for logical equality.",
+            "D": "equals() is only for primitives."
+          },
+          "answer": "C",
+          "explanation": "Use == for primitives/reference checks and .equals() for logical equality (where implemented)."
+        },
+        {
+          "id": 34,
+          "question": "What are Wrapper Classes?",
+          "options": {
+            "A": "Built-in Apex types for DML only.",
+            "B": "Custom classes that combine multiple data types/objects for complex logic.",
+            "C": "A special UI component in LWC.",
+            "D": "A way to encrypt sObjects."
+          },
+          "answer": "B",
+          "explanation": "Wrapper classes bundle objects and additional properties for use in complex processing or UI scenarios."
+        },
+        {
+          "id": 35,
+          "question": "Example of Wrapper Class?",
+          "options": {
+            "A": "public wrapper AccountWrapper extends Account { }",
+            "B": "Wrapper classes cannot include sObjects.",
+            "C": "A wrapper is an interface only.",
+            "D": "public class AccountWrapper { public Account acc; public Boolean isSelected; }"
+          },
+          "answer": "D",
+          "explanation": "A typical wrapper class contains an sObject and helper fields to manage selection or UI state."
+        },
+        {
+          "id": 36,
+          "question": "What is a Static Resource?",
+          "options": {
+            "A": "Uploaded files (CSS, JS, images, ZIP) that can be used in VF, LWC, or Apex.",
+            "B": "A dynamically generated Apex page.",
+            "C": "A field on the Account object.",
+            "D": "A Salesforce system user."
+          },
+          "answer": "A",
+          "explanation": "Static resources are uploaded assets referenced by pages and components for consistent delivery."
+        },
+        {
+          "id": 37,
+          "question": "Can we perform DML in a Constructor?",
+          "options": {
+            "A": "No, it's impossible by language design.",
+            "B": "Only in managed packages.",
+            "C": "Yes, but not recommended as it can cause unexpected behavior.",
+            "D": "Only for test methods."
+          },
+          "answer": "C",
+          "explanation": "While allowed, performing DML in constructors can lead to side effects and is generally discouraged."
+        },
+        {
+          "id": 38,
+          "question": "What is the difference between Insert and Database.insert?",
+          "options": {
+            "A": "insert allows partial success; Database.insert always rolls back on error.",
+            "B": "There is no difference in behavior.",
+            "C": "Database.insert cannot insert lists.",
+            "D": "insert throws exception if any record fails; Database.insert allows partial success using allOrNone=false."
+          },
+          "answer": "D",
+          "explanation": "Database.insert supports optional partial success and error handling via Database.SaveResult when allOrNone=false."
+        },
+        {
+          "id": 39,
+          "question": "What is the use of Schema class in Apex?",
+          "options": {
+            "A": "To manage UI components.",
+            "B": "Used for Dynamic Apex to access metadata at runtime.",
+            "C": "To run SOQL statements only.",
+            "D": "To deploy packages."
+          },
+          "answer": "B",
+          "explanation": "Schema provides runtime metadata access like Schema.sObjectType.Account.fields.getMap()."
+        },
+        {
+          "id": 40,
+          "question": "What are Custom Metadata Types?",
+          "options": {
+            "A": "Types that cannot be deployed between orgs.",
+            "B": "Temporary settings that are lost on restart.",
+            "C": "Configuration data defined by admin/developer, deployable via packages.",
+            "D": "Inner classes inside Apex."
+          },
+          "answer": "C",
+          "explanation": "Custom metadata stores config data that can be packaged and deployed, unlike some custom settings."
+        },
+        {
+          "id": 41,
+          "question": "What are Custom Settings?",
+          "options": {
+            "A": "Similar to custom objects, optimized for app configuration and accessible in Apex without SOQL.",
+            "B": "Standard objects used for account hierarchy only.",
+            "C": "Deprecated feature with no use.",
+            "D": "Only available in sandbox orgs."
+          },
+          "answer": "A",
+          "explanation": "Custom settings provide cached configuration accessible without SOQL for efficient access in code."
+        },
+        {
+          "id": 42,
+          "question": "What is the difference between Custom Metadata and Custom Settings?",
+          "options": {
+            "A": "Custom Metadata is not deployable; Custom Settings are deployable.",
+            "B": "They are identical features with different names.",
+            "C": "Custom Settings are only for profiles.",
+            "D": "Custom Metadata: Deployable, versioned, accessible in formulas; Custom Settings: Not deployable via packages."
+          },
+          "answer": "D",
+          "explanation": "Custom metadata is packaged and versioned; custom settings are org-specific and less portable."
+        },
+        {
+          "id": 43,
+          "question": "What are Annotations in Apex?",
+          "options": {
+            "A": "Special keywords starting with @ that provide metadata to classes/methods.",
+            "B": "Comments in the code ignored by the compiler.",
+            "C": "A type of exception handler.",
+            "D": "A way to encrypt code."
+          },
+          "answer": "A",
+          "explanation": "Annotations like @future, @isTest, @AuraEnabled annotate behavior or expose methods to other frameworks."
+        },
+        {
+          "id": 44,
+          "question": "What is @AuraEnabled used for?",
+          "options": {
+            "A": "To mark methods as deprecated.",
+            "B": "To expose Apex methods/properties to LWC/Aura components.",
+            "C": "To secure classes from being accessed.",
+            "D": "To enable batch processing."
+          },
+          "answer": "B",
+          "explanation": "@AuraEnabled allows client-side components (Aura/LWC) to call Apex methods or access properties."
+        },
+        {
+          "id": 45,
+          "question": "What is a Virtual Method?",
+          "options": {
+            "A": "A method that cannot be overridden.",
+            "B": "A static method only.",
+            "C": "A method used only for testing.",
+            "D": "A method in a virtual class that can be overridden in child classes."
+          },
+          "answer": "D",
+          "explanation": "Virtual methods are overridable in subclasses of a virtual class to provide polymorphic behavior."
+        },
+        {
+          "id": 46,
+          "question": "What is the use of instanceof operator?",
+          "options": {
+            "A": "To check if an object is an instance of a specific class.",
+            "B": "To compare two strings.",
+            "C": "To cast objects to primitives.",
+            "D": "To perform DML operations."
+          },
+          "answer": "A",
+          "explanation": "instanceof helps check type at runtime. Example: if(obj instanceof Account) { ... }"
+        },
+        {
+          "id": 47,
+          "question": "What are Getter and Setter methods?",
+          "options": {
+            "A": "Methods used to access and update private variables.",
+            "B": "UI components in Lightning.",
+            "C": "Database triggers only.",
+            "D": "Methods that delete records."
+          },
+          "answer": "A",
+          "explanation": "Getters and setters encapsulate access to private fields and allow controlled read/write."
+        },
+        {
+          "id": 48,
+          "question": "What is the difference between get() and set() methods in Apex properties?",
+          "options": {
+            "A": "get(): Assigns value; set(): Retrieves value.",
+            "B": "They are deprecated in Apex.",
+            "C": "Only get() exists in Apex.",
+            "D": "get(): Retrieves value; set(): Assigns value."
+          },
+          "answer": "D",
+          "explanation": "get() returns the property value; set() is used to assign a value to the property."
+        },
+        {
+          "id": 49,
+          "question": "What is a Database Savepoint?",
+          "options": {
+            "A": "A point in a transaction to rollback if needed.",
+            "B": "A method to permanently commit partial data only.",
+            "C": "A log of all DML operations.",
+            "D": "A type of test annotation."
+          },
+          "answer": "A",
+          "explanation": "Savepoints allow rolling back to a known state. Example: Savepoint sp = Database.setSavepoint(); Database.rollback(sp);"
+        },
+        {
+          "id": 50,
+          "question": "What is a Trigger Context Variable?",
+          "options": {
+            "A": "A global variable set in Setup.",
+            "B": "A type of field used only in triggers.",
+            "C": "A method to commit trigger operations automatically.",
+            "D": "Built-in variables like Trigger.new, Trigger.old, Trigger.isInsert that provide context during trigger execution."
+          },
+          "answer": "D",
+          "explanation": "Trigger context variables give context (records and operation type) to code running in triggers."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,309 @@
+{
+    "section": "Testing",
+  "levels": {
+    "level16": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "Why do we need testing in Salesforce?",
+          "options": {
+            "A": "To ensure code works as expected, prevent regressions, meet 75% code coverage requirement, and validate business logic.",
+            "B": "Only to increase storage limits for the org.",
+            "C": "To automatically deploy code to production without review.",
+            "D": "To replace the need for documentation entirely."
+          },
+          "answer": "A",
+          "explanation": "Testing validates functionality, prevents regressions, satisfies deployment coverage rules, and verifies business logic."
+        },
+        {
+          "id": 2,
+          "question": "What is the minimum test coverage required for production deployment?",
+          "options": {
+            "A": "100% across all Apex classes.",
+            "B": "75% across all Apex classes and triggers, and each trigger must have some coverage.",
+            "C": "No minimum — tests are optional.",
+            "D": "50% overall coverage is required."
+          },
+          "answer": "B",
+          "explanation": "Salesforce enforces at least 75% overall Apex coverage for production deployment; triggers must also be covered."
+        },
+        {
+          "id": 3,
+          "question": "What is @isTest annotation?",
+          "options": {
+            "A": "Marks a class or method as a test class/method; test methods don’t count against org limits and aren’t included in package size.",
+            "B": "An annotation for scheduling batch jobs.",
+            "C": "A decorator to mark methods as deprecated.",
+            "D": "A way to expose a method to Aura/LWC."
+          },
+          "answer": "A",
+          "explanation": "@isTest designates test classes/methods so the runtime treats them as test code with special behaviors."
+        },
+        {
+          "id": 4,
+          "question": "What is seeAllData=true in test classes?",
+          "options": {
+            "A": "Allows test methods to access existing org data; best practice is to avoid it and create test data instead.",
+            "B": "Automatically backs up org data after tests run.",
+            "C": "Enables parallel test execution only.",
+            "D": "Grants tests admin privileges permanently."
+          },
+          "answer": "A",
+          "explanation": "seeAllData=true lets tests see org data but reduces test isolation and reproducibility, so creating test data is recommended."
+        },
+        {
+          "id": 5,
+          "question": "How to create test data in Apex tests?",
+          "options": {
+            "A": "By inserting test records in the test method or using a @testSetup method.",
+            "B": "By exporting production records and importing them in tests.",
+            "C": "Test data cannot be created inside tests.",
+            "D": "Only by using external CSV files hosted outside Salesforce."
+          },
+          "answer": "A",
+          "explanation": "Create records in test methods or use @testSetup to create shared test data for efficiency and isolation."
+        },
+        {
+          "id": 6,
+          "question": "What is the @testSetup annotation?",
+          "options": {
+            "A": "Creates common test data once per class, shared across all test methods for efficiency.",
+            "B": "Schedules tests to run at a later time.",
+            "C": "Marks a test to be excluded from coverage.",
+            "D": "Defines a test user account to run tests under."
+          },
+          "answer": "A",
+          "explanation": "@testSetup runs once and prepares data that each test method can use, reducing duplicate setup and improving speed."
+        },
+        {
+          "id": 7,
+          "question": "Difference between Test.startTest() and Test.stopTest()?",
+          "options": {
+            "A": "startTest() resets governor limits; stopTest() executes asynchronous code (future, batch, queueable, schedulable).",
+            "B": "startTest() deploys metadata; stopTest() rolls it back.",
+            "C": "startTest() runs tests in parallel; stopTest() ends the org.",
+            "D": "They are aliases and do the same thing."
+          },
+          "answer": "A",
+          "explanation": "startTest() gives a fresh set of limits for the following code; stopTest() forces async jobs queued during the test to run."
+        },
+        {
+          "id": 8,
+          "question": "Can we call DML in test classes?",
+          "options": {
+            "A": "Yes — test methods can perform DML; the data is rolled back automatically after the test completes.",
+            "B": "No — DML is blocked in tests.",
+            "C": "Only read operations are allowed in tests.",
+            "D": "DML is allowed but always persists permanently."
+          },
+          "answer": "A",
+          "explanation": "Tests can insert/update/delete records; changes are rolled back at the end of the test to keep org data clean."
+        },
+        {
+          "id": 9,
+          "question": "Can we commit data permanently from a test class?",
+          "options": {
+            "A": "Yes — test-induced data persists across all orgs.",
+            "B": "No — data inserted in tests is not committed to the database.",
+            "C": "Only when seeAllData=true is used.",
+            "D": "Only in Developer Edition orgs."
+          },
+          "answer": "B",
+          "explanation": "Test transactions are isolated and rolled back; they do not commit persistent changes to the org."
+        },
+        {
+          "id": 10,
+          "question": "Can we test private methods in Apex?",
+          "options": {
+            "A": "No — private methods are completely untestable.",
+            "B": "Yes — using @TestVisible annotation to expose private members to test classes.",
+            "C": "Only by running tests in production.",
+            "D": "Private methods are automatically public in test context."
+          },
+          "answer": "B",
+          "explanation": "@TestVisible lets specific private fields/methods be visible to tests so internal behavior can be validated without changing production visibility."
+        },
+        {
+          "id": 11,
+          "question": "How do we test triggers?",
+          "options": {
+            "A": "By creating test data that executes trigger conditions and verifying expected results using System.assert.",
+            "B": "Triggers cannot be tested; only classes can.",
+            "C": "By manually running triggers from Setup.",
+            "D": "By exporting trigger logic to CSV for validation."
+          },
+          "answer": "A",
+          "explanation": "Create records that invoke the trigger and use assertions to confirm side effects (DML, field updates, related records) occurred."
+        },
+        {
+          "id": 12,
+          "question": "How to test a future method?",
+          "options": {
+            "A": "Call the method inside a test and wrap in Test.startTest() and Test.stopTest().",
+            "B": "Future methods cannot be tested at all.",
+            "C": "By deploying to production first and observing logs.",
+            "D": "By calling them outside of a test context only."
+          },
+          "answer": "A",
+          "explanation": "Use startTest/stopTest to ensure queued @future jobs run during test execution, then assert outcomes."
+        },
+        {
+          "id": 13,
+          "question": "How to test a batch class?",
+          "options": {
+            "A": "Use Database.executeBatch(new BatchClass(), 200) inside test methods.",
+            "B": "Batch classes cannot be executed in tests.",
+            "C": "Only run batch classes in production.",
+            "D": "By manually invoking execute() without context."
+          },
+          "answer": "A",
+          "explanation": "Call Database.executeBatch in tests (optionally with a small scope) and use Test.startTest/stopTest to control execution timing."
+        },
+        {
+          "id": 14,
+          "question": "How to test a Queueable class?",
+          "options": {
+            "A": "Use System.enqueueJob(new QueueableClass()) inside a test method and wrap with Test.startTest()/stopTest().",
+            "B": "Queueable classes cannot be enqueued in test context.",
+            "C": "Only scheduled jobs can be tested.",
+            "D": "By converting them to future methods temporarily."
+          },
+          "answer": "A",
+          "explanation": "Enqueue the job in a test; stopTest forces the job to run so you can assert results afterward."
+        },
+        {
+          "id": 15,
+          "question": "How to test a Schedulable class?",
+          "options": {
+            "A": "Use System.schedule('Test Job', '0 0 0 ? * * *', new MySchedulableClass()) inside a test.",
+            "B": "Schedulable classes cannot be tested.",
+            "C": "By running them directly in production console.",
+            "D": "By calling the execute method directly without scheduling."
+          },
+          "answer": "A",
+          "explanation": "Scheduling within a test context and using Test.startTest/stopTest allows the scheduled execute() to run for assertions."
+        },
+        {
+          "id": 16,
+          "question": "What is a Test Utility Class?",
+          "options": {
+            "A": "A helper class with static methods to create reusable test data, improving maintainability.",
+            "B": "A special system class that boosts coverage automatically.",
+            "C": "A managed package required dependency for tests.",
+            "D": "A developer-only UI for running tests manually."
+          },
+          "answer": "A",
+          "explanation": "Test utility classes centralize data creation and common assertions so tests are cleaner and easier to maintain."
+        },
+        {
+          "id": 17,
+          "question": "How to test callouts in Salesforce?",
+          "options": {
+            "A": "Use HttpCalloutMock or WebServiceMock interfaces to simulate responses; actual callouts are not allowed in tests.",
+            "B": "Perform real HTTP requests during test runs.",
+            "C": "Callouts are ignored in tests and return null.",
+            "D": "Use System.debug to approximate callout behavior."
+          },
+          "answer": "A",
+          "explanation": "Mocking external responses ensures tests are deterministic and do not rely on external systems or network availability."
+        },
+        {
+          "id": 18,
+          "question": "What is HttpCalloutMock?",
+          "options": {
+            "A": "A test interface to define mock HTTP responses for test methods that perform callouts.",
+            "B": "A built-in HTTP server inside Salesforce.",
+            "C": "A production-only library for callout monitoring.",
+            "D": "A UI component to view outbound requests."
+          },
+          "answer": "A",
+          "explanation": "Implement HttpCalloutMock to return a fake HttpResponse when tests execute code that makes HTTP callouts."
+        },
+        {
+          "id": 19,
+          "question": "How to test Platform Events?",
+          "options": {
+            "A": "Publish events in test classes and subscribe using triggers or processes to validate logic.",
+            "B": "Platform Events cannot be published in tests.",
+            "C": "Only external systems can publish platform events.",
+            "D": "Platform Events are automatically validated without tests."
+          },
+          "answer": "A",
+          "explanation": "In tests you can publish events and assert that triggers or subscribers processed the events as expected."
+        },
+        {
+          "id": 20,
+          "question": "How to test Exception Scenarios?",
+          "options": {
+            "A": "Use System.assertException or try-catch blocks in tests to verify proper handling.",
+            "B": "Exceptions cannot be asserted in tests.",
+            "C": "Only positive paths should be tested; exceptions are ignored.",
+            "D": "Throwing exceptions in tests automatically increases coverage."
+          },
+          "answer": "A",
+          "explanation": "Design tests to provoke error paths and assert that appropriate exceptions are thrown or handled gracefully."
+        },
+        {
+          "id": 21,
+          "question": "Can we exclude classes from code coverage?",
+          "options": {
+            "A": "Yes — by marking them with @isTest or @TestVisible where applicable.",
+            "B": "No — every class must be included in coverage calculations.",
+            "C": "Only managed package classes are excluded automatically.",
+            "D": "By deleting the class before deployment."
+          },
+          "answer": "C",
+          "explanation": "Managed package tests are treated separately; production orgs rely on test classes (@isTest) but you cannot exclude arbitrary non-test classes from coverage. (Use test design to avoid needing exclusions.)"
+        },
+        {
+          "id": 22,
+          "question": "What is the maximum test execution time limit?",
+          "options": {
+            "A": "60 minutes per test method.",
+            "B": "5 minutes for the entire org.",
+            "C": "Unlimited execution time for tests.",
+            "D": "10 seconds per test method."
+          },
+          "answer": "A",
+          "explanation": "Salesforce sets generous execution time limits for tests (commonly up to 60 minutes), but tests should still be efficient."
+        },
+        {
+          "id": 23,
+          "question": "How to check code coverage in Salesforce?",
+          "options": {
+            "A": "Developer Console, Setup → Apex Test Execution, or sfdx force:apex:test:run.",
+            "B": "By reading debug logs only.",
+            "C": "Coverage cannot be checked; it is shown only during deployment.",
+            "D": "Using the Reports tab labeled 'Coverage' by default."
+          },
+          "answer": "A",
+          "explanation": "Use Developer Console, Setup test runner, or SFDX CLI to run tests and inspect coverage metrics."
+        },
+        {
+          "id": 24,
+          "question": "What are best practices for writing test classes?",
+          "options": {
+            "A": "Cover positive & negative cases; avoid seeAllData=true; use @testSetup for reusability; cover bulk scenarios; use assertions to validate results.",
+            "B": "Rely on production data for all tests to save time.",
+            "C": "Avoid assertions — tests should only exercise code paths.",
+            "D": "Write one giant test class to cover everything for simplicity."
+          },
+          "answer": "A",
+          "explanation": "Good tests are isolated, reusable, check both success and failure, handle bulk data, and assert expected outcomes."
+        },
+        {
+          "id": 25,
+          "question": "What is the difference between unit test and integration test in Salesforce?",
+          "options": {
+            "A": "Unit Test → Tests a single class or method in isolation. Integration Test → Tests interaction between multiple components (triggers, classes, flows, etc.).",
+            "B": "They are the same and interchangeable terms.",
+            "C": "Unit tests run only in production; integration tests run only in sandbox.",
+            "D": "Integration tests are only for UI components."
+          },
+          "answer": "A",
+          "explanation": "Unit tests focus on single units (methods/classes) with mocked dependencies; integration tests validate cooperation among multiple components and systems."
+        }
+      ]
+    }
+  }
+}

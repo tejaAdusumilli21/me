@@ -1,0 +1,309 @@
+{
+   "section": "Sales Cloud",
+  "levels": {
+    "level10": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Sales Cloud in Salesforce?",
+          "options": {
+            "A": "A CRM solution to manage leads, opportunities, accounts, contacts, forecasting, and sales processes.",
+            "B": "A marketing automation only product for email campaigns.",
+            "C": "A data warehousing offering for analytics outside CRM.",
+            "D": "A serverless compute platform inside Salesforce."
+          },
+          "answer": "A",
+          "explanation": "Sales Cloud is Salesforce's core CRM offering focused on lead-to-cash processes, pipeline management, forecasting, and sales productivity."
+        },
+        {
+          "id": 2,
+          "question": "What are the key objects in Sales Cloud?",
+          "options": {
+            "A": "Case, Solution, Asset, Knowledge.",
+            "B": "Lead, Account, Contact, Opportunity, Campaign, Quote, Forecast.",
+            "C": "User, Group, PermissionSet only.",
+            "D": "Report, Dashboard, Dataset only."
+          },
+          "answer": "B",
+          "explanation": "Sales Cloud centers around Lead → Account/Contact → Opportunity and supporting objects like Campaigns, Quotes, and Forecasts."
+        },
+        {
+          "id": 3,
+          "question": "What is a Lead in Sales Cloud?",
+          "options": {
+            "A": "A closed deal that has been invoiced.",
+            "B": "A contact linked to an opportunity.",
+            "C": "A support ticket submitted by a customer.",
+            "D": "A prospect who has shown interest but is not yet qualified."
+          },
+          "answer": "D",
+          "explanation": "Leads represent unqualified prospects — people or companies that may become accounts/contacts/opportunities after qualification."
+        },
+        {
+          "id": 4,
+          "question": "What is Lead Conversion?",
+          "options": {
+            "A": "Deleting a lead permanently from the system.",
+            "B": "Assigning a lead to a queue only.",
+            "C": "The process of converting a lead into Account, Contact, and optionally Opportunity.",
+            "D": "Exporting leads to a CSV file."
+          },
+          "answer": "C",
+          "explanation": "Lead conversion creates an Account and Contact from the Lead and optionally creates an Opportunity to track potential revenue."
+        },
+        {
+          "id": 5,
+          "question": "Can a lead be converted without creating an Opportunity?",
+          "options": {
+            "A": "Yes, Salesforce provides the option to skip creating an Opportunity during conversion.",
+            "B": "No, an Opportunity is always mandatory on conversion.",
+            "C": "Only in Professional Edition.",
+            "D": "Only if a custom trigger blocks Opportunity creation."
+          },
+          "answer": "A",
+          "explanation": "During conversion users can choose not to create an Opportunity, useful when the lead is qualified but not sales-ready."
+        },
+        {
+          "id": 6,
+          "question": "What is an Opportunity?",
+          "options": {
+            "A": "A marketing campaign record.",
+            "B": "A potential revenue-generating deal linked to an Account and Contact.",
+            "C": "A support case escalation.",
+            "D": "A read-only snapshot for reporting."
+          },
+          "answer": "B",
+          "explanation": "Opportunities represent potential sales revenue and are tied to accounts/contacts with stages, amounts, and close dates."
+        },
+        {
+          "id": 7,
+          "question": "What are Opportunity Stages?",
+          "options": {
+            "A": "Different products in the price book.",
+            "B": "User permission levels for sales reps.",
+            "C": "Different phases of the sales cycle (e.g., Prospecting, Negotiation, Closed Won, Closed Lost).",
+            "D": "API endpoints for opportunity integrations."
+          },
+          "answer": "C",
+          "explanation": "Opportunity stages track progress through the sales lifecycle and usually map to probability percentages."
+        },
+        {
+          "id": 8,
+          "question": "What is Opportunity Probability?",
+          "options": {
+            "A": "A system flag for deleted records.",
+            "B": "A currency conversion rate applied to amounts.",
+            "C": "A stage-dependent discount applied to quotes.",
+            "D": "A percentage value that reflects the likelihood of closing a deal, linked to the Opportunity Stage."
+          },
+          "answer": "D",
+          "explanation": "Probability indicates the estimated chance of winning and is often derived from the Opportunity Stage to support forecasting."
+        },
+        {
+          "id": 9,
+          "question": "What is Forecasting in Sales Cloud?",
+          "options": {
+            "A": "A tool to schedule data backups.",
+            "B": "An object type for storing leads.",
+            "C": "A visual editor for page layouts.",
+            "D": "A tool to predict future revenue based on Opportunities in the pipeline."
+          },
+          "answer": "D",
+          "explanation": "Forecasting aggregates pipeline values to estimate future revenue — used by reps and managers for targets and planning."
+        },
+        {
+          "id": 10,
+          "question": "What is Collaborative Forecasting?",
+          "options": {
+            "A": "A deprecated reporting feature.",
+            "B": "A forecasting tool that allows managers and reps to adjust and share forecasts in real time.",
+            "C": "An automated lead scoring algorithm.",
+            "D": "A template system for quotes."
+          },
+          "answer": "B",
+          "explanation": "Collaborative Forecasting enables users to make manual adjustments, share insights, and collaborate on expected sales figures."
+        },
+        {
+          "id": 11,
+          "question": "Difference between Campaign and Opportunity?",
+          "options": {
+            "A": "Campaign → Sales deal; Opportunity → Marketing campaign.",
+            "B": "They are identical objects used interchangeably.",
+            "C": "Campaign → Marketing initiative to generate leads; Opportunity → Sales deal that generates revenue.",
+            "D": "Campaigns are only available in Service Cloud."
+          },
+          "answer": "C",
+          "explanation": "Campaigns track marketing efforts that generate leads; Opportunities track deals and revenue associated with accounts/contacts."
+        },
+        {
+          "id": 12,
+          "question": "How are Campaigns linked to Opportunities?",
+          "options": {
+            "A": "They cannot be linked directly.",
+            "B": "Campaign membership automatically creates opportunities.",
+            "C": "Via the Price Book object only.",
+            "D": "Through Campaign Influence, which tracks the impact of campaigns on Opportunities."
+          },
+          "answer": "D",
+          "explanation": "Campaign Influence models attribute which campaigns contributed to an opportunity, helping measure marketing ROI."
+        },
+        {
+          "id": 13,
+          "question": "What are Quotes in Sales Cloud?",
+          "options": {
+            "A": "Draft invoices stored outside opportunities.",
+            "B": "System audit logs for price changes.",
+            "C": "A special report type for forecasting.",
+            "D": "Price proposals for Opportunities, containing product, pricing, and discount details."
+          },
+          "answer": "D",
+          "explanation": "Quotes capture pricing details to present to customers and can be synced to opportunities as the primary quote."
+        },
+        {
+          "id": 14,
+          "question": "Can multiple Quotes be linked to one Opportunity?",
+          "options": {
+            "A": "No, only a single Quote may exist per Opportunity.",
+            "B": "Yes, but only one Quote can be marked as the primary quote.",
+            "C": "Only if the Opportunity is closed.",
+            "D": "Only for custom objects, not standard Opportunity."
+          },
+          "answer": "B",
+          "explanation": "Salesforce allows multiple quotes per opportunity to compare proposals; one quote can be selected as primary to sync totals."
+        },
+        {
+          "id": 15,
+          "question": "What is Price Book in Sales Cloud?",
+          "options": {
+            "A": "A set of users allowed to sell a product.",
+            "B": "A discount schedule engine only for communities.",
+            "C": "A collection of products and their prices that can be linked to Opportunities or Quotes.",
+            "D": "A report template for revenue."
+          },
+          "answer": "C",
+          "explanation": "Price Books define the catalog of products with associated prices; opportunities reference price books to select product prices."
+        },
+        {
+          "id": 16,
+          "question": "What is a Product in Sales Cloud?",
+          "options": {
+            "A": "A lead status value.",
+            "B": "A permission set license.",
+            "C": "A workflow rule type.",
+            "D": "A catalog item or service that can be sold through Opportunities and Quotes."
+          },
+          "answer": "D",
+          "explanation": "Products represent goods or services in the catalog and are added to Opportunity Line Items and Quotes for pricing."
+        },
+        {
+          "id": 17,
+          "question": "What is an Order in Sales Cloud?",
+          "options": {
+            "A": "A contract to provide products or services, typically created after a Quote is accepted.",
+            "B": "A forecasting bucket.",
+            "C": "A lead assignment rule.",
+            "D": "An Apex job scheduling object."
+          },
+          "answer": "A",
+          "explanation": "Orders formalize the commitment to deliver products/services and are often created from accepted quotes."
+        },
+        {
+          "id": 18,
+          "question": "What is Territory Management?",
+          "options": {
+            "A": "A feature that automatically creates opportunities.",
+            "B": "A feature to assign accounts and opportunities to sales reps based on geographic or business rules.",
+            "C": "A case escalation mechanism.",
+            "D": "A UI theme manager for sales pages."
+          },
+          "answer": "B",
+          "explanation": "Territory Management provides rules-based assignment of accounts and opportunities to sales teams or territories for coverage planning."
+        },
+        {
+          "id": 19,
+          "question": "What is Contact Role on Opportunity?",
+          "options": {
+            "A": "A permission that controls who can view an opportunity.",
+            "B": "A price book entry for contacts.",
+            "C": "Identifies the role of a Contact (e.g., Decision Maker, Influencer) in an Opportunity.",
+            "D": "A special type of campaign member."
+          },
+          "answer": "C",
+          "explanation": "Contact Roles specify how contacts are involved in a deal (decision maker, approver, influencer), important for sales engagement context."
+        },
+        {
+          "id": 20,
+          "question": "What is a Path in Sales Cloud?",
+          "options": {
+            "A": "A way to encrypt opportunity data.",
+            "B": "A report grouping feature only for campaigns.",
+            "C": "A background job runner.",
+            "D": "A guided process UI that helps users progress through Opportunity or Lead stages."
+          },
+          "answer": "D",
+          "explanation": "Path provides a visual, configurable guide (with guidance and key fields) to help reps move records through stages consistently."
+        },
+        {
+          "id": 21,
+          "question": "How do you automate Lead Assignment?",
+          "options": {
+            "A": "Using Lead Assignment Rules based on criteria like region, product, or source.",
+            "B": "Only via manual reassignment by users.",
+            "C": "By converting leads automatically without rules.",
+            "D": "Lead assignment cannot be automated in Salesforce."
+          },
+          "answer": "A",
+          "explanation": "Lead Assignment Rules evaluate incoming leads and route them to queues or users based on configured criteria."
+        },
+        {
+          "id": 22,
+          "question": "What is a Lead Queue?",
+          "options": {
+            "A": "A holding area where unassigned leads are stored until a rep claims them.",
+            "B": "A scheduled list of leads to be deleted.",
+            "C": "A type of opportunity stage.",
+            "D": "A system batch job name."
+          },
+          "answer": "B",
+          "explanation": "Lead Queues allow teams to share responsibility for new leads; reps can claim leads from the queue for follow-up. (Correct description is A.)"
+        },
+        {
+          "id": 23,
+          "question": "What is a Big Deal Alert?",
+          "options": {
+            "A": "A naming convention for large accounts only.",
+            "B": "An automatic discount applied to big deals.",
+            "C": "A notification system that alerts sales teams about large Opportunities.",
+            "D": "A report type used only by finance teams."
+          },
+          "answer": "C",
+          "explanation": "Big Deal Alerts notify relevant stakeholders when an opportunity exceeds a threshold so leadership can engage appropriately."
+        },
+        {
+          "id": 24,
+          "question": "What is Einstein Opportunity Scoring?",
+          "options": {
+            "A": "A manual scoring field filled by reps.",
+            "B": "An integration with external BI only.",
+            "C": "An automated pipeline generation tool.",
+            "D": "An AI feature that predicts the likelihood of closing an Opportunity based on historical data."
+          },
+          "answer": "D",
+          "explanation": "Einstein Opportunity Scoring uses machine learning to rank opportunities by win probability, helping reps prioritize efforts."
+        },
+        {
+          "id": 25,
+          "question": "Best practices for customizing Sales Cloud?",
+          "options": {
+            "A": "Hardcode business rules in triggers only; avoid declarative tooling.",
+            "B": "Add as many fields as possible to every object for future use.",
+            "C": "Use Visualforce for all UI changes regardless of Lightning availability.",
+            "D": "Automate lead routing & follow-ups; use validation rules to ensure data quality; implement Path and Guidance for Success; use Forecasting for pipeline visibility."
+          },
+          "answer": "D",
+          "explanation": "Good practices include automating routine tasks, enforcing data quality, providing guided sales processes, and leveraging forecasting for visibility."
+        }
+      ]
+    }
+  }
+}

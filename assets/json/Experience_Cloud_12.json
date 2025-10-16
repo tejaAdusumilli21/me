@@ -1,0 +1,309 @@
+{
+    "section": "Experience Cloud",
+  "levels": {
+    "level12": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is Experience Cloud in Salesforce?",
+          "options": {
+            "A": "A developer-only framework for Apex-heavy sites.",
+            "B": "A feature for internal reporting dashboards only.",
+            "C": "A Salesforce product that allows organizations to create branded portals, partner communities, and customer self-service sites.",
+            "D": "A lightweight mobile app builder unrelated to Salesforce communities."
+          },
+          "answer": "C",
+          "explanation": "Experience Cloud enables orgs to build authenticated or public sites (customer/partner portals, help centers) with branding and community features."
+        },
+        {
+          "id": 2,
+          "question": "What are the different types of Experience Cloud sites?",
+          "options": {
+            "A": "Only internal admin portals and developer sandboxes.",
+            "B": "Customer communities, partner communities, employee communities, B2B portals, and self-service help portals.",
+            "C": "Only public marketing websites and blogs.",
+            "D": "Only mobile-only microapps."
+          },
+          "answer": "B",
+          "explanation": "Experience Cloud supports multiple site use-cases: customer support, partners, employees, B2B portals and self-service help."
+        },
+        {
+          "id": 3,
+          "question": "Difference between Customer Community and Partner Community?",
+          "options": {
+            "A": "Customer Community → For employees only; Partner Community → For customers only.",
+            "B": "They are identical; only the name differs.",
+            "C": "Customer Community → For end customers to log cases, access knowledge, and collaborate. Partner Community → For business partners to manage leads, opportunities, and deals.",
+            "D": "Customer Community supports API access; Partner Community does not."
+          },
+          "answer": "D",
+          "explanation": "Customer Communities focus on self-service/support; Partner Communities expose CRM objects like Leads/Opportunities for partner collaboration."
+        },
+        {
+          "id": 4,
+          "question": "What is the license difference between Customer and Partner Community?",
+          "options": {
+            "A": "Customer Community License → Includes full CRM access; Partner → limited to knowledge only.",
+            "B": "Both licenses are identical in privileges.",
+            "C": "Customer Community License → Focused on service/support use cases. Partner Community License → Includes CRM objects like Leads and Opportunities.",
+            "D": "Licenses differ only by price, not features."
+          },
+          "answer": "C",
+          "explanation": "Partner community licenses typically give access to CRM objects and sales features; customer licenses are optimized for support/self-service."
+        },
+        {
+          "id": 5,
+          "question": "What is the difference between Experience Cloud and Sites (Force.com Sites)?",
+          "options": {
+            "A": "Experience Cloud → Only for public marketing pages; Sites → supports communities and login.",
+            "B": "They are exactly the same product rebranded.",
+            "C": "Experience Cloud → Branded, customizable, authenticated or public. Force.com Sites → Public websites only, no login functionality.",
+            "D": "Force.com Sites provides mobile widgets while Experience Cloud does not."
+          },
+          "answer": "C",
+          "explanation": "Experience Cloud adds authenticated community features and builder tooling; Force.com Sites are for public, unauthenticated pages."
+        },
+        {
+          "id": 6,
+          "question": "How is Experience Cloud secured?",
+          "options": {
+            "A": "Only by IP restrictions; other controls aren't available.",
+            "B": "Security is managed using profiles, permission sets, sharing sets, and role hierarchies.",
+            "C": "Experience Cloud has no security controls; it's always public.",
+            "D": "Only via SSO; profiles and permissions are ignored."
+          },
+          "answer": "B",
+          "explanation": "Access for external users is controlled via standard Salesforce security primitives: profiles, permission sets, sharing sets, roles, and SSO options."
+        },
+        {
+          "id": 7,
+          "question": "What are Sharing Sets in Experience Cloud?",
+          "options": {
+            "A": "A method to duplicate records across orgs.",
+            "B": "A way to share files only, not records.",
+            "C": "Provide community users access to records related to their account or contact.",
+            "D": "A deprecated feature replaced by Chatter groups."
+          },
+          "answer": "C",
+          "explanation": "Sharing Sets map community (external) users to records related to their account/contact so they can access appropriate data without full role access."
+        },
+        {
+          "id": 8,
+          "question": "What is a Role Hierarchy in Partner Communities?",
+          "options": {
+            "A": "A method to schedule community publishing.",
+            "B": "Defines how partner users can see and manage records within their partner organization.",
+            "C": "A template for branding the site.",
+            "D": "A required setting to enable CMS Connect."
+          },
+          "answer": "B",
+          "explanation": "Partner role hierarchies model partner org structure, controlling record visibility and delegation among partner users."
+        },
+        {
+          "id": 9,
+          "question": "What is a Login & Registration page in Experience Cloud?",
+          "options": {
+            "A": "A page that only displays public marketing content.",
+            "B": "The entry point where external users authenticate or sign up to access the portal.",
+            "C": "A background service used for SSO token exchange only.",
+            "D": "A deprecated Visualforce-only feature."
+          },
+          "answer": "B",
+          "explanation": "The Login & Registration page handles authentication and self-registration flows for external community users."
+        },
+        {
+          "id": 10,
+          "question": "What authentication methods are available for Experience Cloud?",
+          "options": {
+            "A": "Only username/password stored in Salesforce.",
+            "B": "No authentication is supported for Experience Cloud.",
+            "C": "Salesforce login, Single Sign-On (SSO), Social Sign-On (Google, Facebook, LinkedIn).",
+            "D": "Only OAuth client credentials flow is supported."
+          },
+          "answer": "C",
+          "explanation": "Experience Cloud supports native Salesforce auth, SSO (SAML/OIDC), and social identity providers for convenient access."
+        },
+        {
+          "id": 11,
+          "question": "What is Delegated Authentication?",
+          "options": {
+            "A": "A way to delegate page layout control to community admins.",
+            "B": "Allows an external system to validate user credentials instead of Salesforce.",
+            "C": "A method for delegating records to queues.",
+            "D": "A replacement for OAuth flows."
+          },
+          "answer": "B",
+          "explanation": "Delegated authentication forwards credential validation to an external auth service rather than using Salesforce's internal auth."
+        },
+        {
+          "id": 12,
+          "question": "What is Just-in-Time (JIT) provisioning in Experience Cloud?",
+          "options": {
+            "A": "A batch job to sync users nightly.",
+            "B": "Creates user records automatically during the first SSO login.",
+            "C": "A manual user creation process by admins only.",
+            "D": "A deprecated user management feature."
+          },
+          "answer": "B",
+          "explanation": "JIT provisioning auto-creates and populates community user records upon successful SSO when the user does not already exist."
+        },
+        {
+          "id": 13,
+          "question": "What is Identity Provider (IdP) vs Service Provider (SP) in Experience Cloud?",
+          "options": {
+            "A": "IdP → System that serves content; SP → System that authenticates users.",
+            "B": "They are the same role in SSO architecture.",
+            "C": "IdP → System that authenticates users (e.g., Okta, Salesforce). SP → System that users access (Experience Cloud site).",
+            "D": "IdP and SP are only used for SOAP integrations."
+          },
+          "answer": "C",
+          "explanation": "In SSO, the IdP authenticates users while the SP (the Experience site) consumes the IdP's assertion to grant access."
+        },
+        {
+          "id": 14,
+          "question": "What is Branding in Experience Cloud?",
+          "options": {
+            "A": "Creating Apex classes for community pages.",
+            "B": "Customizing the look and feel (logo, theme, colors, navigation) of a portal using Experience Builder.",
+            "C": "A back-end security classification.",
+            "D": "A process for migrating sites between orgs."
+          },
+          "answer": "B",
+          "explanation": "Branding uses Experience Builder theme and settings to apply company logos, colors, and navigation for a consistent customer-facing experience."
+        },
+        {
+          "id": 15,
+          "question": "What is the Experience Builder?",
+          "options": {
+            "A": "A drag-and-drop tool to design and customize Experience Cloud sites without coding.",
+            "B": "A command-line utility for site deployment only.",
+            "C": "A mobile-only site editor.",
+            "D": "A template engine for Apex email."
+          },
+          "answer": "A",
+          "explanation": "Experience Builder provides a visual editor to compose pages, add components, and configure layout and navigation for a community site."
+        },
+        {
+          "id": 16,
+          "question": "Can LWC be used in Experience Cloud?",
+          "options": {
+            "A": "No — Experience Cloud only supports Aura components.",
+            "B": "Yes, LWCs can be exposed as Lightning components and embedded into Experience Cloud pages.",
+            "C": "Only Visualforce components are supported.",
+            "D": "Only static HTML widgets are allowed."
+          },
+          "answer": "B",
+          "explanation": "You can expose LWCs for use in Experience Builder and embed them into pages and templates for dynamic behavior."
+        },
+        {
+          "id": 17,
+          "question": "What are Audience Targeting rules in Experience Cloud?",
+          "options": {
+            "A": "A tool to throttle API calls by user profile.",
+            "B": "Allow different page variations to be shown based on user profiles, location, or criteria.",
+            "C": "A reporting filter for site visits only.",
+            "D": "A deprecated feature replaced by permission sets."
+          },
+          "answer": "C",
+          "explanation": "Audience targeting tailors the content and page variations presented to users based on attributes like profile, role, or custom criteria (correct content under B)."
+        },
+        {
+          "id": 18,
+          "question": "What is a Navigation Menu in Experience Cloud?",
+          "options": {
+            "A": "Defines how users move between pages and features within the portal.",
+            "B": "A low-level CSS file only.",
+            "C": "A special object type for external data.",
+            "D": "A repository of knowledge articles."
+          },
+          "answer": "A",
+          "explanation": "Navigation menus are configured in Experience Builder to control site navigation, labels, and link targets for users."
+        },
+        {
+          "id": 19,
+          "question": "How are Knowledge Articles exposed in Experience Cloud?",
+          "options": {
+            "A": "By enabling Knowledge in the site and giving access to external users via permissions.",
+            "B": "Knowledge cannot be exposed to Experience Cloud users.",
+            "C": "Only by exporting articles to static pages.",
+            "D": "Only via custom Apex pages."
+          },
+          "answer": "A",
+          "explanation": "Configure article channels and permission sets to allow community users to search and view knowledge content in the portal."
+        },
+        {
+          "id": 20,
+          "question": "What are the types of Community users?",
+          "options": {
+            "A": "Only internal Salesforce users can access communities.",
+            "B": "Customer Community User, Partner Community User, Customer Plus User, External App User.",
+            "C": "Only Guest and Admin users exist.",
+            "D": "Only Contact records can be community users."
+          },
+          "answer": "B",
+          "explanation": "Experience Cloud supports various external user types with differing capabilities and license entitlements (customer, partner, plus, external app)."
+        },
+        {
+          "id": 21,
+          "question": "What are Community Moderation features?",
+          "options": {
+            "A": "Flags, reputation points, and moderation rules to monitor and control user activity.",
+            "B": "Only automated content deletion after 24 hours.",
+            "C": "A tool to export comments to CSV daily.",
+            "D": "A deprecated Chatter feature not available in Experience Cloud."
+          },
+          "answer": "A",
+          "explanation": "Moderation tools help maintain community quality using flags, reputation/gamification and configurable moderation workflows."
+        },
+        {
+          "id": 22,
+          "question": "What are Reputation Levels in Experience Cloud?",
+          "options": {
+            "A": "A security clearance for admin users only.",
+            "B": "A gamification feature that rewards users for participation (posting, commenting, answering).",
+            "C": "A way to prioritize search results by date.",
+            "D": "A deprecated metric no longer used."
+          },
+          "answer": "B",
+          "explanation": "Reputation levels incentivize user contributions by granting badges/privileges as users engage in the community."
+        },
+        {
+          "id": 23,
+          "question": "What is the use of CMS Connect in Experience Cloud?",
+          "options": {
+            "A": "Integrates external CMS content (like WordPress, Drupal) into Experience Cloud.",
+            "B": "A tool for connecting multiple Salesforce orgs.",
+            "C": "A way to store static resources only.",
+            "D": "A legacy API for file uploads."
+          },
+          "answer": "A",
+          "explanation": "CMS Connect lets Experience sites surface content from external CMS platforms without importing content into Salesforce."
+        },
+        {
+          "id": 24,
+          "question": "How do you deploy an Experience Cloud site to production?",
+          "options": {
+            "A": "By copying HTML files via FTP to the production org.",
+            "B": "Only by recreating the site manually in production.",
+            "C": "By publishing the site in Experience Builder and deploying metadata using Change Sets or SFDX.",
+            "D": "Experience Cloud sites cannot be deployed; they live only in sandbox."
+          },
+          "answer": "C",
+          "explanation": "Publish changes in Experience Builder for content; move metadata (pages, components, site config) via Change Sets, SFDX, or metadata deploy tools."
+        },
+        {
+          "id": 25,
+          "question": "Best practices for Experience Cloud implementation?",
+          "options": {
+            "A": "Use sharing sets for simplified record access; optimize performance with caching; apply audience targeting for personalization; ensure strong authentication and branding.",
+            "B": "Allow all external users full system access for convenience.",
+            "C": "Avoid testing with real users; deploy immediately.",
+            "D": "Use only Visualforce pages and avoid Experience Builder."
+          },
+          "answer": "A",
+          "explanation": "Follow security and performance best practices: least-privilege access (sharing sets), caching, personalization, and robust authentication for external sites."
+        }
+      ]
+    }
+  }
+}

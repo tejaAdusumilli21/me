@@ -1,0 +1,369 @@
+{
+    "section": "Advanced Topics",
+  "levels": {
+    "level18": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What are Custom Settings in Salesforce?",
+          "options": {
+            "A": "Custom objects used to store configuration data accessible in Apex without SOQL queries. Types: List and Hierarchy.",
+            "B": "A kind of Visualforce page setting for UI rendering.",
+            "C": "A managed package feature for AppExchange apps only.",
+            "D": "A replacement for Profiles and Permission Sets."
+          },
+          "answer": "A",
+          "explanation": "Custom Settings are metadata-like custom objects (List and Hierarchy) that Apex can access without SOQL, useful for runtime configuration."
+        },
+        {
+          "id": 2,
+          "question": "Difference between Custom Settings and Custom Metadata?",
+          "options": {
+            "A": "Custom Settings → Data is org-specific, not deployable with metadata. Custom Metadata → Deployable via metadata, version-controlled, better for app configurations.",
+            "B": "Custom Metadata is only for transient runtime values.",
+            "C": "Custom Settings are always deployable via packages.",
+            "D": "There is no practical difference; they are interchangeable."
+          },
+          "answer": "A",
+          "explanation": "Custom Metadata records are metadata and deployable via packages/SFDX; Custom Settings are org data and historically not packaged the same way."
+        },
+        {
+          "id": 3,
+          "question": "When to use Custom Metadata over Custom Settings?",
+          "options": {
+            "A": "When configuration needs to be deployed across orgs (e.g., feature flags, API endpoints).",
+            "B": "When you need per-user editable runtime settings.",
+            "C": "When you require encrypted fields in configuration.",
+            "D": "When you need extremely large storage for transactional data."
+          },
+          "answer": "A",
+          "explanation": "Custom Metadata is ideal for deployable, environment-agnostic configuration like flags or endpoints; Custom Settings suit org-specific runtime values."
+        },
+        {
+          "id": 4,
+          "question": "What is Dynamic Apex?",
+          "options": {
+            "A": "Apex features that allow runtime access to objects, fields, and SOQL queries using Schema and Describe methods.",
+            "B": "A scheduler for batch Apex jobs.",
+            "C": "A UI framework for Lightning components.",
+            "D": "A special debug mode for Apex profiling."
+          },
+          "answer": "A",
+          "explanation": "Dynamic Apex (Schema, describe calls, Database.query, sObject APIs) enables code to adapt to changing schema at runtime."
+        },
+        {
+          "id": 5,
+          "question": "Example use case of Dynamic Apex?",
+          "options": {
+            "A": "Building a generic data import utility that can read field definitions dynamically.",
+            "B": "Replacing all static SOQL queries with hardcoded queries.",
+            "C": "Scheduling jobs via UI only.",
+            "D": "Encrypting fields at rest automatically."
+          },
+          "answer": "A",
+          "explanation": "Dynamic Apex is useful for tools that must work across objects/fields without compile-time knowledge (importers, generic UIs)."
+        },
+        {
+          "id": 6,
+          "question": "What is Describe Information in Apex?",
+          "options": {
+            "A": "Metadata about objects/fields (label, datatype, picklist values) retrieved using Schema.DescribeSObjectResult.",
+            "B": "A runtime profiler metric for CPU usage.",
+            "C": "A way to create custom labels dynamically.",
+            "D": "A method to describe logs in Setup."
+          },
+          "answer": "A",
+          "explanation": "Describe calls return schema metadata (labels, types, relationships, picklist values) useful for dynamic behavior."
+        },
+        {
+          "id": 7,
+          "question": "What is the difference between Dynamic SOQL and Static SOQL?",
+          "options": {
+            "A": "Static SOQL → Written at compile time. Dynamic SOQL → Built at runtime using strings (Database.query(queryString)).",
+            "B": "Dynamic SOQL runs faster because it is compiled at runtime.",
+            "C": "Static SOQL can only run in tests, dynamic only in production.",
+            "D": "There is no difference; names are interchangeable."
+          },
+          "answer": "A",
+          "explanation": "Static SOQL is declared in code, while dynamic SOQL builds the query string at runtime and runs via Database.query."
+        },
+        {
+          "id": 8,
+          "question": "What is Tooling API in Salesforce?",
+          "options": {
+            "A": "API that allows developers to build custom tools for metadata (Apex classes, triggers, Visualforce, logs) management.",
+            "B": "API for migrating production data only.",
+            "C": "API used exclusively by mobile apps.",
+            "D": "API for sending email from Apex."
+          },
+          "answer": "A",
+          "explanation": "Tooling API exposes developer-focused metadata and runtime objects (Apex, logs, tests) useful for editors and CI tooling."
+        },
+        {
+          "id": 9,
+          "question": "Difference between Metadata API and Tooling API?",
+          "options": {
+            "A": "Metadata API → Deploys/retrieves metadata. Tooling API → Used for developer tools (debug logs, code coverage, Apex compilation).",
+            "B": "Tooling API is a legacy name for Metadata API.",
+            "C": "Metadata API is only for REST; Tooling only SOAP.",
+            "D": "They are identical in capabilities and endpoints."
+          },
+          "answer": "A",
+          "explanation": "Metadata API handles broad metadata deployments; Tooling API provides fine-grained developer operations and tooling information."
+        },
+        {
+          "id": 10,
+          "question": "What are Custom Labels in Salesforce?",
+          "options": {
+            "A": "Text values stored in Salesforce for multi-language support, accessed in Apex, LWC, and Visualforce.",
+            "B": "Labels used on page layouts only.",
+            "C": "A record type for labeling contacts.",
+            "D": "A deprecated localization feature."
+          },
+          "answer": "A",
+          "explanation": "Custom Labels permit localized text to be referenced from code and components, supporting multi-language UI."
+        },
+        {
+          "id": 11,
+          "question": "What is the purpose of Platform Events?",
+          "options": {
+            "A": "Enable event-driven architecture by allowing publishers and subscribers to communicate asynchronously.",
+            "B": "Store large files in Salesforce.",
+            "C": "Only for queueing batch Apex jobs.",
+            "D": "A replacement for validation rules."
+          },
+          "answer": "A",
+          "explanation": "Platform Events provide pub/sub messaging to decouple producers and consumers for asynchronous processing."
+        },
+        {
+          "id": 12,
+          "question": "Difference between Platform Events and Change Data Capture (CDC)?",
+          "options": {
+            "A": "Platform Events → Custom events defined by developers. CDC → Out-of-the-box events generated when records change.",
+            "B": "CDC requires external middleware to function.",
+            "C": "Platform Events are only available in Classic UI.",
+            "D": "There is no difference — they are the same feature."
+          },
+          "answer": "A",
+          "explanation": "Platform Events are developer-defined; CDC automatically publishes record change events for configured objects."
+        },
+        {
+          "id": 13,
+          "question": "What is a Big Object?",
+          "options": {
+            "A": "Special object type for storing and querying massive datasets (billions of records) in Salesforce.",
+            "B": "A very large Apex class file.",
+            "C": "A custom object with many fields only.",
+            "D": "A deprecated feature for data exports."
+          },
+          "answer": "A",
+          "explanation": "Big Objects store large volumes of historical or event data and are optimized for append/query use cases with certain limitations."
+        },
+        {
+          "id": 14,
+          "question": "How do you query Big Objects?",
+          "options": {
+            "A": "Using Async SOQL or standard SOQL (with limitations) tailored to indexed fields and query patterns.",
+            "B": "Only via the UI reports engine.",
+            "C": "By using SOSL only.",
+            "D": "Big Objects cannot be queried at all."
+          },
+          "answer": "A",
+          "explanation": "Big Objects are queried using Async SOQL for large results or standard SOQL constrained by the object's index and supported patterns."
+        },
+        {
+          "id": 15,
+          "question": "What are External Objects?",
+          "options": {
+            "A": "Objects that map to data stored outside Salesforce using Salesforce Connect.",
+            "B": "Objects used to store very large files inside Salesforce.",
+            "C": "Standard objects that cannot be customized.",
+            "D": "Temporary objects used during data loads only."
+          },
+          "answer": "A",
+          "explanation": "External Objects provide a schema and references to external data sources (OData, external systems) accessible in Salesforce in near real-time."
+        },
+        {
+          "id": 16,
+          "question": "Difference between External Objects and Big Objects?",
+          "options": {
+            "A": "External Objects → Data stored outside Salesforce (real-time access). Big Objects → Data stored inside Salesforce for historical/archival purposes.",
+            "B": "External Objects are designed for billions of rows stored inside Salesforce.",
+            "C": "Big Objects are real-time proxies to external systems.",
+            "D": "They are the same feature with different names."
+          },
+          "answer": "A",
+          "explanation": "External Objects are virtual representations of external data; Big Objects store massive internal datasets for archival and analysis."
+        },
+        {
+          "id": 17,
+          "question": "What is a Named Credential?",
+          "options": {
+            "A": "A secure way to store authentication details for external callouts, avoiding hardcoded credentials.",
+            "B": "A label for custom metadata records.",
+            "C": "A special Permission Set type for external users.",
+            "D": "A deprecated method for storing remote URLs."
+          },
+          "answer": "A",
+          "explanation": "Named Credentials combine endpoint and authentication details so Apex can call external services without embedding secrets in code."
+        },
+        {
+          "id": 18,
+          "question": "What is a Custom Metadata Loader?",
+          "options": {
+            "A": "A utility (often an Apex + CSV solution) to bulk insert/update custom metadata records.",
+            "B": "A UI tool that automatically converts Custom Settings to Custom Metadata.",
+            "C": "A managed package for upgrading metadata versions.",
+            "D": "A Salesforce feature to automatically schedule metadata deployments."
+          },
+          "answer": "A",
+          "explanation": "Custom metadata loaders help populate metadata records in bulk (CSV -> custom metadata) since UI bulk options are limited."
+        },
+        {
+          "id": 19,
+          "question": "What is Apex Managed Sharing?",
+          "options": {
+            "A": "Programmatically sharing records by creating entries in Share objects, used when declarative sharing is insufficient.",
+            "B": "A feature for managing Apex class versions.",
+            "C": "A UI permission for sharing dashboards.",
+            "D": "An auto-sharing option for reports only."
+          },
+          "answer": "A",
+          "explanation": "Apex Managed Sharing inserts records into <Object>Share tables to grant explicit access programmatically with custom rowCause reasons."
+        },
+        {
+          "id": 20,
+          "question": "Difference between with sharing, without sharing, and inherited sharing?",
+          "options": {
+            "A": "with sharing → Respects user’s sharing rules. without sharing → Runs in system mode. inherited sharing → Inherits caller’s context.",
+            "B": "with sharing → Always runs as System Admin. without sharing → Honors object FLS. inherited sharing → Forces sharing to read-only.",
+            "C": "These keywords only control CRUD, not sharing.",
+            "D": "They are aliases for permission set assignment."
+          },
+          "answer": "A",
+          "explanation": "'with sharing' enforces sharing rules, 'without sharing' bypasses them (system mode), and 'inherited sharing' uses the context of the caller (useful for library classes)."
+        },
+        {
+          "id": 21,
+          "question": "What is the purpose of Custom Metadata in CI/CD?",
+          "options": {
+            "A": "Helps in deploying environment-specific configurations (like endpoint URLs) without changing code.",
+            "B": "Automatically runs Apex tests during deployments.",
+            "C": "Stores binary artifacts for CI servers.",
+            "D": "Replaces the need for version control."
+          },
+          "answer": "A",
+          "explanation": "Custom Metadata stores deployable config values so pipelines can move settings between orgs without manual edits to code or data."
+        },
+        {
+          "id": 22,
+          "question": "What are Limits of Custom Metadata?",
+          "options": {
+            "A": "Max 200KB per record, no encrypted fields, not suitable for frequently changing data.",
+            "B": "Unlimited size and encryption support for each record.",
+            "C": "Custom Metadata can only store integers.",
+            "D": "Custom Metadata is limited to a single record per org."
+          },
+          "answer": "A",
+          "explanation": "Custom Metadata has record size limits, lacks encrypted field support, and is best for relatively static config rather than very frequently changing data."
+        },
+        {
+          "id": 23,
+          "question": "What is Apex Dynamic Binding?",
+          "options": {
+            "A": "Ability to refer to fields dynamically in SOQL/DML without hardcoding field names.",
+            "B": "A method for binding Visualforce components at runtime.",
+            "C": "An integration pattern for SOAP only.",
+            "D": "A UI binding mechanism for LWC."
+          },
+          "answer": "A",
+          "explanation": "Dynamic binding uses sObject.get/put, field tokens, or dynamic SOQL to work with fields determined at runtime."
+        },
+        {
+          "id": 24,
+          "question": "What is the difference between SOQL Injection and Dynamic SOQL?",
+          "options": {
+            "A": "SOQL Injection → Security risk when user input is directly concatenated in queries. Dynamic SOQL → Safe if using bind variables or escapeSingleQuotes.",
+            "B": "They are identical — both are always insecure.",
+            "C": "Dynamic SOQL automatically prevents injection by default.",
+            "D": "SOQL Injection is a deprecated attack vector."
+          },
+          "answer": "A",
+          "explanation": "Dynamic SOQL is a technique; it must be used safely (binds or escaping) to avoid SOQL injection vulnerabilities."
+        },
+        {
+          "id": 25,
+          "question": "How to prevent SOQL injection in Apex?",
+          "options": {
+            "A": "Use bind variables; use String.escapeSingleQuotes(); validate user input.",
+            "B": "Concatenate user input into queries but limit result size.",
+            "C": "Disable dynamic SOQL entirely in org settings.",
+            "D": "Only run queries in asynchronous context."
+          },
+          "answer": "A",
+          "explanation": "Bind variables, escaping quotes, and input validation are best practices to eliminate injection risks in dynamic queries."
+        },
+        {
+          "id": 26,
+          "question": "What is Asynchronous SOQL?",
+          "options": {
+            "A": "A feature to process large data volumes in parallel using async jobs (returns results via callback).",
+            "B": "A way to run SOQL in the browser without authentication.",
+            "C": "A deprecated query language replaced by Async SOSL.",
+            "D": "A tooling API method for retrieving debug logs."
+          },
+          "answer": "A",
+          "explanation": "Asynchronous SOQL processes large queries in the background and returns results once complete, enabling LDV operations."
+        },
+        {
+          "id": 27,
+          "question": "What is the Streaming API?",
+          "options": {
+            "A": "Enables clients to receive push notifications when data changes in Salesforce.",
+            "B": "A batch export tool for large files.",
+            "C": "A UI streaming component for Lightning pages.",
+            "D": "A replacement for Platform Events."
+          },
+          "answer": "A",
+          "explanation": "Streaming API (PushTopics/CDC) lets external clients subscribe to change notifications in near real-time."
+        },
+        {
+          "id": 28,
+          "question": "What is the difference between Streaming API and Platform Events?",
+          "options": {
+            "A": "Streaming API → Predefined events based on PushTopics or CDC. Platform Events → Developer-defined custom events.",
+            "B": "Streaming API uses HTTP only; Platform Events use FTP.",
+            "C": "Platform Events are only available in Enterprise Edition while Streaming is free.",
+            "D": "They are the same and interchangeable."
+          },
+          "answer": "A",
+          "explanation": "Streaming API supports PushTopics and CDC for data changes; Platform Events are custom pub/sub messages defined by developers."
+        },
+        {
+          "id": 29,
+          "question": "What is the Tooling API used for in CI/CD?",
+          "options": {
+            "A": "Fetching code coverage, running tests, retrieving debug logs, and analyzing deployed components.",
+            "B": "Deploying metadata in bulk like Metadata API.",
+            "C": "Only for user authentication in CI servers.",
+            "D": "Replacing Git as source control."
+          },
+          "answer": "A",
+          "explanation": "Tooling API supports developer tooling needs (coverage, logs, compile status) that CI systems use for quality checks."
+        },
+        {
+          "id": 30,
+          "question": "Best practices for Advanced Apex development?",
+          "options": {
+            "A": "Use Custom Metadata for configs; avoid hardcoding IDs and URLs; use Dynamic Apex only when needed; use Named Credentials for callouts; use event-driven architecture for scalability.",
+            "B": "Hardcode endpoints for speed and avoid metadata complexity.",
+            "C": "Always use seeAllData=true in tests for convenience.",
+            "D": "Avoid asynchronous processing to keep logic simple."
+          },
+          "answer": "A",
+          "explanation": "Advanced Apex best practices emphasize deployable config (custom metadata), secure callouts (named credentials), minimal hardcoding, and scalable event-driven patterns."
+        }
+      ]
+    }
+  }
+}
