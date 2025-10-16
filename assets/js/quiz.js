@@ -427,3 +427,50 @@ function toggleQuizSections() {
   }
 }
 
+const modal      = document.getElementById('quiz-modal');
+  const accept     = document.getElementById('accept-terms');
+  const startBtn   = document.getElementById('start-test-btn');
+  const cancelBtn  = document.getElementById('cancel-test-btn');
+  const quizBlock  = document.querySelector('.quiz-block');
+
+  // Open modal when "Take Test" is clicked
+  document.querySelector('.sparkle-button')?.addEventListener('click', () => {
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+  });
+
+  // Open mini test directly (you can customize what it shows)
+  document.querySelector('.learn-more')?.addEventListener('click', () => {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    quizBlock.style.display = 'block';
+    document.getElementById('quiz-root')?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Close modal handlers
+  modal.querySelectorAll('[data-action="close"], .quiz-modal-backdrop')?.forEach(el => {
+    el.addEventListener('click', () => {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    });
+  });
+
+  // Enable Start only after terms accepted
+  accept?.addEventListener('change', (e) => {
+    startBtn.disabled = !e.target.checked;
+  });
+
+  // Cancel button closes modal
+  cancelBtn?.addEventListener('click', () => {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  });
+
+  // Start Test -> hide modal, show quiz
+  window.toggleQuizSections = function () {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    quizBlock.style.display = 'block';
+    document.getElementById('quiz-root')?.scrollIntoView({ behavior: 'smooth' });
+  };
+

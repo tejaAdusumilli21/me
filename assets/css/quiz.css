@@ -455,3 +455,28 @@ button:hover .button-text {
 .small { font-size:13px; color:#6b7280; }
 .hidden { display:none; }
 
+/* Center the CTA buttons on the page */
+.quiz-buttons {
+  min-height: 60vh;               /* vertically centers within viewport */
+  display: flex;
+  flex-direction: column;         /* stack "Take Test" over "Mini Test" */
+  align-items: center;            /* horizontal center */
+  justify-content: center;        /* vertical center */
+  gap: 20px;
+  text-align: center;
+}
+
+/* Keep the quiz block centered and tidy */
+.quiz-block {
+  max-width: 1000px;
+  margin: 24px auto;              /* centers the quiz container */
+  display: none;                  /* hidden until test starts */
+}
+
+/* Optional: on wider screens, place buttons side-by-side */
+@media (min-width: 600px) {
+  .quiz-buttons {
+    flex-direction: row;          /* sit next to each other */
+  }
+}
+/* Optional: on smaller screens, make buttons full-width */
