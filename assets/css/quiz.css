@@ -18,6 +18,15 @@
    Quiz visibility & selection visuals
    ----------------------- */
 
+
+
+.question-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
 /* Keep quiz-root hidden until user starts the test */
 /* #quiz-root {
   display: none; 
@@ -425,7 +434,10 @@ button:hover .button-text {
 /* Minimal styling - tweak to match your theme */
 .quiz-app { max-width: 900px; margin: 18px auto; font-family: Inter, system-ui, Arial; color: #0f1724; }
 .quiz-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px; }
-.section-title { font-weight:700; font-size:18px; }
+.section-title {  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  margin-bottom: 8px;}
 .scorecard { font-size:14px; }
 .question-card { background:#fff; border:1px solid #e6e9ef; border-radius:8px; padding:12px; margin:12px 0; }
 .q-text { font-weight:600; margin-bottom:8px; }

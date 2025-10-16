@@ -201,7 +201,14 @@ function renderQuestion() {
   const q = quizState.questions[i];
   if (!q) return;
 
-  document.getElementById('question-text').textContent = `${q.sectionName} — Q${q.originalId}: ${q.questionText}`;
+  document.getElementById('question-text').innerHTML = `
+  <div class="section-title" style="font-size:1.2rem;font-weight:600;margin-bottom:8px;">
+    ${q.sectionName}
+  </div>
+  <div class="question-text" style="font-size:1.1rem;font-weight:500;line-height:1.6;">
+    ${q.questionText}
+  </div>
+`;
 
   const optionsList = document.getElementById('options-list');
   optionsList.innerHTML = '';
