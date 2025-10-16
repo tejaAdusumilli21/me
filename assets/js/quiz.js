@@ -1,3 +1,4 @@
+
 /*
   Quiz runtime:
   - Loads SECTION_JSON_MAP (you provided earlier)
@@ -5,10 +6,6 @@
   - Randomizes option order per question and maps to labels A,B,C,D
   - Tracks score, shows explanation on correct, shows error + highlights correct on wrong
   - After all questions shows final score
-
-  UI fixes included:
-  - Replaces the .sp block with #quiz-root on Start Test (so quiz-root shows in the same place)
-  - Injects minimal CSS for .option.selected/.correct/.wrong/.disabled if not already present so selection feedback is visible
 */
 
 /* -------------------------
@@ -79,43 +76,16 @@ const quizState = {
 };
 
 /* -------------------------
-   UI Mount (ensure #quiz-root exists)
+   UI Mount
    ------------------------- */
-let quizRoot = document.querySelector('#quiz-root');
-if (!quizRoot) {
-  quizRoot = document.createElement('div');
-  quizRoot.id = 'quiz-root';
-  quizRoot.style.maxWidth = '1000px';
-  quizRoot.style.margin = '20px auto';
-  document.body.appendChild(quizRoot);
-}
+const quizRoot = document.querySelector('#quiz-root') || (function(){
+  const d = document.createElement('div');
+  d.id = 'quiz-root';
+  document.body.appendChild(d);
+  return d;
+})();
 
-/* Inject minimal selection CSS if missing (guarantee visual feedback) */
-function ensureSelectionCSS() {
-  const id = 'quiz-selection-helper-css';
-  if (document.getElementById(id)) return;
-  const style = document.createElement('style');
-  style.id = id;
-  style.innerHTML = `
-/* selection helper - safe, minimal & scoped to .option elements */
-#quiz-root .options { list-style:none; padding:0; margin:0; }
-#quiz-root .option { display:flex; gap:12px; align-items:center; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); margin-bottom:8px; cursor:pointer; background:#fff; transition:box-shadow .15s, transform .06s; }
-#quiz-root .option:hover { transform:translateY(-2px); box-shadow: 0 6px 18px rgba(16,24,40,0.06); }
-#quiz-root .option .option-label { width:36px; height:36px; flex:0 0 36px; display:flex; align-items:center; justify-content:center; border-radius:6px; font-weight:700; }
-#quiz-root .option .option-text { flex:1; }
-#quiz-root .option.selected { background:#eef2ff; border-color:#4f46e5; box-shadow:0 8px 20px rgba(79,70,229,0.06); }
-#quiz-root .option.correct { background:#ecfdf5; border:2px solid #10b981; }
-#quiz-root .option.wrong { background:#fff1f2; border:2px solid #ef4444; }
-#quiz-root .option.disabled { opacity:0.9; pointer-events:none; }
-#quiz-root .option.selected .option-label { color:#3730a3; }
-#quiz-root .feedback { margin-top:12px; min-height:40px; }
-  `;
-  document.head.appendChild(style);
-}
-
-/* -------------------------
-   create quiz UI shell
-   ------------------------- */
+/* create quiz UI shell */
 function createQuizShell() {
   quizRoot.innerHTML = '';
   const shell = el('div', { class: 'quiz-container' });
@@ -203,14 +173,17 @@ function buildQuizFromSections(sections) {
       final.push({
         section: s.sectionIndex,
         sectionName: s.sectionName,
-        originalId: q.id || '',
-        questionText: q.question || q.prompt || '',
+        originalId: q.id,
+        questionText: q.question,
         options: displayedOptions,
-        correctKey: q.answer || q.correct || q.correctAnswer || '',
+        correctKey: q.answer, // original key like "A"
         explanation: q.explanation || ''
       });
     });
   });
+  // optional: little shuffle across sections to mix them, or keep grouped by section.
+  // We keep them in section order but it's fine to shuffle entire list if desired:
+  // shuffle(final);
   return final;
 }
 
@@ -242,29 +215,15 @@ function renderQuestion() {
       // deselect others
       Array.from(optionsList.children).forEach(c => c.classList.remove('selected'));
       li.classList.add('selected');
-
-      // accessibility marker
-      Array.from(optionsList.children).forEach(c => c.setAttribute('aria-pressed','false'));
-      li.setAttribute('aria-pressed','true');
-    });
-    // keyboard support
-    li.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        li.click();
-      }
     });
     optionsList.appendChild(li);
   });
 
   // clear feedback & buttons
-  const feedbackEl = document.getElementById('feedback');
-  if (feedbackEl) {
-    feedbackEl.innerHTML = '';
-    feedbackEl.style.color = '';
-  }
+  document.getElementById('feedback').innerHTML = '';
   document.getElementById('submit-answer').classList.remove('hidden');
   document.getElementById('next-question').classList.add('hidden');
+
 }
 
 /* -------------------------
@@ -293,7 +252,7 @@ function onSubmitAnswer() {
 
   const feedback = document.getElementById('feedback');
   const correctKey = current.correctKey; // original key like "A"
-  if (String(sel.origKey).trim() === String(correctKey).trim()) {
+  if (sel.origKey === correctKey) {
     // Correct
     sel.element.classList.add('correct');
     quizState.score += 1;
@@ -337,7 +296,7 @@ function showFinalResult() {
   const total = quizState.questions.length;
   const score = quizState.score;
   const percent = ((score / total) * 100).toFixed(1);
-  panel.appendChild(el('h2', {}, ['Test Complete']));
+  panel.appendChild(el('h2', {}, [`Test Complete`]));
   panel.appendChild(el('div', {}, [`Participant: ${quizState.participantName || 'Anonymous'}`]));
   panel.appendChild(el('div', {}, [`Score: ${score} / ${total} (${percent}%)`]));
   // breakdown per section
@@ -369,15 +328,11 @@ function setupPretestModal() {
   const nameInput = document.getElementById('participant-name');
   const acceptCheck = document.getElementById('accept-terms');
   const modalCloseButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
-  const spBlock = document.querySelector('.sp');
 
   function openModal() {
     if (!modal) return;
     modal.style.display = 'block';
     modal.setAttribute('aria-hidden', 'false');
-    // focus name
-    const ni = document.getElementById('participant-name');
-    if (ni) ni.focus();
   }
   function closeModal() {
     if (!modal) return;
@@ -392,12 +347,10 @@ function setupPretestModal() {
   cancelBtn && cancelBtn.addEventListener('click', closeModal);
 
   function updateStartBtnState() {
-    if (!startBtn) return;
     startBtn.disabled = !(nameInput && nameInput.value.trim() && acceptCheck && acceptCheck.checked);
   }
   if (nameInput) nameInput.addEventListener('input', updateStartBtnState);
   if (acceptCheck) acceptCheck.addEventListener('change', updateStartBtnState);
-  updateStartBtnState();
 
   startBtn && startBtn.addEventListener('click', async () => {
     // validate
@@ -406,29 +359,6 @@ function setupPretestModal() {
     // set participant
     quizState.participantName = nameInput.value.trim();
     closeModal();
-
-    // ---------- UI swap: move quiz-root into place of .sp ----------
-    // If .sp exists, replace it with quizRoot so the quiz appears exactly where the buttons were.
-    try {
-      if (spBlock) {
-        // Ensure quizRoot has the wrapper attributes the user expects
-        quizRoot.style.maxWidth = quizRoot.style.maxWidth || '1000px';
-        quizRoot.style.margin = quizRoot.style.margin || '20px auto';
-
-        // Insert quizRoot right after spBlock, then remove spBlock
-        spBlock.parentNode.insertBefore(quizRoot, spBlock.nextSibling);
-        spBlock.parentNode.removeChild(spBlock);
-      } else {
-        // If .sp not present, just ensure quizRoot visible
-        quizRoot.style.display = 'block';
-      }
-    } catch (err) {
-      console.warn('UI swap error:', err);
-    }
-
-    // Ensure selection CSS is present (guarantee visual feedback)
-    ensureSelectionCSS();
-
     // bootstrap quiz: load JSONs
     createQuizShell();
     try {
@@ -463,6 +393,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPretestModal();
   // expose start function for debug if needed
   window._quizState = quizState;
-  // hide quiz-root initially to avoid showing empty area (will be moved into place later)
-  if (quizRoot) quizRoot.style.display = 'none';
 });
+
