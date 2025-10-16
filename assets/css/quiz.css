@@ -502,3 +502,9 @@ button:hover .button-text {
 .terms a { white-space: nowrap; }      /* keep “Terms & Conditions” together */
 .terms input { flex: 0 0 auto; }       /* checkbox stays tight to the left */
 
+/* Small utility to control visibility via JS */
+.is-hidden { display: none !important; }
+
+/* default state: buttons visible, quiz-block hidden */
+
+
