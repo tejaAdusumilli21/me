@@ -19,18 +19,18 @@
    ----------------------- */
 
 /* Keep quiz-root hidden until user starts the test */
-#quiz-root {
-  display: none; /* will be shown by JS when quiz starts */
-}
+/* #quiz-root {
+  display: none; 
+} */
 
 /* Visible state for quiz root when JS sets it */
-#quiz-root.active {
+/* #quiz-root.active {
   display: block;
-}
+} */
 
 /* Selected option style (click feedback) */
 .option.selected {
-  background: #eef2ff;
+  background: #00A1E0;
   border-color: #4f46e5;
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
 }
