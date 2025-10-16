@@ -1,13 +1,13 @@
 /* quiz button */
 /* Minimal presentational styles for quiz UI */
-.quiz-container { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#fff; color:#111; padding:18px; border-radius:8px; box-shadow:0 6px 30px rgba(0,0,0,0.12); }
+.quiz-container { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;  color:#111; padding:18px; border-radius:8px; box-shadow:0 6px 30px rgba(0,0,0,0.12); }
 .quiz-header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .quiz-question { font-size:1.1rem; font-weight:600; margin:12px 0; }
 .options { list-style:none; padding:0; margin:8px 0; display:grid; gap:8px; }
 .option { border:1px solid #ddd; padding:10px; border-radius:6px; cursor:pointer; display:flex; gap:12px; align-items:center; }
 .option.disabled { pointer-events:none; opacity:0.75; }
-.option.correct { border-color: #0b9; background: #ecfff7; }
-.option.wrong { border-color: #f33; background: #fff2f2; }
+.option.correct { border-color: #0b9; border: #0b9 solid 3px; }
+.option.wrong { border-color: #f33; border: #f33 solid 3px; }
 .feedback { margin-top:10px; font-size:0.95rem; }
 .controls { margin-top:16px; display:flex; gap:10px; }
 .hidden { display:none; }
