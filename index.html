@@ -1172,6 +1172,7 @@ Case and work order to there field support team.
 
       <!--code here   -->
       <div class="quiz-block">
+         <button onclick="toggleQuizSections()">Exit</button>
         <div id="quiz-root" style="max-width:1000px;margin:20px auto;"></div>
       </div>
       
@@ -1207,7 +1208,7 @@ Case and work order to there field support team.
         </label>
       </div>
       <div class="form-actions">
-        <button type="button" id="start-test-btn" class="btn-primary" disabled>Start Test</button>
+        <button type="button" id="start-test-btn" class="btn-primary" onclick="toggleQuizSections()" disabled>Start Test</button>
         <button type="button" id="cancel-test-btn" class="btn-secondary">Cancel</button>
       </div>
     </form>

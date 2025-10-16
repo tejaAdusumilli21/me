@@ -401,4 +401,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // expose start function for debug if needed
   window._quizState = quizState;
 });
+function toggleQuizSections() {
+  const quizButtons = document.querySelector('.quiz-buttons');
+  const quizBlock = document.querySelector('.quiz-block');
+
+  if (!quizButtons || !quizBlock) {
+    console.warn('Elements with classes "quiz-buttons" or "quiz-block" not found.');
+    return;
+  }
+
+  // Determine current state based on visibility
+  const buttonsVisible = window.getComputedStyle(quizButtons).display !== 'none';
+  const blockVisible = window.getComputedStyle(quizBlock).display !== 'none';
+
+  // Toggle visibility
+  if (buttonsVisible) {
+    quizButtons.style.display = 'none';
+    quizBlock.style.display = 'block';
+  } else if (blockVisible) {
+    quizBlock.style.display = 'none';
+    quizButtons.style.display = 'block';
+  } else {
+    // if both hidden (edge case), show buttons
+    quizButtons.style.display = 'block';
+  }
+}
 
