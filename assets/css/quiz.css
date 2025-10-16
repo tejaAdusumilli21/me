@@ -14,6 +14,49 @@
 .score-panel { text-align:center; padding:18px; }
 .progress { font-size:0.9rem; color:#666; margin-bottom:8px; }
 
+/* -----------------------
+   Quiz visibility & selection visuals
+   ----------------------- */
+
+/* Keep quiz-root hidden until user starts the test */
+#quiz-root {
+  display: none; /* will be shown by JS when quiz starts */
+}
+
+/* Visible state for quiz root when JS sets it */
+#quiz-root.active {
+  display: block;
+}
+
+/* Selected option style (click feedback) */
+.option.selected {
+  background: #eef2ff;
+  border-color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+/* Make the label stand out when selected */
+.option.selected .option-label {
+  background: #eef2ff;
+  color: #3730a3;
+  font-weight: 700;
+}
+
+/* Disabled options (after submit) still visible but not clickable) */
+.option.disabled {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Keep correct/wrong more obvious */
+/* .option.correct {
+  background: #ecfdf5;
+  border: 3px solid #10b981;
+}
+.option.wrong {
+  background: #fff1f2;
+  border: 3px solid #ef4444;
+} */
 
 
 

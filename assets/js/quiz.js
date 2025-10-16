@@ -1,397 +1,448 @@
-
-/*
-  Quiz runtime:
-  - Loads SECTION_JSON_MAP (you provided earlier)
-  - Picks 10 random unique questions from each section
-  - Randomizes option order per question and maps to labels A,B,C,D
-  - Tracks score, shows explanation on correct, shows error + highlights correct on wrong
-  - After all questions shows final score
+/* quiz.js - full script
+   Drop into your page and ensure quiz.css includes styles from previous message.
 */
 
-/* -------------------------
-   Configuration / Helpers
-   ------------------------- */
-const SECTION_JSON_MAP = window.SECTION_JSON_MAP || {
-  1: './assets/json/Apex_Fundamentals_&_OOP_Concepts_1.json',
-  2: './assets/json/Salesforce_Triggers_2.json',
-  3: './assets/json/Asynchronous_Apex_3.json',
-  4: './assets/json/Lightning_Web_Components_4.json',
-  5: './assets/json/Aura_Components_&_Migration_to_LWC_5.json',
-  6: './assets/json/Visualforce_6.json',
-  7: './assets/json/SOQL_&_SOSL_7.json',
-  8: './assets/json/Integration_8.json',
-  9: './assets/json/OmniStudio_9.json',
-  10: './assets/json/Sales_Cloud_10.json',
-  11: './assets/json/Service_Cloud_11.json',
-  12: './assets/json/Experience_Cloud_12.json',
-  13: './assets/json/Security_&_Sharing_13.json',
-  14: './assets/json/Deployment_&_DevOps_14.json',
-  15: './assets/json/Governor_Limits_&_Performance_Tuning_15.json',
-  16: './assets/json/Testing_16.json',
-  17: './assets/json/Design_Patterns_&_Frameworks_17.json',
-  18: './assets/json/Advanced_Topics_18.json'
-};
+(() => {
+  // Config
+  const SECTIONS_COUNT = 18;
+  const QUESTIONS_PER_SECTION = 10;
+  const JSON_PATH_TEMPLATE = (n) => `level${n}.json`; // adjust path if needed (e.g., '/data/level1.json')
 
-const QUESTIONS_PER_SECTION = 10;
+  // Quiz state
+  const quizState = {
+    participantName: '',
+    sections: [], // array of arrays (sections -> questions)
+    currentSectionIndex: 0,
+    currentQuestionIndex: 0,
+    answers: {}, // { "s0q3": { selected: 'B', correct: true } }
+    score: 0,
+    started: false
+  };
 
-/* random shuffle helper */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-/* pick n unique random items */
-function pickRandom(arr, n) {
-  if (n >= arr.length) return [...arr];
-  return shuffle([...arr]).slice(0, n);
-}
-
-/* create element helper */
-function el(tag, attrs = {}, children = []) {
-  const e = document.createElement(tag);
-  Object.entries(attrs).forEach(([k, v]) => {
-    if (k === 'class') e.className = v;
-    else if (k === 'html') e.innerHTML = v;
-    else e.setAttribute(k, String(v));
-  });
-  children.forEach(c => {
-    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
-    else e.appendChild(c);
-  });
-  return e;
-}
-
-/* -------------------------
-   Quiz State
-   ------------------------- */
-const quizState = {
-  participantName: '',
-  questions: [], // flattened list of {section, originalId, question, optionsMap, answerKey, explanation}
-  currentIndex: 0,
-  score: 0,
-  perSectionScore: {}, // section -> correct count
-};
-
-/* -------------------------
-   UI Mount
-   ------------------------- */
-const quizRoot = document.querySelector('#quiz-root') || (function(){
-  const d = document.createElement('div');
-  d.id = 'quiz-root';
-  document.body.appendChild(d);
-  return d;
-})();
-
-/* create quiz UI shell */
-function createQuizShell() {
-  quizRoot.innerHTML = '';
-  const shell = el('div', { class: 'quiz-container' });
-
-  const header = el('div', { class: 'quiz-header' }, [
-    el('div', { class: 'progress', html: `<span id="progress-text">Question 0 / 0</span>` }),
-    el('div', { class: 'score', html: `<strong>Score: <span id="score-text">0</span></strong>` })
-  ]);
-  shell.appendChild(header);
-
-  const qbox = el('div', { class: 'quiz-body' });
-  qbox.appendChild(el('div', { class: 'quiz-question', id: 'question-text' }, []));
-  qbox.appendChild(el('ul', { class: 'options', id: 'options-list' }, []));
-  qbox.appendChild(el('div', { class: 'feedback', id: 'feedback' }));
-
-  const controls = el('div', { class: 'controls' });
-  const submitBtn = el('button', { class: 'btn', id: 'submit-answer' }, ['Submit Answer']);
-  const nextBtn = el('button', { class: 'btn hidden', id: 'next-question' }, ['Next']);
-  const quitBtn = el('button', { class: 'btn', id: 'quit-quiz' }, ['Quit']);
-  controls.append(submitBtn, nextBtn, quitBtn);
-
-  shell.appendChild(qbox);
-  shell.appendChild(controls);
-
-  quizRoot.appendChild(shell);
-
-  // attach listeners
-  document.getElementById('submit-answer').addEventListener('click', onSubmitAnswer);
-  document.getElementById('next-question').addEventListener('click', onNextQuestion);
-  document.getElementById('quit-quiz').addEventListener('click', showFinalResult);
-}
-
-/* -------------------------
-   Loading JSONs and building question list
-   ------------------------- */
-async function loadAllSections() {
-  const keys = Object.keys(SECTION_JSON_MAP);
-  // load all sequentially - you may use Promise.all if CORS allows
-  const sections = [];
-  for (const key of keys) {
-    const path = SECTION_JSON_MAP[key];
-    try {
-      const res = await fetch(path, { cache: 'no-store' });
-      if (!res.ok) {
-        console.warn('Failed to load', path, res.status);
-        continue;
-      }
-      const json = await res.json();
-      // assumed structure: { section: "...", levels: { level1: { questions: [...] } } }
-      // gather all questions under levels -> level1 (or merge all)
-      let questions = [];
-      if (json.levels) {
-        Object.values(json.levels).forEach(level => {
-          if (Array.isArray(level.questions)) questions = questions.concat(level.questions);
-        });
-      } else if (Array.isArray(json.questions)) {
-        questions = json.questions;
-      }
-      sections.push({ sectionIndex: Number(key), sectionName: json.section || `Section ${key}`, questions });
-    } catch (err) {
-      console.error('Error loading json', path, err);
-    }
-  }
-  return sections;
-}
-
-/* build final quiz array (10 per section) */
-function buildQuizFromSections(sections) {
-  const final = [];
-  sections.forEach(s => {
-    if (!s.questions || s.questions.length === 0) return;
-    const picked = pickRandom(s.questions, QUESTIONS_PER_SECTION);
-    picked.forEach(q => {
-      // convert options object to array to enable randomization of displayed options
-      const optsEntries = Object.entries(q.options || {});
-      const randOptEntries = shuffle(optsEntries.map(([k, v]) => ({ key: k, text: v })));
-      // create mapping of displayed labels A/B/C/D -> original key so we can check answer
-      const displayedOptions = randOptEntries.map((o, idx) => {
-        return {
-          label: ['A','B','C','D'][idx],
-          origKey: o.key,
-          text: o.text
-        };
-      }).slice(0,4); // ensure max 4
-      final.push({
-        section: s.sectionIndex,
-        sectionName: s.sectionName,
-        originalId: q.id,
-        questionText: q.question,
-        options: displayedOptions,
-        correctKey: q.answer, // original key like "A"
-        explanation: q.explanation || ''
-      });
-    });
-  });
-  // optional: little shuffle across sections to mix them, or keep grouped by section.
-  // We keep them in section order but it's fine to shuffle entire list if desired:
-  // shuffle(final);
-  return final;
-}
-
-/* -------------------------
-   Render helpers
-   ------------------------- */
-function renderQuestion() {
-  const i = quizState.currentIndex;
-  const total = quizState.questions.length;
-  const progressText = document.getElementById('progress-text');
-  const scoreText = document.getElementById('score-text');
-  progressText.textContent = `Question ${i+1} / ${total}`;
-  scoreText.textContent = `${quizState.score}`;
-
-  const q = quizState.questions[i];
-  if (!q) return;
-
-  document.getElementById('question-text').textContent = `${q.sectionName} — Q${q.originalId}: ${q.questionText}`;
-
-  const optionsList = document.getElementById('options-list');
-  optionsList.innerHTML = '';
-
-  q.options.forEach(opt => {
-    const li = el('li', { class: 'option', 'data-orig-key': opt.origKey }, [
-      el('div', { class: 'option-label' }, [opt.label]),
-      el('div', { class: 'option-text', html: opt.text })
-    ]);
-    li.addEventListener('click', () => {
-      // deselect others
-      Array.from(optionsList.children).forEach(c => c.classList.remove('selected'));
-      li.classList.add('selected');
-    });
-    optionsList.appendChild(li);
-  });
-
-  // clear feedback & buttons
-  document.getElementById('feedback').innerHTML = '';
-  document.getElementById('submit-answer').classList.remove('hidden');
-  document.getElementById('next-question').classList.add('hidden');
-
-}
-
-/* -------------------------
-   Answer submission flow
-   ------------------------- */
-function getSelectedOption() {
-  const optionsList = document.getElementById('options-list');
-  const sel = optionsList.querySelector('.option.selected');
-  return sel ? { origKey: sel.getAttribute('data-orig-key'), element: sel } : null;
-}
-
-function onSubmitAnswer() {
-  const sel = getSelectedOption();
-  if (!sel) {
-    const f = document.getElementById('feedback');
-    f.textContent = 'Please select an option.';
-    f.style.color = '#c00';
-    return;
-  }
-  const current = quizState.questions[quizState.currentIndex];
-  const submitBtn = document.getElementById('submit-answer');
-  submitBtn.classList.add('hidden');
-
-  // disable further clicks on options
-  Array.from(document.getElementById('options-list').children).forEach(c => c.classList.add('disabled'));
-
-  const feedback = document.getElementById('feedback');
-  const correctKey = current.correctKey; // original key like "A"
-  if (sel.origKey === correctKey) {
-    // Correct
-    sel.element.classList.add('correct');
-    quizState.score += 1;
-    quizState.perSectionScore[current.section] = (quizState.perSectionScore[current.section] || 0) + 1;
-    feedback.innerHTML = `<div style="color:green;"><strong>Correct!</strong></div><div style="margin-top:6px">${current.explanation || ''}</div>`;
-  } else {
-    // Wrong: highlight selected and highlight correct option
-    sel.element.classList.add('wrong');
-    feedback.innerHTML = `<div style="color:#b00;"><strong>Incorrect.</strong> The correct answer is highlighted below.</div><div style="margin-top:6px">${current.explanation || ''}</div>`;
-    // find correct option element and mark
-    const options = document.getElementById('options-list').children;
-    for (const o of options) {
-      if (o.getAttribute('data-orig-key') === correctKey) {
-        o.classList.add('correct');
-      }
-    }
-  }
-
-  // update score UI
-  document.getElementById('score-text').textContent = quizState.score;
-
-  // show next button
-  document.getElementById('next-question').classList.remove('hidden');
-}
-
-function onNextQuestion() {
-  quizState.currentIndex += 1;
-  if (quizState.currentIndex >= quizState.questions.length) {
-    showFinalResult();
-  } else {
-    renderQuestion();
-  }
-}
-
-/* -------------------------
-   Final result
-   ------------------------- */
-function showFinalResult() {
-  quizRoot.innerHTML = '';
-  const panel = el('div', { class: 'score-panel' });
-  const total = quizState.questions.length;
-  const score = quizState.score;
-  const percent = ((score / total) * 100).toFixed(1);
-  panel.appendChild(el('h2', {}, [`Test Complete`]));
-  panel.appendChild(el('div', {}, [`Participant: ${quizState.participantName || 'Anonymous'}`]));
-  panel.appendChild(el('div', {}, [`Score: ${score} / ${total} (${percent}%)`]));
-  // breakdown per section
-  const tableWrap = el('div', { style: 'margin-top:12px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto' });
-  tableWrap.appendChild(el('h4', {}, ['Per-section score:']));
-  const ul = el('ul');
-  Object.keys(quizState.perSectionScore).sort((a,b)=>a-b).forEach(s => {
-    const count = quizState.perSectionScore[s];
-    ul.appendChild(el('li', {}, [`Section ${s}: ${count} / ${QUESTIONS_PER_SECTION}`]));
-  });
-  tableWrap.appendChild(ul);
-  // restart button
-  const restart = el('button', { class: 'btn', id: 'restart-quiz', style: 'margin-top:14px' }, ['Restart']);
-  restart.addEventListener('click', () => location.reload());
-  panel.appendChild(tableWrap);
-  panel.appendChild(restart);
-  quizRoot.appendChild(panel);
-}
-
-/* -------------------------
-   Modal / Pretest flow (uses your existing modal HTML ids)
-   ------------------------- */
-function setupPretestModal() {
-  // expected elements:
-  const takeTestBtn = document.querySelector('.sparkle-button');
-  const modal = document.getElementById('quiz-modal');
-  const startBtn = document.getElementById('start-test-btn');
-  const cancelBtn = document.getElementById('cancel-test-btn');
-  const nameInput = document.getElementById('participant-name');
-  const acceptCheck = document.getElementById('accept-terms');
-  const modalCloseButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
-
+  /* ---------- Modal + pretest UI ---------- */
   function openModal() {
+    const modal = document.getElementById('quiz-modal');
     if (!modal) return;
     modal.style.display = 'block';
     modal.setAttribute('aria-hidden', 'false');
   }
   function closeModal() {
+    const modal = document.getElementById('quiz-modal');
     if (!modal) return;
     modal.style.display = 'none';
     modal.setAttribute('aria-hidden', 'true');
   }
 
-  // open modal on Take Test click
-  if (takeTestBtn) takeTestBtn.addEventListener('click', openModal);
+  function setupPretestModal() {
+    const takeBtn = document.querySelector('.sparkle-button');
+    const modal = document.getElementById('quiz-modal');
+    const closeButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
+    const startBtn = document.getElementById('start-test-btn');
+    const cancelBtn = document.getElementById('cancel-test-btn');
 
-  modalCloseButtons.forEach(b => b.addEventListener('click', closeModal));
-  cancelBtn && cancelBtn.addEventListener('click', closeModal);
-
-  function updateStartBtnState() {
-    startBtn.disabled = !(nameInput && nameInput.value.trim() && acceptCheck && acceptCheck.checked);
-  }
-  if (nameInput) nameInput.addEventListener('input', updateStartBtnState);
-  if (acceptCheck) acceptCheck.addEventListener('change', updateStartBtnState);
-
-  startBtn && startBtn.addEventListener('click', async () => {
-    // validate
-    if (!nameInput.value.trim()) { alert('Please enter your name'); return; }
-    if (!acceptCheck.checked) { alert('Please accept Terms & Conditions'); return; }
-    // set participant
-    quizState.participantName = nameInput.value.trim();
-    closeModal();
-    // bootstrap quiz: load JSONs
-    createQuizShell();
-    try {
-      const sections = await loadAllSections();
-      if (!sections.length) {
-        quizRoot.innerHTML = '<div style="padding:20px">Unable to load quiz data. Check console for errors and paths/CORS.</div>';
-        return;
-      }
-      // build questions
-      quizState.questions = buildQuizFromSections(sections);
-      if (!quizState.questions.length) {
-        quizRoot.innerHTML = '<div style="padding:20px">No questions available in loaded JSONs.</div>';
-        return;
-      }
-      // initialize counts
-      quizState.currentIndex = 0;
-      quizState.score = 0;
-      quizState.perSectionScore = {};
-      // render first question
-      renderQuestion();
-    } catch (err) {
-      console.error(err);
-      quizRoot.innerHTML = `<div style="padding:20px">Error preparing quiz. Check console.</div>`;
+    if (takeBtn) {
+      takeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
     }
+
+    closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    if (!startBtn) return;
+
+    startBtn.addEventListener('click', async () => {
+      const nameInput = document.getElementById('participant-name');
+      const acceptCheck = document.getElementById('accept-terms');
+      if (!nameInput.value.trim()) {
+        alert('Please enter your name');
+        return;
+      }
+      if (!acceptCheck.checked) {
+        alert('Please accept Terms & Conditions');
+        return;
+      }
+
+      quizState.participantName = nameInput.value.trim();
+      closeModal();
+
+      // UI swap: hide .sp and show #quiz-root (place quiz-root where .sp was visually)
+      const spBlock = document.querySelector('.sp');
+      if (spBlock) spBlock.style.display = 'none'; // or spBlock.remove();
+
+      const quizRootEl = document.getElementById('quiz-root');
+      if (quizRootEl) {
+        quizRootEl.classList.add('active');
+        quizRootEl.style.display = 'block';
+      }
+
+      // Boot the quiz
+      await bootQuiz();
+    });
+  }
+
+  /* ---------- Loading sections JSON ---------- */
+  async function loadSectionJson(index) {
+    // index is 1-based for file naming (level1.json)
+    const path = JSON_PATH_TEMPLATE(index);
+    try {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`Failed to fetch ${path} - ${res.status}`);
+      const json = await res.json();
+      // Expect json to be an array of questions. If not, try to handle gracefully.
+      if (!Array.isArray(json)) throw new Error(`${path} did not return an array`);
+      return json;
+    } catch (err) {
+      console.warn('loadSectionJson error:', err);
+      return null; // caller will handle fallback
+    }
+  }
+
+  async function loadAllSections() {
+    const sections = [];
+    for (let i = 1; i <= SECTIONS_COUNT; i++) {
+      const sec = await loadSectionJson(i);
+      if (sec && sec.length) {
+        // Optionally shuffle and pick QUESTIONS_PER_SECTION if JSON has more.
+        const picked = shuffleArray(sec).slice(0, QUESTIONS_PER_SECTION);
+        sections.push(picked);
+      } else {
+        // Fallback: generate dummy questions if file missing
+        const fallback = generateDummySection(i);
+        sections.push(fallback);
+      }
+    }
+    return sections;
+  }
+
+  /* ---------- Quiz UI creation ---------- */
+  function createQuizShell() {
+    const root = document.getElementById('quiz-root');
+    if (!root) return;
+    root.innerHTML = `
+      <div class="quiz-container">
+        <header class="quiz-header">
+          <h2 id="quiz-title">Quiz — <span id="participant-name-display"></span></h2>
+          <div class="progress">
+            <span id="section-indicator"></span> | <span id="question-indicator"></span>
+          </div>
+        </header>
+        <main id="quiz-main" class="quiz-main"></main>
+        <footer class="quiz-footer">
+          <div class="controls">
+            <button id="prev-q" class="btn-secondary">Previous</button>
+            <button id="submit-answer" class="btn-primary">Submit Answer</button>
+            <button id="next-q" class="btn-secondary">Next</button>
+          </div>
+        </footer>
+      </div>
+    `;
+
+    document.getElementById('participant-name-display').textContent = quizState.participantName || 'Participant';
+    document.getElementById('prev-q').addEventListener('click', onPrev);
+    document.getElementById('next-q').addEventListener('click', onNext);
+    document.getElementById('submit-answer').addEventListener('click', onSubmitAnswer);
+  }
+
+  /* ---------- Render question ---------- */
+  function renderCurrent() {
+    const main = document.getElementById('quiz-main');
+    if (!main) return;
+    const sIdx = quizState.currentSectionIndex;
+    const qIdx = quizState.currentQuestionIndex;
+    const section = quizState.sections[sIdx];
+    if (!section) {
+      main.innerHTML = `<p>Section not loaded.</p>`;
+      return;
+    }
+    const question = section[qIdx];
+    if (!question) {
+      main.innerHTML = `<p>Question not available.</p>`;
+      return;
+    }
+
+    // Build question HTML. Expect question object shape:
+    // { prompt: "Question text", options: { A: '...', B: '...', C: '...', D: '...' }, answer: 'A' }
+    const prompt = escapeHtml(question.prompt || question.question || 'No prompt');
+    const options = question.options || question.choices || question.answers || {};
+    const keys = Object.keys(options);
+    // ensure deterministic order A,B,C,D if present
+    const order = ['A','B','C','D'].filter(k => keys.includes(k)).length ? ['A','B','C','D'] : keys;
+
+    // Build options list
+    const optionsHtml = order.map(k => {
+      const label = escapeHtml(options[k] || options[k.toLowerCase()] || options[k.toUpperCase()] || '');
+      return `<li class="option" data-key="${k}" role="button" tabindex="0" aria-pressed="false">
+                <div class="option-key">${k}</div>
+                <div class="option-label">${label}</div>
+              </li>`;
+    }).join('');
+
+    main.innerHTML = `
+      <section class="question-card">
+        <div class="q-meta">
+          <div id="section-indicator">Section ${sIdx+1} / ${SECTIONS_COUNT}</div>
+          <div id="question-indicator">Q ${qIdx+1} / ${quizState.sections[sIdx].length}</div>
+        </div>
+        <h3 class="question-prompt">${prompt}</h3>
+        <ul class="options-list" role="list">${optionsHtml}</ul>
+        <div class="post-actions" aria-live="polite"></div>
+      </section>
+    `;
+
+    // Wire option click & keyboard handlers
+    const optionsList = main.querySelector('.options-list');
+    Array.from(optionsList.children).forEach(li => {
+      li.addEventListener('click', () => selectOption(li));
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          li.click();
+        }
+      });
+    });
+
+    // If previously answered, show selection and disabled state
+    const answerKey = getAnswerKey(sIdx, qIdx);
+    const stored = quizState.answers[answerKey];
+    if (stored && stored.selected) {
+      // mark selection
+      const selectedEl = optionsList.querySelector(`.option[data-key="${stored.selected}"]`);
+      if (selectedEl) {
+        optionsList.querySelectorAll('.option').forEach(o => {
+          o.classList.remove('selected');
+          o.setAttribute('aria-pressed', 'false');
+        });
+        selectedEl.classList.add('selected');
+        selectedEl.setAttribute('aria-pressed', 'true');
+      }
+      // if already evaluated (correct/wrong) show accordingly and disable
+      if (stored.evaluated) {
+        evaluateUIForAnswer(optionsList, question, stored);
+      }
+    }
+  }
+
+  function selectOption(li) {
+    const optionsList = li.parentElement;
+    Array.from(optionsList.children).forEach(c => {
+      c.classList.remove('selected');
+      c.setAttribute('aria-pressed', 'false');
+    });
+    li.classList.add('selected');
+    li.setAttribute('aria-pressed', 'true');
+    // store temporary selection (not evaluated until submit)
+    const sIdx = quizState.currentSectionIndex;
+    const qIdx = quizState.currentQuestionIndex;
+    const answerKey = getAnswerKey(sIdx, qIdx);
+    if (!quizState.answers[answerKey]) quizState.answers[answerKey] = {};
+    quizState.answers[answerKey].selected = li.getAttribute('data-key');
+    quizState.answers[answerKey].evaluated = !!quizState.answers[answerKey].evaluated; // keep if already evaluated
+  }
+
+  function onPrev() {
+    if (quizState.currentQuestionIndex > 0) {
+      quizState.currentQuestionIndex--;
+      renderCurrent();
+    } else if (quizState.currentSectionIndex > 0) {
+      quizState.currentSectionIndex--;
+      quizState.currentQuestionIndex = Math.max(0, quizState.sections[quizState.currentSectionIndex].length - 1);
+      renderCurrent();
+    }
+  }
+  function onNext() {
+    const sec = quizState.sections[quizState.currentSectionIndex];
+    if (!sec) return;
+    if (quizState.currentQuestionIndex < sec.length - 1) {
+      quizState.currentQuestionIndex++;
+      renderCurrent();
+    } else if (quizState.currentSectionIndex < quizState.sections.length - 1) {
+      quizState.currentSectionIndex++;
+      quizState.currentQuestionIndex = 0;
+      renderCurrent();
+    } else {
+      // End of last section -> show summary
+      showScorecard();
+    }
+  }
+
+  function onSubmitAnswer() {
+    const sIdx = quizState.currentSectionIndex;
+    const qIdx = quizState.currentQuestionIndex;
+    const section = quizState.sections[sIdx];
+    if (!section) return;
+    const question = section[qIdx];
+    const answerKey = getAnswerKey(sIdx, qIdx);
+    const stored = quizState.answers[answerKey];
+    if (!stored || !stored.selected) {
+      alert('Please select an option before submitting.');
+      return;
+    }
+    // Evaluate
+    const correctAnswer = (question.answer || question.correctAnswer || question.correct || '').toString().trim();
+    const selected = stored.selected;
+    const isCorrect = !!correctAnswer && (selected.toString().trim().toUpperCase() === correctAnswer.toString().trim().toUpperCase());
+
+    // Save evaluation and score
+    quizState.answers[answerKey] = { ...stored, evaluated: true, correctAnswer, selected, correct: isCorrect };
+    if (isCorrect) quizState.score++;
+
+    // UI feedback
+    const main = document.getElementById('quiz-main');
+    const optionsList = main.querySelector('.options-list');
+    evaluateUIForAnswer(optionsList, question, quizState.answers[answerKey]);
+
+    // Auto move to next after brief pause? Not auto — keep on user's control.
+  }
+
+  function evaluateUIForAnswer(optionsList, question, stored) {
+    // Mark correct / wrong visually and disable further selection
+    const correct = (stored.correctAnswer || stored.correct || question.answer || question.correctAnswer || '').toString().trim().toUpperCase();
+    Array.from(optionsList.children).forEach(li => {
+      const key = li.getAttribute('data-key');
+      li.classList.add('disabled');
+      li.setAttribute('aria-disabled', 'true');
+      if (key.toString().trim().toUpperCase() === correct) {
+        li.classList.add('correct');
+      }
+      if (stored.selected && key === stored.selected && !stored.correct) {
+        li.classList.add('wrong');
+      }
+    });
+    // Also show post-action message
+    const post = optionsList.parentElement.querySelector('.post-actions');
+    if (stored.correct) {
+      post.innerHTML = `<div class="toast success">Correct! +1</div>`;
+    } else {
+      post.innerHTML = `<div class="toast error">Wrong. Correct answer: <strong>${escapeHtml(correct)}</strong></div>`;
+    }
+  }
+
+  function showScorecard() {
+    const root = document.getElementById('quiz-root');
+    if (!root) return;
+    const totalQuestions = quizState.sections.reduce((acc, s) => acc + (s ? s.length : 0), 0);
+    const score = quizState.score;
+    root.innerHTML = `
+      <div class="scorecard">
+        <h2>Scorecard</h2>
+        <p><strong>${escapeHtml(quizState.participantName)}</strong>, your score is <strong>${score}</strong> out of <strong>${totalQuestions}</strong>.</p>
+        <div class="score-actions">
+          <button id="review-answers" class="btn-secondary">Review answers</button>
+          <button id="restart-quiz" class="btn-primary">Restart</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('restart-quiz').addEventListener('click', restartQuiz);
+    document.getElementById('review-answers').addEventListener('click', reviewAnswers);
+  }
+
+  function reviewAnswers() {
+    // Simple review: show first section/question where we can re-render and show evaluated states
+    quizState.currentSectionIndex = 0;
+    quizState.currentQuestionIndex = 0;
+    createQuizShell();
+    // Ensure UI root rebuilt with participant name
+    document.getElementById('participant-name-display').textContent = quizState.participantName;
+    // Render first QA
+    renderCurrent();
+  }
+
+  function restartQuiz() {
+    // Reset state but keep name
+    const name = quizState.participantName;
+    Object.assign(quizState, {
+      participantName: name,
+      sections: quizState.sections,
+      currentSectionIndex: 0,
+      currentQuestionIndex: 0,
+      answers: {},
+      score: 0,
+      started: false
+    });
+    createQuizShell();
+    renderCurrent();
+  }
+
+  /* ---------- Boot sequence ---------- */
+  async function bootQuiz() {
+    if (quizState.started) return;
+    createQuizShell();
+    // show loading placeholder
+    const main = document.getElementById('quiz-main');
+    if (main) main.innerHTML = `<p>Loading questions...</p>`;
+    // Try to load requested JSONs
+    quizState.sections = await loadAllSections();
+    quizState.started = true;
+    // reset navigation
+    quizState.currentSectionIndex = 0;
+    quizState.currentQuestionIndex = 0;
+    quizState.score = 0;
+    quizState.answers = {};
+    renderCurrent();
+  }
+
+  /* ---------- Utils ---------- */
+  function getAnswerKey(sectionIndex, questionIndex) {
+    return `s${sectionIndex}q${questionIndex}`;
+  }
+
+  // Very small HTML escaper
+  function escapeHtml(unsafe) {
+    if (unsafe === null || unsafe === undefined) return '';
+    return String(unsafe)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  // Fisher-Yates shuffle
+  function shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Fallback: generate dummy section with QUESTIONS_PER_SECTION items
+  function generateDummySection(index) {
+    const sec = [];
+    for (let i = 0; i < QUESTIONS_PER_SECTION; i++) {
+      const qn = {
+        prompt: `Section ${index} - Sample question ${i + 1}: What is ${i + 1} + ${index}?`,
+        options: {
+          A: String(i + 1 + index),
+          B: String(i + 1 + index + 1),
+          C: String(i + 1 + index + 2),
+          D: String(i + 1 + index + 3)
+        },
+        answer: 'A'
+      };
+      sec.push(qn);
+    }
+    return sec;
+  }
+
+  /* ---------- Initialization ---------- */
+  document.addEventListener('DOMContentLoaded', () => {
+    setupPretestModal();
+    // Also wire mini test button (if present) to optionally start a shorter flow
+    const miniBtn = document.querySelector('.learn-more');
+    if (miniBtn) {
+      miniBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // quick mini flow: open modal but we could alter config to fewer sections
+        openModal();
+      });
+    }
+    // Hide #quiz-root initially to avoid flash if CSS not applied
+    const qr = document.getElementById('quiz-root');
+    if (qr) qr.style.display = 'none';
   });
-}
 
-/* -------------------------
-   Bootstrap once DOM ready
-   ------------------------- */
-document.addEventListener('DOMContentLoaded', () => {
-  setupPretestModal();
-  // expose start function for debug if needed
-  window._quizState = quizState;
-});
-
+})();
