@@ -39,6 +39,18 @@
     const closeButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
     const startBtn = document.getElementById('start-test-btn');
     const cancelBtn = document.getElementById('cancel-test-btn');
+      // Enable/disable Start button dynamically
+  const nameInput = document.getElementById('participant-name');
+  const acceptCheck = document.getElementById('accept-terms');
+  const validateForm = () => {
+    if (nameInput.value.trim() && acceptCheck.checked) {
+      startBtn.removeAttribute('disabled');
+    } else {
+      startBtn.setAttribute('disabled', 'true');
+    }
+  };
+  nameInput.addEventListener('input', validateForm);
+  acceptCheck.addEventListener('change', validateForm);
 
     if (takeBtn) {
       takeBtn.addEventListener('click', (e) => {
