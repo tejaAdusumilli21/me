@@ -20,7 +20,7 @@ const SECTION_JSON_MAP = window.SECTION_JSON_MAP || {
   14: './assets/json/Deployment_&_DevOps_14.json',
   15: './assets/json/Governor_Limits_&_Performance_Tuning_15.json',
   16: './assets/json/Testing_16.json',
-  17: './assets/json/Design_PatternS_&_Frameworks_17.json',
+  17: './assets/json/Design_Patterns_&_Frameworks_17.json',
   18: './assets/json/Advanced_Topics_18.json'
 };
 
