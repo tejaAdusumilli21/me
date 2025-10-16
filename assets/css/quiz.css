@@ -480,3 +480,25 @@ button:hover .button-text {
   }
 }
 /* Optional: on smaller screens, make buttons full-width */
+
+/* Always center when visible */
+.quiz-modal {
+  position: fixed;
+  inset: 0;
+  display: none;                 /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+.quiz-modal[aria-hidden="false"] { display: flex; }  /* flex -> centers */
+
+/* Keep the checkbox row tidy */
+.terms {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: nowrap;     /* don’t break to the next line */
+}
+.terms a { white-space: nowrap; }      /* keep “Terms & Conditions” together */
+.terms input { flex: 0 0 auto; }       /* checkbox stays tight to the left */
+
