@@ -1,16 +1,16 @@
-/* =======================================================
-   QUIZ APP – Full JS
-   - Loads JSON from SECTION_JSON_MAP (same behavior as before)
-   - Shows 10 random questions per section (configurable)
-   - Clean toggle between .quiz-buttons and .quiz-block
-   - Modal open/close + Start/Mini Test flows
-   ======================================================= */
+
+/*
+  Quiz runtime:
+  - Loads SECTION_JSON_MAP (you provided earlier)
+  - Picks 10 random unique questions from each section
+  - Randomizes option order per question and maps to labels A,B,C,D
+  - Tracks score, shows explanation on correct, shows error + highlights correct on wrong
+  - After all questions shows final score
+*/
 
 /* -------------------------
    Configuration / Helpers
    ------------------------- */
-
-// Map of section index -> JSON path (same keys/paths as your old file)
 const SECTION_JSON_MAP = window.SECTION_JSON_MAP || {
   1: './assets/json/Apex_Fundamentals_&_OOP_Concepts_1.json',
   2: './assets/json/Salesforce_Triggers_2.json',
@@ -45,7 +45,6 @@ function shuffle(arr) {
 
 /* pick n unique random items */
 function pickRandom(arr, n) {
-  if (!Array.isArray(arr)) return [];
   if (n >= arr.length) return [...arr];
   return shuffle([...arr]).slice(0, n);
 }
@@ -60,7 +59,7 @@ function el(tag, attrs = {}, children = []) {
   });
   children.forEach(c => {
     if (typeof c === 'string') e.appendChild(document.createTextNode(c));
-    else if (c) e.appendChild(c);
+    else e.appendChild(c);
   });
   return e;
 }
@@ -70,51 +69,53 @@ function el(tag, attrs = {}, children = []) {
    ------------------------- */
 const quizState = {
   participantName: '',
-  questions: [], // {section, sectionName, originalId, questionText, options, correctKey, explanation}
+  questions: [], // flattened list of {section, originalId, question, optionsMap, answerKey, explanation}
   currentIndex: 0,
   score: 0,
   perSectionScore: {}, // section -> correct count
-  locked: false
 };
 
 /* -------------------------
    UI Mount
    ------------------------- */
-const quizRoot = document.getElementById('quiz-root');
+const quizRoot = document.querySelector('#quiz-root') || (function(){
+  const d = document.createElement('div');
+  d.id = 'quiz-root';
+  document.body.appendChild(d);
+  return d;
+})();
 
 /* create quiz UI shell */
 function createQuizShell() {
-  if (!quizRoot) return;
+  quizRoot.innerHTML = '';
+  const shell = el('div', { class: 'quiz-container' });
 
-  quizRoot.innerHTML = `
-    <div class="quiz-app">
-      <div class="quiz-meta">
-        <h3 class="section-title">Quiz</h3>
-        <div class="scorecard small">
-          <span id="progress">Question 0/0</span> · Score: <span id="score">0</span>
-        </div>
-      </div>
+  const header = el('div', { class: 'quiz-header' }, [
+    el('div', { class: 'progress', html: `<span id="progress-text">Question 0 / 0</span>` }),
+    el('div', { class: 'score', html: `<strong>Score: <span id="score-text">0</span></strong>` })
+  ]);
+  shell.appendChild(header);
 
-      <div id="card" class="question-card">
-        <div id="qtext" class="q-text"></div>
-        <ul id="opts" class="options"></ul>
-        <div id="explain" class="explanation hidden"></div>
-        <div class="controls">
-          <button id="submit" class="btn primary">Submit</button>
-          <button id="next" class="btn ghost hidden">Next</button>
-          <button id="finish" class="btn ghost hidden">Finish</button>
-          <button id="exit" class="btn ghost">Exit</button>
-        </div>
-      </div>
+  const qbox = el('div', { class: 'quiz-body' });
+  qbox.appendChild(el('div', { class: 'quiz-question', id: 'question-text' }, []));
+  qbox.appendChild(el('ul', { class: 'options', id: 'options-list' }, []));
+  qbox.appendChild(el('div', { class: 'feedback', id: 'feedback' }));
 
-      <div id="results" class="results hidden"></div>
-    </div>
-  `;
+  const controls = el('div', { class: 'controls' });
+  const submitBtn = el('button', { class: 'btn', id: 'submit-answer' }, ['Submit Answer']);
+  const nextBtn = el('button', { class: 'btn hidden', id: 'next-question' }, ['Next']);
+  const quitBtn = el('button', { class: 'btn', id: 'quit-quiz' }, ['Quit']);
+  controls.append(submitBtn, nextBtn, quitBtn);
 
-  document.getElementById('submit')?.addEventListener('click', onSubmit);
-  document.getElementById('next')?.addEventListener('click', onNext);
-  document.getElementById('finish')?.addEventListener('click', onFinish);
-  document.getElementById('exit')?.addEventListener('click', () => setQuizView('buttons'));
+  shell.appendChild(qbox);
+  shell.appendChild(controls);
+
+  quizRoot.appendChild(shell);
+
+  // attach listeners
+  document.getElementById('submit-answer').addEventListener('click', onSubmitAnswer);
+  document.getElementById('next-question').addEventListener('click', onNextQuestion);
+  document.getElementById('quit-quiz').addEventListener('click', showFinalResult);
 }
 
 /* -------------------------
@@ -122,8 +123,8 @@ function createQuizShell() {
    ------------------------- */
 async function loadAllSections() {
   const keys = Object.keys(SECTION_JSON_MAP);
+  // load all sequentially - you may use Promise.all if CORS allows
   const sections = [];
-
   for (const key of keys) {
     const path = SECTION_JSON_MAP[key];
     try {
@@ -133,10 +134,8 @@ async function loadAllSections() {
         continue;
       }
       const json = await res.json();
-
-      // Expected shapes your old data used:
-      // 1) { section: "Name", levels: { level1: {questions:[...]}, ... } }
-      // 2) { section: "Name", questions:[...] }
+      // assumed structure: { section: "...", levels: { level1: { questions: [...] } } }
+      // gather all questions under levels -> level1 (or merge all)
       let questions = [];
       if (json.levels) {
         Object.values(json.levels).forEach(level => {
@@ -145,17 +144,11 @@ async function loadAllSections() {
       } else if (Array.isArray(json.questions)) {
         questions = json.questions;
       }
-
-      sections.push({
-        sectionIndex: Number(key),
-        sectionName: json.section || `Section ${key}`,
-        questions
-      });
+      sections.push({ sectionIndex: Number(key), sectionName: json.section || `Section ${key}`, questions });
     } catch (err) {
       console.error('Error loading json', path, err);
     }
   }
-
   return sections;
 }
 
@@ -164,251 +157,272 @@ function buildQuizFromSections(sections) {
   const final = [];
   sections.forEach(s => {
     if (!s.questions || s.questions.length === 0) return;
-
     const picked = pickRandom(s.questions, QUESTIONS_PER_SECTION);
     picked.forEach(q => {
-      // q.options is assumed to be an object {A:'',B:'',C:'',D:''}
-      const entries = Object.entries(q.options || {});
-      const randomized = shuffle(entries.map(([key, text]) => ({ key, text }))).slice(0, 4);
-
+      // convert options object to array to enable randomization of displayed options
+      const optsEntries = Object.entries(q.options || {});
+      const randOptEntries = shuffle(optsEntries.map(([k, v]) => ({ key: k, text: v })));
+      // create mapping of displayed labels A/B/C/D -> original key so we can check answer
+      const displayedOptions = randOptEntries.map((o, idx) => {
+        return {
+          label: ['A','B','C','D'][idx],
+          origKey: o.key,
+          text: o.text
+        };
+      }).slice(0,4); // ensure max 4
       final.push({
         section: s.sectionIndex,
         sectionName: s.sectionName,
         originalId: q.id,
         questionText: q.question,
-        options: randomized.map((o, i) => ({
-          label: ['A', 'B', 'C', 'D'][i],
-          origKey: o.key,
-          text: o.text
-        })),
+        options: displayedOptions,
         correctKey: q.answer, // original key like "A"
         explanation: q.explanation || ''
       });
     });
   });
-
+  // optional: little shuffle across sections to mix them, or keep grouped by section.
+  // We keep them in section order but it's fine to shuffle entire list if desired:
+  // shuffle(final);
   return final;
 }
 
 /* -------------------------
-   Render & Flow
+   Render helpers
    ------------------------- */
 function renderQuestion() {
-  const q = quizState.questions[quizState.currentIndex];
+  const i = quizState.currentIndex;
+  const total = quizState.questions.length;
+  const progressText = document.getElementById('progress-text');
+  const scoreText = document.getElementById('score-text');
+  progressText.textContent = `Question ${i+1} / ${total}`;
+  scoreText.textContent = `${quizState.score}`;
+
+  const q = quizState.questions[i];
   if (!q) return;
 
-  document.querySelector('.section-title').textContent = q.sectionName || 'Quiz';
-  document.getElementById('progress').textContent = `Question ${quizState.currentIndex + 1}/${quizState.questions.length}`;
-  document.getElementById('score').textContent = String(quizState.score);
+  document.getElementById('question-text').innerHTML = `
+  <div class="section-title" style="font-size:1.2rem;font-weight:600;margin-bottom:8px;">
+    ${q.sectionName}
+  </div>
+  <div class="question-text" style="font-size:1.1rem;font-weight:500;line-height:1.6;">
+    ${q.questionText}
+  </div>
+`;
 
-  // text
-  const qtext = document.getElementById('qtext');
-  qtext.innerHTML = `
-    <div class="question-text">${q.questionText}</div>
-  `;
+  const optionsList = document.getElementById('options-list');
+  optionsList.innerHTML = '';
 
-  // options
-  const opts = document.getElementById('opts');
-  opts.innerHTML = '';
-  q.options.forEach((opt, i) => {
+  q.options.forEach(opt => {
     const li = el('li', { class: 'option', 'data-orig-key': opt.origKey }, [
       el('div', { class: 'option-label' }, [opt.label]),
       el('div', { class: 'option-text', html: opt.text })
     ]);
-    li.addEventListener('click', () => selectOption(i));
-    opts.appendChild(li);
+    li.addEventListener('click', () => {
+      // deselect others
+      Array.from(optionsList.children).forEach(c => c.classList.remove('selected'));
+      li.classList.add('selected');
+    });
+    optionsList.appendChild(li);
   });
 
-  quizState.locked = false;
-  show('#submit', true);
-  show('#next', false);
-  show('#finish', false);
-  show('#explain', false);
-}
+  // clear feedback & buttons
+  document.getElementById('feedback').innerHTML = '';
+  document.getElementById('submit-answer').classList.remove('hidden');
+  document.getElementById('next-question').classList.add('hidden');
 
-function selectOption(i) {
-  if (quizState.locked) return;
-  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
-  const chosen = document.querySelectorAll('.option')[i];
-  chosen?.classList.add('selected');
-}
-
-function onSubmit() {
-  if (quizState.locked) return;
-
-  const sel = document.querySelector('.option.selected');
-  if (!sel) {
-    pulseCard();
-    return;
-  }
-
-  quizState.locked = true;
-  const chosenKey = sel.getAttribute('data-orig-key');
-  const q = quizState.questions[quizState.currentIndex];
-
-  document.querySelectorAll('.option').forEach(o => o.classList.add('disabled'));
-
-  if (chosenKey === q.correctKey) {
-    sel.classList.add('correct');
-    quizState.score += 1;
-    quizState.perSectionScore[q.section] = (quizState.perSectionScore[q.section] || 0) + 1;
-    showExplanation(`Correct! ${q.explanation || ''}`);
-  } else {
-    sel.classList.add('wrong');
-    // mark the correct one
-    document.querySelectorAll('.option').forEach(o => {
-      if (o.getAttribute('data-orig-key') === q.correctKey) o.classList.add('correct');
-    });
-    showExplanation(`Incorrect. ${q.explanation || ''}`);
-  }
-
-  document.getElementById('score').textContent = String(quizState.score);
-
-  const last = quizState.currentIndex === quizState.questions.length - 1;
-  show('#submit', false);
-  show('#next', !last);
-  show('#finish', last);
-}
-
-function onNext() {
-  if (quizState.currentIndex < quizState.questions.length - 1) {
-    quizState.currentIndex += 1;
-    renderQuestion();
-  }
-}
-
-function onFinish() {
-  const res = document.getElementById('results');
-  const total = quizState.questions.length;
-  const pct = total ? ((quizState.score / total) * 100).toFixed(1) : '0.0';
-
-  res.innerHTML = `
-    <strong>Done!</strong><br/>
-    You scored <b>${quizState.score}</b> out of <b>${total}</b> (${pct}%).
-  `;
-  show('#results', true);
-  res.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 /* -------------------------
-   Utilities
+   Answer submission flow
    ------------------------- */
-function show(selector, on) {
-  const el = document.querySelector(selector);
-  if (!el) return;
-  el.classList.toggle('hidden', !on);
+function getSelectedOption() {
+  const optionsList = document.getElementById('options-list');
+  const sel = optionsList.querySelector('.option.selected');
+  return sel ? { origKey: sel.getAttribute('data-orig-key'), element: sel } : null;
 }
 
-function showExplanation(text) {
-  const ex = document.getElementById('explain');
-  ex.textContent = text;
-  show('#explain', true);
-}
+function onSubmitAnswer() {
+  const sel = getSelectedOption();
+  if (!sel) {
+    const f = document.getElementById('feedback');
+    f.textContent = 'Please select an option.';
+    f.style.color = '#c00';
+    return;
+  }
+  const current = quizState.questions[quizState.currentIndex];
+  const submitBtn = document.getElementById('submit-answer');
+  submitBtn.classList.add('hidden');
 
-function pulseCard() {
-  const card = document.getElementById('card');
-  card.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.55)';
-  setTimeout(() => { card.style.boxShadow = ''; }, 300);
-}
+  // disable further clicks on options
+  Array.from(document.getElementById('options-list').children).forEach(c => c.classList.add('disabled'));
 
-/* =======================================================
-   View toggling for .quiz-buttons / .quiz-block
-   ======================================================= */
-const view = {
-  buttons: document.querySelector('.quiz-buttons'),
-  block:   document.querySelector('.quiz-block')
-};
-
-/** Show exactly one: 'buttons' or 'block' (default shows buttons). */
-function setQuizView(which = 'buttons') {
-  const showButtons = which === 'buttons';
-  view.buttons?.classList.toggle('is-hidden', !showButtons);
-  view.block?.classList.toggle('is-hidden', showButtons);
-}
-
-/** Flip view: if buttons visible -> show block, else show buttons. */
-function toggleQuizView() {
-  const buttonsVisible = view.buttons && !view.buttons.classList.contains('is-hidden');
-  setQuizView(buttonsVisible ? 'block' : 'buttons');
-}
-
-window.toggleQuizSections = toggleQuizView; // for your inline Exit if needed
-window.setQuizView = setQuizView;
-
-/* =======================================================
-   Modal / pretest flow
-   ======================================================= */
-const modal     = document.getElementById('quiz-modal');
-const accept    = document.getElementById('accept-terms');
-const startBtn  = document.getElementById('start-test-btn');
-const cancelBtn = document.getElementById('cancel-test-btn');
-
-function openModal() {
-  if (!modal) return;
-  modal.style.display = 'flex'; // flex -> centered per CSS
-  modal.setAttribute('aria-hidden', 'false');
-}
-function closeModal() {
-  if (!modal) return;
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden', 'true');
-}
-
-/* Build + load quiz */
-async function bootstrapQuiz() {
-  createQuizShell();
-  try {
-    const sections = await loadAllSections();
-    if (!sections.length) {
-      quizRoot.innerHTML = '<div style="padding:20px">No sections loaded. Check JSON paths and CORS.</div>';
-      return;
+  const feedback = document.getElementById('feedback');
+  const correctKey = current.correctKey; // original key like "A"
+  if (sel.origKey === correctKey) {
+    // Correct
+    sel.element.classList.add('correct');
+    quizState.score += 1;
+    quizState.perSectionScore[current.section] = (quizState.perSectionScore[current.section] || 0) + 1;
+    feedback.innerHTML = `<div style="color:green;"><strong>Correct!</strong></div><div style="margin-top:6px">${current.explanation || ''}</div>`;
+  } else {
+    // Wrong: highlight selected and highlight correct option
+    sel.element.classList.add('wrong');
+    feedback.innerHTML = `<div style="color:#b00;"><strong>Incorrect.</strong> The correct answer is highlighted below.</div><div style="margin-top:6px">${current.explanation || ''}</div>`;
+    // find correct option element and mark
+    const options = document.getElementById('options-list').children;
+    for (const o of options) {
+      if (o.getAttribute('data-orig-key') === correctKey) {
+        o.classList.add('correct');
+      }
     }
-    quizState.questions = buildQuizFromSections(sections);
-    quizState.currentIndex = 0;
-    quizState.score = 0;
-    quizState.perSectionScore = {};
+  }
+
+  // update score UI
+  document.getElementById('score-text').textContent = quizState.score;
+
+  // show next button
+  document.getElementById('next-question').classList.remove('hidden');
+}
+
+function onNextQuestion() {
+  quizState.currentIndex += 1;
+  if (quizState.currentIndex >= quizState.questions.length) {
+    showFinalResult();
+  } else {
     renderQuestion();
-  } catch (err) {
-    console.error('Quiz load error:', err);
-    quizRoot.innerHTML = '<div style="padding:20px">Error preparing quiz. Check console.</div>';
   }
 }
 
-/* =======================================================
-   Startup wiring
-   ======================================================= */
+/* -------------------------
+   Final result
+   ------------------------- */
+function showFinalResult() {
+  quizRoot.innerHTML = '';
+  const panel = el('div', { class: 'score-panel' });
+  const total = quizState.questions.length;
+  const score = quizState.score;
+  const percent = ((score / total) * 100).toFixed(1);
+  panel.appendChild(el('h2', {}, [`Test Complete`]));
+  panel.appendChild(el('div', {}, [`Participant: ${quizState.participantName || 'Anonymous'}`]));
+  panel.appendChild(el('div', {}, [`Score: ${score} / ${total} (${percent}%)`]));
+  // breakdown per section
+  const tableWrap = el('div', { style: 'margin-top:12px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto' });
+  tableWrap.appendChild(el('h4', {}, ['Per-section score:']));
+  const ul = el('ul');
+  Object.keys(quizState.perSectionScore).sort((a,b)=>a-b).forEach(s => {
+    const count = quizState.perSectionScore[s];
+    ul.appendChild(el('li', {}, [`Section ${s}: ${count} / ${QUESTIONS_PER_SECTION}`]));
+  });
+  tableWrap.appendChild(ul);
+  // restart button
+  const restart = el('button', { class: 'btn', id: 'restart-quiz', style: 'margin-top:14px' }, ['Restart']);
+  restart.addEventListener('click', () => location.reload());
+  panel.appendChild(tableWrap);
+  panel.appendChild(restart);
+  quizRoot.appendChild(panel);
+}
+
+/* -------------------------
+   Modal / Pretest flow (uses your existing modal HTML ids)
+   ------------------------- */
+function setupPretestModal() {
+  // expected elements:
+  const takeTestBtn = document.querySelector('.sparkle-button');
+  const modal = document.getElementById('quiz-modal');
+  const startBtn = document.getElementById('start-test-btn');
+  const cancelBtn = document.getElementById('cancel-test-btn');
+  const nameInput = document.getElementById('participant-name');
+  const acceptCheck = document.getElementById('accept-terms');
+  const modalCloseButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
+
+  function openModal() {
+    if (!modal) return;
+    modal.style.display = 'block';
+    modal.setAttribute('aria-hidden', 'false');
+  }
+  function closeModal() {
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  // open modal on Take Test click
+  if (takeTestBtn) takeTestBtn.addEventListener('click', openModal);
+
+  modalCloseButtons.forEach(b => b.addEventListener('click', closeModal));
+  cancelBtn && cancelBtn.addEventListener('click', closeModal);
+
+  function updateStartBtnState() {
+    startBtn.disabled = !(nameInput && nameInput.value.trim() && acceptCheck && acceptCheck.checked);
+  }
+  if (nameInput) nameInput.addEventListener('input', updateStartBtnState);
+  if (acceptCheck) acceptCheck.addEventListener('change', updateStartBtnState);
+
+  startBtn && startBtn.addEventListener('click', async () => {
+    // validate
+    if (!nameInput.value.trim()) { alert('Please enter your name'); return; }
+    if (!acceptCheck.checked) { alert('Please accept Terms & Conditions'); return; }
+    // set participant
+    quizState.participantName = nameInput.value.trim();
+    closeModal();
+    // bootstrap quiz: load JSONs
+    createQuizShell();
+    try {
+      const sections = await loadAllSections();
+      if (!sections.length) {
+        quizRoot.innerHTML = '<div style="padding:20px">Unable to load quiz data. Check console for errors and paths/CORS.</div>';
+        return;
+      }
+      // build questions
+      quizState.questions = buildQuizFromSections(sections);
+      if (!quizState.questions.length) {
+        quizRoot.innerHTML = '<div style="padding:20px">No questions available in loaded JSONs.</div>';
+        return;
+      }
+      // initialize counts
+      quizState.currentIndex = 0;
+      quizState.score = 0;
+      quizState.perSectionScore = {};
+      // render first question
+      renderQuestion();
+    } catch (err) {
+      console.error(err);
+      quizRoot.innerHTML = `<div style="padding:20px">Error preparing quiz. Check console.</div>`;
+    }
+  });
+}
+
+/* -------------------------
+   Bootstrap once DOM ready
+   ------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
-  // default: show buttons, hide quiz area (requires .is-hidden in CSS)
-  setQuizView('buttons');
-
-  // Take Test opens modal
-  document.querySelector('.sparkle-button')?.addEventListener('click', openModal);
-
-  // Mini Test: skip modal, show quiz
-  document.querySelector('.learn-more')?.addEventListener('click', () => {
-    closeModal();
-    setQuizView('block');
-    bootstrapQuiz();
-    quizRoot?.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  // Modal closers
-  modal?.querySelectorAll('[data-action="close"], .quiz-modal-backdrop, .quiz-modal-close')
-    ?.forEach(el => el.addEventListener('click', closeModal));
-  cancelBtn?.addEventListener('click', closeModal);
-
-  // Enable Start when terms checked (and optionally name filled if you enforce it)
-  accept?.addEventListener('change', e => { startBtn.disabled = !e.target.checked; });
-
-  // Start Test -> close modal, show quiz, load JSON
-  startBtn?.addEventListener('click', () => {
-    if (startBtn.disabled) return;
-    closeModal();
-    setQuizView('block');
-    bootstrapQuiz();
-    quizRoot?.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  // expose for debugging if needed
+  setupPretestModal();
+  // expose start function for debug if needed
   window._quizState = quizState;
 });
+function toggleQuizSections() {
+  const quizButtons = document.querySelector('.quiz-buttons');
+  const quizBlock = document.querySelector('.quiz-block');
+
+  if (!quizButtons || !quizBlock) {
+    console.warn('Elements with classes "quiz-buttons" or "quiz-block" not found.');
+    return;
+  }
+
+  // Determine current state based on visibility
+  const buttonsVisible = window.getComputedStyle(quizButtons).display !== 'none';
+  const blockVisible = window.getComputedStyle(quizBlock).display !== 'none';
+
+  // Toggle visibility
+  if (buttonsVisible) {
+    quizButtons.style.display = 'none';
+    quizBlock.style.display = 'block';
+  } else if (blockVisible) {
+    quizBlock.style.display = 'none';
+    quizButtons.style.display = 'block';
+  } else {
+    // if both hidden (edge case), show buttons
+    quizButtons.style.display = 'block';
+  }
+}
