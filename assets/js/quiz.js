@@ -54,6 +54,7 @@ function el(tag, attrs = {}, children = []) {
   const e = document.createElement(tag);
   Object.entries(attrs).forEach(([k, v]) => {
     if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
     else if (k === 'html') e.innerHTML = v;
     else e.setAttribute(k, String(v));
   });
@@ -216,7 +217,7 @@ function renderQuestion() {
   q.options.forEach(opt => {
     const li = el('li', { class: 'option', 'data-orig-key': opt.origKey }, [
       el('div', { class: 'option-label' }, [opt.label]),
-      el('div', { class: 'option-text', html: opt.text })
+      el('div', { class: 'option-text', text: opt.text })
     ]);
     li.addEventListener('click', () => {
       // deselect others
