@@ -1170,8 +1170,11 @@ Case and work order to there field support team.
 
       <!--code here   -->
       <div class="quiz-block">
-         <button onclick="toggleQuizSections()">Exit</button>
+        <div class="quiz-block-actions">
+          <button type="button" class="btn-secondary" onclick="toggleQuizSections('exit')">Exit</button>
+        </div>
         <div id="quiz-root" style="max-width:1000px;margin:20px auto;"></div>
+        <div id="mini-quiz-root" class="mini-quiz-root" style="max-width:1000px;margin:20px auto;display:none;"></div>
       </div>
       
     
@@ -1199,12 +1202,38 @@ Case and work order to there field support team.
       <div class="form-row">
         <label class="terms">
           <input id="accept-terms" type="checkbox" />
-          I accept the <a href="#" target="_blank" rel="noopener">Terms & Conditions</a>.
+          <span class="terms-text">I accept the <a href="#" target="_blank" rel="noopener">Terms &amp; Conditions</a>.</span>
         </label>
       </div>
       <div class="form-actions">
-        <button type="button" id="start-test-btn" class="btn-primary" onclick="toggleQuizSections()" disabled>Start Test</button>
+        <button type="button" id="start-test-btn" class="btn-primary" disabled>Start Test</button>
         <button type="button" id="cancel-test-btn" class="btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="mini-quiz-modal" class="quiz-modal" aria-hidden="true" role="dialog" aria-modal="true" style="display:none">
+  <div class="quiz-modal-backdrop" data-mini-action="close"></div>
+  <div class="quiz-modal-body" role="document" aria-labelledby="mini-quiz-modal-title">
+    <button class="quiz-modal-close" data-mini-action="close" aria-label="Close">✕</button>
+    <h2 id="mini-quiz-modal-title">Mini Test — Quick 50</h2>
+    <form id="mini-pretest-form" novalidate>
+      <div class="form-row">
+        <label for="mini-participant-name">Enter your name</label>
+        <input id="mini-participant-name" name="miniParticipantName" type="text" placeholder="Your full name" required />
+        <div class="helper">Used to personalize your mini scorecard.</div>
+      </div>
+      <div class="form-row rules">
+        <h3>Rules & Info</h3>
+        <ul>
+          <li><strong>Total questions:</strong> 50 random questions</li>
+          <li><strong>Sources:</strong> Curated from the mini question bank</li>
+          <li><strong>Scoring:</strong> Each correct answer = 1 point</li>
+        </ul>
+      </div>
+      <div class="form-actions">
+        <button type="button" id="start-mini-test-btn" class="btn-primary" disabled>Start Mini Test</button>
+        <button type="button" id="cancel-mini-test-btn" class="btn-secondary">Cancel</button>
       </div>
     </form>
   </div>
@@ -1599,7 +1628,8 @@ Case and work order to there field support team.
   -->
   <script src="./assets/js/script.js"></script>
   <script src="./assets/js/vanilla-tilt.js"></script>
-<script src="./assets/js/quiz.js"></script>
+  <script src="./assets/js/quiz.js"></script>
+  <script src="./assets/js/mini-quiz.js"></script>
 
   <!--
     - ionicon link
