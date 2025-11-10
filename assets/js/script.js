@@ -268,56 +268,15 @@ async function postQuizAttemptToSalesforce(result) {
   }
 }
 
-// for debugging in console if needed
+// expose helper for quiz scripts to call after computing a result object
+// e.g. window.postQuizAttemptToSalesforce({
+//   name: "Participant - 2024-01-01 - Main",
+//   testType: "Main",
+//   totalQuestions: 180,
+//   totalCorrect: 150,
+//   sections: [...]
+// });
 window.postQuizAttemptToSalesforce = postQuizAttemptToSalesforce;
-// Example values – replace with your real variables
-const participantName = userNameInputValue;      // whatever you capture
-const totalQuestions = 180;
-const totalCorrect = totalCorrectCount;
-
-// assume you have per-section scores
-const sections = [
-  { number: 1, title: "Apex Basics", correct: section1Correct },
-  { number: 2, title: "Triggers",    correct: section2Correct },
-  // ... up to 18
-];
-
-const resultMain = {
-  name:
-    participantName +
-    " - " +
-    new Date().toISOString().slice(0, 10) +
-    " - Main",
-  testType: "Main",
-  status: "Completed",
-  totalQuestions,
-  totalCorrect,
-  totalScore: totalCorrect, // or some other scoring logic
-  sections,
-};
-
-postQuizAttemptToSalesforce(resultMain);
-const participantName = userNameInputValue;
-const totalQuestionsMini = miniTotalQuestions;
-const totalCorrectMini = miniCorrectCount;
-
-const resultMini = {
-  name:
-    participantName +
-    " - " +
-    new Date().toISOString().slice(0, 10) +
-    " - Mini",
-  testType: "Mini",
-  status: "Completed",
-  totalQuestions: totalQuestionsMini,
-  totalCorrect: totalCorrectMini,
-  totalScore: totalCorrectMini,
-  // no sections -> mini test => all Section_01..18 stay null in SF
-};
-
-postQuizAttemptToSalesforce(resultMini);
-
-
 
 // slider function for cards
 /* === Testimonials slider logic === */
