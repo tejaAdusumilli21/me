@@ -339,7 +339,7 @@ function setupPretestModal() {
 
   function openModal() {
     if (!modal) return;
-    modal.style.display = 'block';
+    modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
   }
   function closeModal() {
