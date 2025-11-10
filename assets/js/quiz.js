@@ -341,6 +341,14 @@ function setupPretestModal() {
     if (!modal) return;
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
+    if (nameInput) {
+      nameInput.value = '';
+      nameInput.focus();
+    }
+    if (acceptCheck) {
+      acceptCheck.checked = false;
+    }
+    updateStartBtnState();
   }
   function closeModal() {
     if (!modal) return;

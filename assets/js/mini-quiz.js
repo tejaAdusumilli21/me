@@ -320,7 +320,11 @@ function setupMiniPretestModal() {
   function openModal() {
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
-    if (nameInput) nameInput.focus();
+    if (nameInput) {
+      nameInput.value = '';
+      nameInput.focus();
+    }
+    updateStartState();
   }
 
   function closeModal() {
