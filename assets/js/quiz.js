@@ -54,6 +54,7 @@ function el(tag, attrs = {}, children = []) {
   const e = document.createElement(tag);
   Object.entries(attrs).forEach(([k, v]) => {
     if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
     else if (k === 'html') e.innerHTML = v;
     else e.setAttribute(k, String(v));
   });
@@ -216,7 +217,7 @@ function renderQuestion() {
   q.options.forEach(opt => {
     const li = el('li', { class: 'option', 'data-orig-key': opt.origKey }, [
       el('div', { class: 'option-label' }, [opt.label]),
-      el('div', { class: 'option-text', html: opt.text })
+      el('div', { class: 'option-text', text: opt.text })
     ]);
     li.addEventListener('click', () => {
       // deselect others
@@ -338,7 +339,7 @@ function setupPretestModal() {
 
   function openModal() {
     if (!modal) return;
-    modal.style.display = 'block';
+    modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
   }
   function closeModal() {
@@ -366,6 +367,7 @@ function setupPretestModal() {
     // set participant
     quizState.participantName = nameInput.value.trim();
     closeModal();
+    toggleQuizSections('full');
     // bootstrap quiz: load JSONs
     createQuizShell();
     try {
@@ -401,28 +403,53 @@ document.addEventListener('DOMContentLoaded', () => {
   // expose start function for debug if needed
   window._quizState = quizState;
 });
-function toggleQuizSections() {
+function toggleQuizSections(mode) {
   const quizButtons = document.querySelector('.quiz-buttons');
   const quizBlock = document.querySelector('.quiz-block');
+  const fullRoot = document.getElementById('quiz-root');
+  const miniRoot = document.getElementById('mini-quiz-root');
 
   if (!quizButtons || !quizBlock) {
     console.warn('Elements with classes "quiz-buttons" or "quiz-block" not found.');
     return;
   }
 
-  // Determine current state based on visibility
-  const buttonsVisible = window.getComputedStyle(quizButtons).display !== 'none';
-  const blockVisible = window.getComputedStyle(quizBlock).display !== 'none';
-
-  // Toggle visibility
-  if (buttonsVisible) {
+  if (mode === 'full' || mode === 'mini') {
     quizButtons.style.display = 'none';
     quizBlock.style.display = 'block';
-  } else if (blockVisible) {
-    quizBlock.style.display = 'none';
-    quizButtons.style.display = 'block';
-  } else {
-    // if both hidden (edge case), show buttons
-    quizButtons.style.display = 'block';
+    if (fullRoot) {
+      fullRoot.style.display = mode === 'full' ? 'block' : 'none';
+      if (mode === 'full') {
+        fullRoot.classList.add('active');
+      } else {
+        fullRoot.classList.remove('active');
+        fullRoot.innerHTML = '';
+      }
+    }
+    if (miniRoot) {
+      miniRoot.style.display = mode === 'mini' ? 'block' : 'none';
+      if (mode === 'mini') {
+        miniRoot.classList.add('active');
+      } else {
+        miniRoot.classList.remove('active');
+        miniRoot.innerHTML = '';
+      }
+    }
+    quizBlock.dataset.mode = mode;
+    return;
+  }
+
+  quizBlock.style.display = 'none';
+  quizButtons.style.display = 'flex';
+  delete quizBlock.dataset.mode;
+  if (fullRoot) {
+    fullRoot.style.display = '';
+    fullRoot.classList.remove('active');
+    fullRoot.innerHTML = '';
+  }
+  if (miniRoot) {
+    miniRoot.style.display = 'none';
+    miniRoot.classList.remove('active');
+    miniRoot.innerHTML = '';
   }
 }
