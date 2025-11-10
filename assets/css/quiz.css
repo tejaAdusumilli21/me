@@ -414,10 +414,35 @@ button:hover .button-text {
 .quiz-modal-close { position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 18px; cursor: pointer; }
 .form-row { margin-bottom: 14px; }
 .form-row label { display:block; font-weight:600; margin-bottom:6px; }
+.form-row label.terms {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+.form-row label.terms input {
+  margin: 4px 0 0;
+}
+.form-row label.terms a {
+  white-space: normal;
+}
+.terms-text {
+  display: block;
+  line-height: 1.5;
+  color: inherit;
+}
 .form-row input[type="text"] { width:100%; padding:10px; border-radius:6px; border:1px solid #ddd; font-size:14px; }
 .helper { font-size:12px; color:#666; margin-top:6px; }
 .rules ul { margin: 0 0 6px 18px; color:#222; }
-.terms { display:flex; gap:8px; align-items:center; font-size:14px; }
+.terms {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 10px;
+  font-size: 14px;
+}
 .form-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
 .btn-primary { background:#0b74de; color:white; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; }
 .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
@@ -494,13 +519,14 @@ button:hover .button-text {
 
 /* Keep the checkbox row tidy */
 .terms {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
   gap: 10px;
-  align-items: center;
-  flex-wrap: nowrap;     /* don’t break to the next line */
 }
-.terms a { white-space: nowrap; }      /* keep “Terms & Conditions” together */
-.terms input { flex: 0 0 auto; }       /* checkbox stays tight to the left */
+.terms input {
+  margin: 4px 0 0;
+}
 
 /* Small utility to control visibility via JS */
 .is-hidden { display: none !important; }
