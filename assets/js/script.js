@@ -193,6 +193,130 @@ function showToast(message) {
   }, 3000);
 }
 
+// ======================
+// Quiz Attempt -> Salesforce (POST)
+// ======================
+
+// Your QuizAttemptAPI endpoint
+const QUIZ_API_URL =
+  "https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/QuizAttemptAPI/";
+
+/**
+ * result object shape:
+ * {
+ *   name: "Teja - 2025-11-10 - Main",
+ *   testType: "Main" or "Mini",
+ *   status: "Completed",
+ *   totalQuestions: 180,
+ *   totalCorrect: 152,
+ *   totalScore: 152,            // optional; if missing we use totalCorrect
+ *   sections: [                 // for Main; omit for Mini
+ *     { number: 1, title: "Apex Basics", correct: 9 },
+ *     { number: 2, title: "Triggers",    correct: 8 },
+ *     ...
+ *   ]
+ * }
+ */
+async function postQuizAttemptToSalesforce(result) {
+  try {
+    const payload = {
+      name: result.name,
+      testType: result.testType,
+      status: result.status || "Completed",
+      totalQuestions: result.totalQuestions,
+      totalCorrect: result.totalCorrect,
+      totalScore:
+        typeof result.totalScore === "number"
+          ? result.totalScore
+          : result.totalCorrect,
+    };
+
+    // Only send sections when it is a Main test
+    if (
+      result.testType === "Main" &&
+      Array.isArray(result.sections) &&
+      result.sections.length > 0
+    ) {
+      payload.sections = result.sections.map((sec, idx) => ({
+        // if you forget number, fallback to index+1
+        number: sec.number != null ? sec.number : idx + 1,
+        title: sec.title,
+        correct: sec.correct,
+      }));
+    }
+
+    const res = await fetch(QUIZ_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    // Your Apex returns JSON like: { success, message, recordId }
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data || !data.success) {
+      console.error("Quiz post error:", res.status, data);
+      showToast("Error sending score to Salesforce.");
+      return;
+    }
+
+    console.log("Quiz attempt posted:", data);
+    showToast("Score saved to Salesforce!");
+  } catch (err) {
+    console.error("Quiz post exception:", err);
+    showToast("Error sending score to Salesforce.");
+  }
+}
+
+// for debugging in console if needed
+window.postQuizAttemptToSalesforce = postQuizAttemptToSalesforce;
+// Example values – replace with your real variables
+const participantName = userNameInputValue;      // whatever you capture
+const totalQuestions = 180;
+const totalCorrect = totalCorrectCount;
+
+// assume you have per-section scores
+const sections = [
+  { number: 1, title: "Apex Basics", correct: section1Correct },
+  { number: 2, title: "Triggers",    correct: section2Correct },
+  // ... up to 18
+];
+
+const resultMain = {
+  name:
+    participantName +
+    " - " +
+    new Date().toISOString().slice(0, 10) +
+    " - Main",
+  testType: "Main",
+  status: "Completed",
+  totalQuestions,
+  totalCorrect,
+  totalScore: totalCorrect, // or some other scoring logic
+  sections,
+};
+
+postQuizAttemptToSalesforce(resultMain);
+const participantName = userNameInputValue;
+const totalQuestionsMini = miniTotalQuestions;
+const totalCorrectMini = miniCorrectCount;
+
+const resultMini = {
+  name:
+    participantName +
+    " - " +
+    new Date().toISOString().slice(0, 10) +
+    " - Mini",
+  testType: "Mini",
+  status: "Completed",
+  totalQuestions: totalQuestionsMini,
+  totalCorrect: totalCorrectMini,
+  totalScore: totalCorrectMini,
+  // no sections -> mini test => all Section_01..18 stay null in SF
+};
+
+postQuizAttemptToSalesforce(resultMini);
+
 
 
 // slider function for cards
