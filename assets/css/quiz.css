@@ -498,6 +498,43 @@ button:hover .button-text {
   display: none;                  /* hidden until test starts */
 }
 
+.quiz-block-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+#quiz-root.active,
+#mini-quiz-root.active {
+  display: block;
+}
+
+#mini-quiz-root .quiz-container {
+  margin-top: 0;
+}
+
+.quiz-loading,
+.quiz-error {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  color: #e5e7eb;
+}
+
+.quiz-error {
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  color: #fecaca;
+}
+
+.mini-final-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
 /* Optional: on wider screens, place buttons side-by-side */
 @media (min-width: 600px) {
   .quiz-buttons {
