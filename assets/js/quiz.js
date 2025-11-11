@@ -163,28 +163,65 @@ function createQuizShell() {
 /* -------------------------
    Loading JSONs and building question list
    ------------------------- */
+function extractQuestionsFromJson(json) {
+  if (!json || typeof json !== 'object') return [];
+  if (Array.isArray(json.questions)) return json.questions;
+  if (Array.isArray(json.Questions)) return json.Questions;
+  if (Array.isArray(json.items)) return json.items;
+  // nested levels support
+  if (json.levels && typeof json.levels === 'object') {
+    const blocks = Object.values(json.levels);
+    return blocks.flatMap(b => {
+      if (Array.isArray(b)) return b;
+      if (Array.isArray(b?.questions)) return b.questions;
+      return [];
+    });
+  }
+  if (Array.isArray(json.data)) return json.data;
+  return [];
+}
+
 async function loadAllSections() {
   const keys = Object.keys(SECTION_JSON_MAP);
   const sections = [];
   for (const key of keys) {
-    const path = SECTION_JSON_MAP[key];
+    const rawPath = SECTION_JSON_MAP[key];
+    // Encode & inside path to be safe on some hosts
+    const path = rawPath.includes('&') ? rawPath.replace(/&/g, '%26') : rawPath;
     try {
+      console.log('[Quiz] Fetching section', key, 'from', path);
       const res = await fetch(path, { cache: 'no-store' });
       if (!res.ok) {
         console.warn(`Unable to load section ${key} from ${path}: ${res.status}`);
         continue;
       }
       const json = await res.json();
+      const questions = extractQuestionsFromJson(json);
+      console.log(`[Quiz] Section ${key}: ${questions.length} questions`);
       sections.push({
         section: Number(key),
-        sectionName: json.section || json.title || `Section ${key}`,
-        questions: json.questions || []
+        sectionName: json.section || json.title || json.name || `Section ${key}`,
+        questions
       });
     } catch (err) {
-      console.error(`Error loading section ${key}:`, err);
+      console.error(`Error loading section ${key} from ${path}:`, err);
     }
   }
+  console.log('[Quiz] Loaded sections:', sections.map(s => ({ section: s.section, count: s.questions.length })));
   return sections;
+}
+
+/* Normalize various option shapes to entries [key,text] */
+function getOptionEntries(q) {
+  let opts = q.options ?? q.Options ?? q.choices ?? q.Choices;
+  if (!opts) return [];
+  if (Array.isArray(opts)) {
+    // convert array to A,B,C,...
+    const labels = ['A','B','C','D','E','F','G','H'];
+    return opts.map((text, idx) => [labels[idx] || String(idx), text]);
+  }
+  if (typeof opts === 'object') return Object.entries(opts);
+  return [];
 }
 
 /* build final quiz array (10 per section) */
@@ -194,8 +231,12 @@ function buildQuizFromSections(sections) {
     if (!s.questions || s.questions.length === 0) return;
     const picked = pickRandom(s.questions, QUESTIONS_PER_SECTION);
     picked.forEach(q => {
-      const options = q.options || {};
-      const randomizedOptions = shuffle(Object.entries(options).map(([key, text]) => ({ origKey: key, text })));
+      const optionEntries = getOptionEntries(q);
+      if (optionEntries.length < 2) {
+        console.warn('[Quiz] Skipping question with insufficient options', q);
+        return;
+      }
+      const randomizedOptions = shuffle(optionEntries.map(([key, text]) => ({ origKey: key, text })));
       const optionsWithLabels = randomizedOptions.slice(0, 4).map((opt, idx) => ({
         label: String.fromCharCode(65 + idx),
         origKey: opt.origKey,
@@ -204,14 +245,15 @@ function buildQuizFromSections(sections) {
       final.push({
         section: s.section,
         sectionName: s.sectionName,
-        originalId: q.id || '?',
-        questionText: q.question || '',
+        originalId: q.id || q.ID || q.qid || '?',
+        questionText: q.question || q.Question || '',
         options: optionsWithLabels,
-        correctKey: q.answer || '',
-        explanation: q.explanation || ''
+        correctKey: q.answer || q.Answer || q.correct || q.Correct || '',
+        explanation: q.explanation || q.Explanation || q.explain || ''
       });
     });
   });
+  console.log('[Quiz] Final question count:', final.length);
   return final;
 }
 
@@ -234,7 +276,7 @@ function renderQuestion() {
       ${q.sectionName}
     </div>
     <div class="question-text" style="font-size:1.1rem;font-weight:500;line-height:1.6;">
-      Q${q.originalId}: ${q.questionText}
+      ${q.originalId ? `Q${q.originalId}: ` : ''}${q.questionText}
     </div>
   `;
 
@@ -284,7 +326,7 @@ function onSubmitAnswer() {
   Array.from(document.getElementById('options-list').children).forEach(c => c.classList.add('disabled'));
 
   const feedback = document.getElementById('feedback');
-  const correctKey = current.correctKey;
+  const correctKey = String(current.correctKey || '').trim();
   const sectionKey = getSectionKey(current);
   
   if (sel.origKey === correctKey) {
@@ -444,6 +486,7 @@ function setupPretestModal() {
   const modalCloseButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
 
   function openModal() {
+    if (!modal) return;
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
     if (nameInput) {
@@ -455,6 +498,7 @@ function setupPretestModal() {
   }
   
   function closeModal() {
+    if (!modal) return;
     modal.style.display = 'none';
     modal.setAttribute('aria-hidden', 'true');
   }
@@ -462,21 +506,22 @@ function setupPretestModal() {
   if (takeTestBtn) takeTestBtn.addEventListener('click', openModal);
 
   modalCloseButtons.forEach(b => b.addEventListener('click', closeModal));
-  cancelBtn && cancelBtn.addEventListener('click', closeModal);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
   function updateStartBtnState() {
-    startBtn.disabled = !nameInput.value.trim() || !acceptCheck.checked;
+    if (!startBtn) return;
+    startBtn.disabled = !(nameInput && nameInput.value.trim()) || !(acceptCheck && acceptCheck.checked);
   }
   
   if (nameInput) nameInput.addEventListener('input', updateStartBtnState);
   if (acceptCheck) acceptCheck.addEventListener('change', updateStartBtnState);
 
-  startBtn && startBtn.addEventListener('click', async () => {
-    if (!nameInput.value.trim()) { 
+  if (startBtn) startBtn.addEventListener('click', async () => {
+    if (!nameInput || !nameInput.value.trim()) { 
       alert('Please enter your name'); 
       return; 
     }
-    if (!acceptCheck.checked) { 
+    if (!acceptCheck || !acceptCheck.checked) { 
       alert('Please accept Terms & Conditions'); 
       return; 
     }
@@ -490,7 +535,9 @@ function setupPretestModal() {
     quizState.score = 0;
     
     closeModal();
-    toggleQuizSections('full');
+    if (typeof window.toggleQuizSections === 'function') {
+      window.toggleQuizSections('full');
+    }
     
     createQuizShell();
     quizRoot.innerHTML = '<div class="quiz-loading">Loading questions...</div>';
@@ -499,7 +546,7 @@ function setupPretestModal() {
       const sections = await loadAllSections();
       const questions = buildQuizFromSections(sections);
       if (!questions.length) {
-        quizRoot.innerHTML = '<div class="quiz-error">No questions available. Please try again later.</div>';
+        quizRoot.innerHTML = '<div class="quiz-error" style="background:#fffbe6;border:1px solid #d4aa00;padding:14px;border-radius:8px;color:#222;">No questions available. Check console for missing/misnamed JSON files.</div>';
         return;
       }
       quizState.questions = questions;
