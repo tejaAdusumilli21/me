@@ -201,6 +201,78 @@ function showToast(message) {
 const QUIZ_API_URL =
   "https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/QuizAttemptAPI/";
 
+const MAIN_QUIZ_SECTIONS = [
+  { number: 1, title: "Apex Fundamentals & OOP Concepts" },
+  { number: 2, title: "Salesforce Triggers" },
+  { number: 3, title: "Asynchronous Apex" },
+  { number: 4, title: "Lightning Web Components" },
+  { number: 5, title: "Aura Components & Migration to LWC" },
+  { number: 6, title: "Visualforce" },
+  { number: 7, title: "SOQL & SOSL" },
+  { number: 8, title: "Integration" },
+  { number: 9, title: "OmniStudio" },
+  { number: 10, title: "Sales Cloud" },
+  { number: 11, title: "Service Cloud" },
+  { number: 12, title: "Experience Cloud" },
+  { number: 13, title: "Security & Sharing" },
+  { number: 14, title: "Deployment & DevOps" },
+  { number: 15, title: "Governor Limits & Performance Tuning" },
+  { number: 16, title: "Testing" },
+  { number: 17, title: "Design Patterns & Frameworks" },
+  { number: 18, title: "Advanced Topics" },
+];
+
+const MAIN_SECTION_TITLE_MAP = new Map(
+  MAIN_QUIZ_SECTIONS.map((section) => [section.number, section.title])
+);
+
+const MAIN_SECTION_SAMPLE_CORRECT = [
+  9, 8, 9, 8, 7, 8, 9, 8, 9, 8, 8, 8, 8, 8, 8, 9, 9, 9,
+];
+
+const SALESFORCE_PAYLOAD_MOCKS = {
+  main: {
+    name: "Participant - 2024-01-01 - Main",
+    testType: "Main",
+    status: "Completed",
+    totalQuestions: 180,
+    totalCorrect: 150,
+    totalScore: 150,
+    sections: MAIN_QUIZ_SECTIONS.map(({ number, title }, index) => ({
+      number,
+      title,
+      correct: MAIN_SECTION_SAMPLE_CORRECT[index] ?? 0,
+    })),
+  },
+  mini: {
+    name: "Participant - 2024-01-01 - Mini",
+    testType: "Mini",
+    status: "Completed",
+    totalQuestions: 10,
+    totalCorrect: 8,
+    totalScore: 8,
+  },
+};
+
+function deepFreeze(object) {
+  Object.freeze(object);
+
+  Object.getOwnPropertyNames(object).forEach((prop) => {
+    const value = object[prop];
+    if (
+      value &&
+      (typeof value === "object" || typeof value === "function") &&
+      !Object.isFrozen(value)
+    ) {
+      deepFreeze(value);
+    }
+  });
+
+  return object;
+}
+
+deepFreeze(SALESFORCE_PAYLOAD_MOCKS);
+
 /**
  * result object shape:
  * {
@@ -276,18 +348,67 @@ async function postQuizAttemptToSalesforce(result = {}) {
     const isMainQuiz = testTypeRaw.toLowerCase() === "main";
 
     // Only send sections when it is a Main test
-    if (isMainQuiz && Array.isArray(result.sections) && result.sections.length > 0) {
-      payload.sections = result.sections.map((sec, idx) => {
-        const sectionNumber = normalizeNumber(sec.number);
-        const sectionCorrect = normalizeNumber(sec.correct);
+    if (isMainQuiz) {
+      const normalizedSections = Array.isArray(result.sections)
+        ? result.sections.map((sec, idx) => {
+            const sectionNumber = normalizeNumber(sec.number);
+            const resolvedNumber =
+              sectionNumber === undefined ? idx + 1 : sectionNumber;
+            const sectionCorrect = normalizeNumber(sec.correct);
+            const trimmedTitle =
+              typeof sec.title === "string" ? sec.title.trim() : "";
 
+            return {
+              number: resolvedNumber,
+              title:
+                trimmedTitle ||
+                MAIN_SECTION_TITLE_MAP.get(resolvedNumber) ||
+                `Section ${resolvedNumber}`,
+              correct: sectionCorrect === undefined ? 0 : sectionCorrect,
+            };
+          })
+        : [];
+
+      const sectionsByNumber = new Map();
+      normalizedSections.forEach((section) => {
+        const key = section.number;
+        if (!Number.isFinite(key)) {
+          return;
+        }
+
+        const existing = sectionsByNumber.get(key);
+        if (existing) {
+          sectionsByNumber.set(key, {
+            number: key,
+            title: section.title || existing.title,
+            correct: (existing.correct || 0) + (section.correct || 0),
+          });
+        } else {
+          sectionsByNumber.set(key, section);
+        }
+      });
+
+      const paddedSections = MAIN_QUIZ_SECTIONS.map(({ number, title }) => {
+        const provided = sectionsByNumber.get(number);
         return {
-          // if you forget number, fallback to index+1
-          number: sectionNumber === undefined ? idx + 1 : sectionNumber,
-          title: sec.title,
-          correct: sectionCorrect === undefined ? 0 : sectionCorrect,
+          number,
+          title:
+            (provided && provided.title) !== undefined && provided.title !== ""
+              ? provided.title
+              : title,
+          correct: provided ? provided.correct : 0,
         };
       });
+
+      const extraSections = [];
+      sectionsByNumber.forEach((section, number) => {
+        if (!MAIN_SECTION_TITLE_MAP.has(number)) {
+          extraSections.push(section);
+        }
+      });
+      extraSections.sort((a, b) => a.number - b.number);
+
+      payload.sections = paddedSections.concat(extraSections);
     }
 
     const res = await fetch(QUIZ_API_URL, {
@@ -314,6 +435,22 @@ async function postQuizAttemptToSalesforce(result = {}) {
   }
 }
 
+function cloneMockPayload(payload) {
+  return JSON.parse(JSON.stringify(payload));
+}
+
+function getSalesforceQuizMockPayload(testType = "Main") {
+  const normalizedType =
+    typeof testType === "string" ? testType.trim().toLowerCase() : "";
+
+  const source =
+    normalizedType === "mini"
+      ? SALESFORCE_PAYLOAD_MOCKS.mini
+      : SALESFORCE_PAYLOAD_MOCKS.main;
+
+  return cloneMockPayload(source);
+}
+
 // expose helper for quiz scripts to call after computing a result object
 // e.g. window.postQuizAttemptToSalesforce({
 //   name: "Participant - 2024-01-01 - Main",
@@ -323,6 +460,11 @@ async function postQuizAttemptToSalesforce(result = {}) {
 //   sections: [...]
 // });
 window.postQuizAttemptToSalesforce = postQuizAttemptToSalesforce;
+window.getSalesforceQuizMockPayload = getSalesforceQuizMockPayload;
+window.salesforceQuizPayloadMocks = {
+  main: cloneMockPayload(SALESFORCE_PAYLOAD_MOCKS.main),
+  mini: cloneMockPayload(SALESFORCE_PAYLOAD_MOCKS.mini),
+};
 
 // slider function for cards
 /* === Testimonials slider logic === */
