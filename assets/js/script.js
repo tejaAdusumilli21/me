@@ -217,32 +217,77 @@ const QUIZ_API_URL =
  *   ]
  * }
  */
-async function postQuizAttemptToSalesforce(result) {
+function normalizeNumber(value) {
+  if (value === "" || value === null || value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : undefined;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function normalizeStatus(status) {
+  if (typeof status === "string") {
+    const trimmed = status.trim();
+    if (trimmed) {
+      return trimmed;
+    }
+  }
+
+  return "Completed";
+}
+
+async function postQuizAttemptToSalesforce(result = {}) {
   try {
+    const name = typeof result.name === "string" ? result.name.trim() : result.name;
+    const testTypeRaw = typeof result.testType === "string" ? result.testType.trim() : "";
+    const totalQuestions = normalizeNumber(result.totalQuestions);
+    const totalCorrect = normalizeNumber(result.totalCorrect);
+    let totalScore = normalizeNumber(result.totalScore);
+
+    if (!name || !testTypeRaw || totalQuestions === undefined || totalCorrect === undefined) {
+      console.error("Quiz post error: missing required fields", {
+        name,
+        testType: result.testType,
+        totalQuestions: result.totalQuestions,
+        totalCorrect: result.totalCorrect,
+      });
+      showToast("Error sending score to Salesforce.");
+      return;
+    }
+
+    if (totalScore === undefined) {
+      totalScore = totalCorrect;
+    }
+
     const payload = {
-      name: result.name,
-      testType: result.testType,
-      status: result.status || "Completed",
-      totalQuestions: result.totalQuestions,
-      totalCorrect: result.totalCorrect,
-      totalScore:
-        typeof result.totalScore === "number"
-          ? result.totalScore
-          : result.totalCorrect,
+      name,
+      testType: testTypeRaw,
+      status: normalizeStatus(result.status),
+      totalQuestions,
+      totalCorrect,
+      totalScore,
     };
 
+    const isMainQuiz = testTypeRaw.toLowerCase() === "main";
+
     // Only send sections when it is a Main test
-    if (
-      result.testType === "Main" &&
-      Array.isArray(result.sections) &&
-      result.sections.length > 0
-    ) {
-      payload.sections = result.sections.map((sec, idx) => ({
-        // if you forget number, fallback to index+1
-        number: sec.number != null ? sec.number : idx + 1,
-        title: sec.title,
-        correct: sec.correct,
-      }));
+    if (isMainQuiz && Array.isArray(result.sections) && result.sections.length > 0) {
+      payload.sections = result.sections.map((sec, idx) => {
+        const sectionNumber = normalizeNumber(sec.number);
+        const sectionCorrect = normalizeNumber(sec.correct);
+
+        return {
+          // if you forget number, fallback to index+1
+          number: sectionNumber === undefined ? idx + 1 : sectionNumber,
+          title: sec.title,
+          correct: sectionCorrect === undefined ? 0 : sectionCorrect,
+        };
+      });
     }
 
     const res = await fetch(QUIZ_API_URL, {
@@ -262,6 +307,7 @@ async function postQuizAttemptToSalesforce(result) {
 
     console.log("Quiz attempt posted:", data);
     showToast("Score saved to Salesforce!");
+    return data;
   } catch (err) {
     console.error("Quiz post exception:", err);
     showToast("Error sending score to Salesforce.");
