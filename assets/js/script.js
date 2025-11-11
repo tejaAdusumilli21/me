@@ -134,6 +134,11 @@ navigationLinks.forEach((link) => {
   });
 });
 
+// ======================
+// Feedback API Configuration
+// ======================
+const FEEDBACK_API_URL = "https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/FeedbackAPI/";
+
 // create feedback form request
 document.addEventListener("DOMContentLoaded", function () {
   const feedbackForm = document.getElementById("feedbackForm");
@@ -144,20 +149,25 @@ document.addEventListener("DOMContentLoaded", function () {
       const data = Object.fromEntries(formData.entries());
       
       try {
-        const response = await fetch('/api/feedback', {
+        console.log('[Feedback] Submitting to Salesforce:', data);
+        const response = await fetch(FEEDBACK_API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
         
         if (response.ok) {
+          const result = await response.json();
+          console.log('[Feedback] Success:', result);
           showToast('Feedback submitted successfully!');
           e.target.reset();
         } else {
+          const errorText = await response.text();
+          console.error('[Feedback] Error:', response.status, errorText);
           showToast('Failed to submit feedback. Please try again.');
         }
       } catch (error) {
-        console.error('Error submitting feedback:', error);
+        console.error('[Feedback] Error submitting feedback:', error);
         showToast('An error occurred. Please try again later.');
       }
     });
@@ -167,6 +177,10 @@ document.addEventListener("DOMContentLoaded", function () {
 // toast message
 function showToast(message) {
   const toast = document.getElementById("toast");
+  if (!toast) {
+    console.warn('Toast element not found');
+    return;
+  }
   toast.textContent = message;
   toast.classList.add("show");
   toast.classList.remove("hidden");
