@@ -1,13 +1,3 @@
-
-/*
-  Quiz runtime:
-  - Loads SECTION_JSON_MAP (you provided earlier)
-  - Picks 10 random unique questions from each section
-  - Randomizes option order per question and maps to labels A,B,C,D
-  - Tracks score, shows explanation on correct, shows error + highlights correct on wrong
-  - After all questions shows final score
-*/
-
 /* -------------------------
    Configuration / Helpers
    ------------------------- */
@@ -34,6 +24,38 @@ const SECTION_JSON_MAP = window.SECTION_JSON_MAP || {
 
 const QUESTIONS_PER_SECTION = 10;
 
+/* random shuffle helper */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* pick n unique random items */
+function pickRandom(arr, n) {
+  if (n >= arr.length) return [...arr];
+  return shuffle([...arr]).slice(0, n);
+}
+
+/* create element helper */
+function el(tag, attrs = {}, children = []) {
+  const e = document.createElement(tag);
+  Object.entries(attrs).forEach(([k, v]) => {
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k === 'html') e.innerHTML = v;
+    else e.setAttribute(k, String(v));
+  });
+  children.forEach(c => {
+    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+    else if (c) e.appendChild(c);
+  });
+  return e;
+}
+
+/* Utility functions for timestamp and naming */
 function pad2(num) {
   return String(num).padStart(2, '0');
 }
@@ -78,50 +100,15 @@ function getSectionTitle(question) {
   return 'Unknown Section';
 }
 
-if (typeof window !== 'undefined' && !window.buildQuizAttemptName) {
-  window.buildQuizAttemptName = buildQuizAttemptName;
-}
-
-/* random shuffle helper */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-/* pick n unique random items */
-function pickRandom(arr, n) {
-  if (n >= arr.length) return [...arr];
-  return shuffle([...arr]).slice(0, n);
-}
-
-/* create element helper */
-function el(tag, attrs = {}, children = []) {
-  const e = document.createElement(tag);
-  Object.entries(attrs).forEach(([k, v]) => {
-    if (k === 'class') e.className = v;
-    else if (k === 'text') e.textContent = v;
-    else if (k === 'html') e.innerHTML = v;
-    else e.setAttribute(k, String(v));
-  });
-  children.forEach(c => {
-    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
-    else e.appendChild(c);
-  });
-  return e;
-}
-
 /* -------------------------
    Quiz State
    ------------------------- */
 const quizState = {
   participantName: '',
-  questions: [], // flattened list of {section, originalId, question, optionsMap, answerKey, explanation}
+  questions: [],
   currentIndex: 0,
   score: 0,
-  perSectionScore: {}, // section -> correct count
+  perSectionScore: {},
   status: 'Not Started',
   startedAt: null,
   hasPostedResult: false,
@@ -178,30 +165,23 @@ function createQuizShell() {
    ------------------------- */
 async function loadAllSections() {
   const keys = Object.keys(SECTION_JSON_MAP);
-  // load all sequentially - you may use Promise.all if CORS allows
   const sections = [];
   for (const key of keys) {
     const path = SECTION_JSON_MAP[key];
     try {
       const res = await fetch(path, { cache: 'no-store' });
       if (!res.ok) {
-        console.warn('Failed to load', path, res.status);
+        console.warn(`Unable to load section ${key} from ${path}: ${res.status}`);
         continue;
       }
       const json = await res.json();
-      // assumed structure: { section: "...", levels: { level1: { questions: [...] } } }
-      // gather all questions under levels -> level1 (or merge all)
-      let questions = [];
-      if (json.levels) {
-        Object.values(json.levels).forEach(level => {
-          if (Array.isArray(level.questions)) questions = questions.concat(level.questions);
-        });
-      } else if (Array.isArray(json.questions)) {
-        questions = json.questions;
-      }
-      sections.push({ sectionIndex: Number(key), sectionName: json.section || `Section ${key}`, questions });
+      sections.push({
+        section: Number(key),
+        sectionName: json.section || json.title || `Section ${key}`,
+        questions: json.questions || []
+      });
     } catch (err) {
-      console.error('Error loading json', path, err);
+      console.error(`Error loading section ${key}:`, err);
     }
   }
   return sections;
@@ -214,31 +194,24 @@ function buildQuizFromSections(sections) {
     if (!s.questions || s.questions.length === 0) return;
     const picked = pickRandom(s.questions, QUESTIONS_PER_SECTION);
     picked.forEach(q => {
-      // convert options object to array to enable randomization of displayed options
-      const optsEntries = Object.entries(q.options || {});
-      const randOptEntries = shuffle(optsEntries.map(([k, v]) => ({ key: k, text: v })));
-      // create mapping of displayed labels A/B/C/D -> original key so we can check answer
-      const displayedOptions = randOptEntries.map((o, idx) => {
-        return {
-          label: ['A','B','C','D'][idx],
-          origKey: o.key,
-          text: o.text
-        };
-      }).slice(0,4); // ensure max 4
+      const options = q.options || {};
+      const randomizedOptions = shuffle(Object.entries(options).map(([key, text]) => ({ origKey: key, text })));
+      const optionsWithLabels = randomizedOptions.slice(0, 4).map((opt, idx) => ({
+        label: String.fromCharCode(65 + idx),
+        origKey: opt.origKey,
+        text: opt.text
+      }));
       final.push({
-        section: s.sectionIndex,
+        section: s.section,
         sectionName: s.sectionName,
-        originalId: q.id,
-        questionText: q.question,
-        options: displayedOptions,
-        correctKey: q.answer, // original key like "A"
+        originalId: q.id || '?',
+        questionText: q.question || '',
+        options: optionsWithLabels,
+        correctKey: q.answer || '',
         explanation: q.explanation || ''
       });
     });
   });
-  // optional: little shuffle across sections to mix them, or keep grouped by section.
-  // We keep them in section order but it's fine to shuffle entire list if desired:
-  // shuffle(final);
   return final;
 }
 
@@ -257,13 +230,13 @@ function renderQuestion() {
   if (!q) return;
 
   document.getElementById('question-text').innerHTML = `
-  <div class="section-title" style="font-size:1.2rem;font-weight:600;margin-bottom:8px;">
-    ${q.sectionName}
-  </div>
-  <div class="question-text" style="font-size:1.1rem;font-weight:500;line-height:1.6;">
-    ${q.questionText}
-  </div>
-`;
+    <div class="section-title" style="font-size:1.25rem;font-weight:600;margin-bottom:8px;">
+      ${q.sectionName}
+    </div>
+    <div class="question-text" style="font-size:1.1rem;font-weight:500;line-height:1.6;">
+      Q${q.originalId}: ${q.questionText}
+    </div>
+  `;
 
   const optionsList = document.getElementById('options-list');
   optionsList.innerHTML = '';
@@ -274,7 +247,6 @@ function renderQuestion() {
       el('div', { class: 'option-text', text: opt.text })
     ]);
     li.addEventListener('click', () => {
-      // deselect others
       Array.from(optionsList.children).forEach(c => c.classList.remove('selected'));
       li.classList.add('selected');
     });
@@ -285,7 +257,6 @@ function renderQuestion() {
   document.getElementById('feedback').innerHTML = '';
   document.getElementById('submit-answer').classList.remove('hidden');
   document.getElementById('next-question').classList.add('hidden');
-
 }
 
 /* -------------------------
@@ -313,8 +284,9 @@ function onSubmitAnswer() {
   Array.from(document.getElementById('options-list').children).forEach(c => c.classList.add('disabled'));
 
   const feedback = document.getElementById('feedback');
-  const correctKey = current.correctKey; // original key like "A"
+  const correctKey = current.correctKey;
   const sectionKey = getSectionKey(current);
+  
   if (sel.origKey === correctKey) {
     // Correct
     sel.element.classList.add('correct');
@@ -395,10 +367,12 @@ function showFinalResult() {
   const percent = total ? ((score / total) * 100).toFixed(1) : '0.0';
   const status = quizState.status === 'Quit' ? 'Quit' : 'Completed';
   const sectionSummary = computeSectionSummary();
+  
   panel.appendChild(el('h2', {}, ['Test Summary']));
   panel.appendChild(el('div', {}, [`Participant: ${quizState.participantName || 'Anonymous'}`]));
   panel.appendChild(el('div', {}, [`Status: ${status}`]));
   panel.appendChild(el('div', {}, [`Score: ${score} / ${total} (${percent}%)`]));
+  
   // breakdown per section
   if (sectionSummary.length) {
     const tableWrap = el('div', {
@@ -416,12 +390,14 @@ function showFinalResult() {
     tableWrap.appendChild(ul);
     panel.appendChild(tableWrap);
   }
+  
   // restart button
   const restart = el('button', { class: 'btn', id: 'restart-quiz', style: 'margin-top:14px' }, ['Restart']);
   restart.addEventListener('click', () => location.reload());
   panel.appendChild(restart);
   quizRoot.appendChild(panel);
 
+  // Post to Salesforce
   if (!quizState.hasPostedResult) {
     const resultPayload = {
       name: buildQuizAttemptName('Main Test', quizState.participantName, quizState.startedAt),
@@ -441,6 +417,9 @@ function showFinalResult() {
     if (typeof window.postQuizAttemptToSalesforce === 'function') {
       window
         .postQuizAttemptToSalesforce(resultPayload)
+        .then(() => {
+          console.log('Successfully posted main quiz result to Salesforce');
+        })
         .catch(err => {
           console.error('Failed to post main quiz result to Salesforce', err);
           quizState.hasPostedResult = false;
@@ -453,10 +432,9 @@ function showFinalResult() {
 }
 
 /* -------------------------
-   Modal / Pretest flow (uses your existing modal HTML ids)
+   Modal / Pretest flow
    ------------------------- */
 function setupPretestModal() {
-  // expected elements:
   const takeTestBtn = document.querySelector('.sparkle-button');
   const modal = document.getElementById('quiz-modal');
   const startBtn = document.getElementById('start-test-btn');
@@ -466,41 +444,43 @@ function setupPretestModal() {
   const modalCloseButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
 
   function openModal() {
-    if (!modal) return;
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
     if (nameInput) {
       nameInput.value = '';
       nameInput.focus();
     }
-    if (acceptCheck) {
-      acceptCheck.checked = false;
-    }
+    if (acceptCheck) acceptCheck.checked = false;
     updateStartBtnState();
   }
+  
   function closeModal() {
-    if (!modal) return;
     modal.style.display = 'none';
     modal.setAttribute('aria-hidden', 'true');
   }
 
-  // open modal on Take Test click
   if (takeTestBtn) takeTestBtn.addEventListener('click', openModal);
 
   modalCloseButtons.forEach(b => b.addEventListener('click', closeModal));
   cancelBtn && cancelBtn.addEventListener('click', closeModal);
 
   function updateStartBtnState() {
-    startBtn.disabled = !(nameInput && nameInput.value.trim() && acceptCheck && acceptCheck.checked);
+    startBtn.disabled = !nameInput.value.trim() || !acceptCheck.checked;
   }
+  
   if (nameInput) nameInput.addEventListener('input', updateStartBtnState);
   if (acceptCheck) acceptCheck.addEventListener('change', updateStartBtnState);
 
   startBtn && startBtn.addEventListener('click', async () => {
-    // validate
-    if (!nameInput.value.trim()) { alert('Please enter your name'); return; }
-    if (!acceptCheck.checked) { alert('Please accept Terms & Conditions'); return; }
-    // set participant
+    if (!nameInput.value.trim()) { 
+      alert('Please enter your name'); 
+      return; 
+    }
+    if (!acceptCheck.checked) { 
+      alert('Please accept Terms & Conditions'); 
+      return; 
+    }
+    
     quizState.participantName = nameInput.value.trim();
     quizState.startedAt = new Date();
     quizState.status = 'In Progress';
@@ -508,30 +488,28 @@ function setupPretestModal() {
     quizState.perSectionScore = {};
     quizState.currentIndex = 0;
     quizState.score = 0;
+    
     closeModal();
     toggleQuizSections('full');
-    // bootstrap quiz: load JSONs
+    
     createQuizShell();
+    quizRoot.innerHTML = '<div class="quiz-loading">Loading questions...</div>';
+    
     try {
       const sections = await loadAllSections();
-      if (!sections.length) {
-        quizRoot.innerHTML = '<div style="padding:20px">Unable to load quiz data. Check console for errors and paths/CORS.</div>';
+      const questions = buildQuizFromSections(sections);
+      if (!questions.length) {
+        quizRoot.innerHTML = '<div class="quiz-error">No questions available. Please try again later.</div>';
         return;
       }
-      // build questions
-      quizState.questions = buildQuizFromSections(sections);
-      if (!quizState.questions.length) {
-        quizRoot.innerHTML = '<div style="padding:20px">No questions available in loaded JSONs.</div>';
-        return;
-      }
-      // initialize counts
+      quizState.questions = questions;
       quizState.currentIndex = 0;
       quizState.score = 0;
-      // render first question
+      createQuizShell();
       renderQuestion();
     } catch (err) {
-      console.error(err);
-      quizRoot.innerHTML = `<div style="padding:20px">Error preparing quiz. Check console.</div>`;
+      console.error('Error loading quiz:', err);
+      quizRoot.innerHTML = '<div class="quiz-error">Failed to load quiz. Please try again.</div>';
     }
   });
 }
@@ -541,56 +519,10 @@ function setupPretestModal() {
    ------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   setupPretestModal();
-  // expose start function for debug if needed
   window._quizState = quizState;
 });
-function toggleQuizSections(mode) {
-  const quizButtons = document.querySelector('.quiz-buttons');
-  const quizBlock = document.querySelector('.quiz-block');
-  const fullRoot = document.getElementById('quiz-root');
-  const miniRoot = document.getElementById('mini-quiz-root');
 
-  if (!quizButtons || !quizBlock) {
-    console.warn('Elements with classes "quiz-buttons" or "quiz-block" not found.');
-    return;
-  }
-
-  if (mode === 'full' || mode === 'mini') {
-    quizButtons.style.display = 'none';
-    quizBlock.style.display = 'block';
-    if (fullRoot) {
-      fullRoot.style.display = mode === 'full' ? 'block' : 'none';
-      if (mode === 'full') {
-        fullRoot.classList.add('active');
-      } else {
-        fullRoot.classList.remove('active');
-        fullRoot.innerHTML = '';
-      }
-    }
-    if (miniRoot) {
-      miniRoot.style.display = mode === 'mini' ? 'block' : 'none';
-      if (mode === 'mini') {
-        miniRoot.classList.add('active');
-      } else {
-        miniRoot.classList.remove('active');
-        miniRoot.innerHTML = '';
-      }
-    }
-    quizBlock.dataset.mode = mode;
-    return;
-  }
-
-  quizBlock.style.display = 'none';
-  quizButtons.style.display = 'flex';
-  delete quizBlock.dataset.mode;
-  if (fullRoot) {
-    fullRoot.style.display = '';
-    fullRoot.classList.remove('active');
-    fullRoot.innerHTML = '';
-  }
-  if (miniRoot) {
-    miniRoot.style.display = 'none';
-    miniRoot.classList.remove('active');
-    miniRoot.innerHTML = '';
-  }
+// Expose helper for mini-quiz and other scripts
+if (typeof window !== 'undefined' && !window.buildQuizAttemptName) {
+  window.buildQuizAttemptName = buildQuizAttemptName;
 }
