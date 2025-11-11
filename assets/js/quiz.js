@@ -81,22 +81,14 @@ function buildQuizAttemptName(testLabel, participantName, startedAt) {
 }
 
 function getSectionKey(question) {
-  if (question.section != null) {
-    return String(question.section);
-  }
-  if (question.sectionName) {
-    return question.sectionName;
-  }
+  if (question.section != null) return String(question.section);
+  if (question.sectionName) return question.sectionName;
   return 'unknown';
 }
 
 function getSectionTitle(question) {
-  if (question.sectionName) {
-    return question.sectionName;
-  }
-  if (question.section != null) {
-    return `Section ${question.section}`;
-  }
+  if (question.sectionName) return question.sectionName;
+  if (question.section != null) return `Section ${question.section}`;
   return 'Unknown Section';
 }
 
@@ -151,7 +143,6 @@ function createQuizShell() {
 
   quizRoot.appendChild(shell);
 
-  // attach listeners
   document.getElementById('submit-answer').addEventListener('click', onSubmitAnswer);
   document.getElementById('next-question').addEventListener('click', onNextQuestion);
   document.getElementById('quit-quiz').addEventListener('click', () => {
@@ -168,7 +159,6 @@ function extractQuestionsFromJson(json) {
   if (Array.isArray(json.questions)) return json.questions;
   if (Array.isArray(json.Questions)) return json.Questions;
   if (Array.isArray(json.items)) return json.items;
-  // nested levels support
   if (json.levels && typeof json.levels === 'object') {
     const blocks = Object.values(json.levels);
     return blocks.flatMap(b => {
@@ -186,7 +176,6 @@ async function loadAllSections() {
   const sections = [];
   for (const key of keys) {
     const rawPath = SECTION_JSON_MAP[key];
-    // Encode & inside path to be safe on some hosts
     const path = rawPath.includes('&') ? rawPath.replace(/&/g, '%26') : rawPath;
     try {
       console.log('[Quiz] Fetching section', key, 'from', path);
@@ -216,7 +205,6 @@ function getOptionEntries(q) {
   let opts = q.options ?? q.Options ?? q.choices ?? q.Choices;
   if (!opts) return [];
   if (Array.isArray(opts)) {
-    // convert array to A,B,C,...
     const labels = ['A','B','C','D','E','F','G','H'];
     return opts.map((text, idx) => [labels[idx] || String(idx), text]);
   }
@@ -271,12 +259,13 @@ function renderQuestion() {
   const q = quizState.questions[i];
   if (!q) return;
 
+  // Removed question number prefix (QX:) as requested
   document.getElementById('question-text').innerHTML = `
     <div class="section-title" style="font-size:1.25rem;font-weight:600;margin-bottom:8px;">
       ${q.sectionName}
     </div>
     <div class="question-text" style="font-size:1.1rem;font-weight:500;line-height:1.6;">
-      ${q.originalId ? `Q${q.originalId}: ` : ''}${q.questionText}
+      ${q.questionText}
     </div>
   `;
 
@@ -295,7 +284,6 @@ function renderQuestion() {
     optionsList.appendChild(li);
   });
 
-  // clear feedback & buttons
   document.getElementById('feedback').innerHTML = '';
   document.getElementById('submit-answer').classList.remove('hidden');
   document.getElementById('next-question').classList.add('hidden');
@@ -322,7 +310,6 @@ function onSubmitAnswer() {
   const submitBtn = document.getElementById('submit-answer');
   submitBtn.classList.add('hidden');
 
-  // disable further clicks on options
   Array.from(document.getElementById('options-list').children).forEach(c => c.classList.add('disabled'));
 
   const feedback = document.getElementById('feedback');
@@ -330,16 +317,13 @@ function onSubmitAnswer() {
   const sectionKey = getSectionKey(current);
   
   if (sel.origKey === correctKey) {
-    // Correct
     sel.element.classList.add('correct');
     quizState.score += 1;
     quizState.perSectionScore[sectionKey] = (quizState.perSectionScore[sectionKey] || 0) + 1;
     feedback.innerHTML = `<div style="color:green;"><strong>Correct!</strong></div><div style="margin-top:6px">${current.explanation || ''}</div>`;
   } else {
-    // Wrong: highlight selected and highlight correct option
     sel.element.classList.add('wrong');
     feedback.innerHTML = `<div style="color:#b00;"><strong>Incorrect.</strong> The correct answer is highlighted below.</div><div style="margin-top:6px">${current.explanation || ''}</div>`;
-    // find correct option element and mark
     const options = document.getElementById('options-list').children;
     for (const o of options) {
       if (o.getAttribute('data-orig-key') === correctKey) {
@@ -348,10 +332,7 @@ function onSubmitAnswer() {
     }
   }
 
-  // update score UI
   document.getElementById('score-text').textContent = quizState.score;
-
-  // show next button
   document.getElementById('next-question').classList.remove('hidden');
 }
 
@@ -369,10 +350,7 @@ function onNextQuestion() {
    Final result
    ------------------------- */
 function computeSectionSummary() {
-  if (!Array.isArray(quizState.questions) || !quizState.questions.length) {
-    return [];
-  }
-
+  if (!Array.isArray(quizState.questions) || !quizState.questions.length) return [];
   const summaryMap = {};
   quizState.questions.forEach(question => {
     const key = getSectionKey(question);
@@ -386,15 +364,11 @@ function computeSectionSummary() {
     }
     summaryMap[key].total += 1;
   });
-
   Object.keys(summaryMap).forEach(key => {
     summaryMap[key].correct = quizState.perSectionScore[key] || 0;
   });
-
   return Object.values(summaryMap).sort((a, b) => {
-    if (a.number != null && b.number != null) {
-      return a.number - b.number;
-    }
+    if (a.number != null && b.number != null) return a.number - b.number;
     if (a.number != null) return -1;
     if (b.number != null) return 1;
     return a.title.localeCompare(b.title);
@@ -415,7 +389,6 @@ function showFinalResult() {
   panel.appendChild(el('div', {}, [`Status: ${status}`]));
   panel.appendChild(el('div', {}, [`Score: ${score} / ${total} (${percent}%)`]));
   
-  // breakdown per section
   if (sectionSummary.length) {
     const tableWrap = el('div', {
       style: 'margin-top:12px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto',
@@ -433,13 +406,11 @@ function showFinalResult() {
     panel.appendChild(tableWrap);
   }
   
-  // restart button
   const restart = el('button', { class: 'btn', id: 'restart-quiz', style: 'margin-top:14px' }, ['Restart']);
   restart.addEventListener('click', () => location.reload());
   panel.appendChild(restart);
   quizRoot.appendChild(panel);
 
-  // Post to Salesforce
   if (!quizState.hasPostedResult) {
     const resultPayload = {
       name: buildQuizAttemptName('Main Test', quizState.participantName, quizState.startedAt),
@@ -459,15 +430,13 @@ function showFinalResult() {
     if (typeof window.postQuizAttemptToSalesforce === 'function') {
       window
         .postQuizAttemptToSalesforce(resultPayload)
-        .then(() => {
-          console.log('Successfully posted main quiz result to Salesforce');
-        })
+        .then(() => console.log('Posted main quiz result'))
         .catch(err => {
-          console.error('Failed to post main quiz result to Salesforce', err);
+          console.error('Post failed', err);
           quizState.hasPostedResult = false;
         });
     } else {
-      console.warn('postQuizAttemptToSalesforce helper is not available.');
+      console.warn('postQuizAttemptToSalesforce not available');
       quizState.hasPostedResult = false;
     }
   }
@@ -504,7 +473,6 @@ function setupPretestModal() {
   }
 
   if (takeTestBtn) takeTestBtn.addEventListener('click', openModal);
-
   modalCloseButtons.forEach(b => b.addEventListener('click', closeModal));
   if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
@@ -517,14 +485,8 @@ function setupPretestModal() {
   if (acceptCheck) acceptCheck.addEventListener('change', updateStartBtnState);
 
   if (startBtn) startBtn.addEventListener('click', async () => {
-    if (!nameInput || !nameInput.value.trim()) { 
-      alert('Please enter your name'); 
-      return; 
-    }
-    if (!acceptCheck || !acceptCheck.checked) { 
-      alert('Please accept Terms & Conditions'); 
-      return; 
-    }
+    if (!nameInput || !nameInput.value.trim()) { alert('Please enter your name'); return; }
+    if (!acceptCheck || !acceptCheck.checked) { alert('Please accept Terms & Conditions'); return; }
     
     quizState.participantName = nameInput.value.trim();
     quizState.startedAt = new Date();
@@ -535,9 +497,7 @@ function setupPretestModal() {
     quizState.score = 0;
     
     closeModal();
-    if (typeof window.toggleQuizSections === 'function') {
-      window.toggleQuizSections('full');
-    }
+    if (typeof window.toggleQuizSections === 'function') window.toggleQuizSections('full');
     
     createQuizShell();
     quizRoot.innerHTML = '<div class="quiz-loading">Loading questions...</div>';
@@ -569,7 +529,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window._quizState = quizState;
 });
 
-// Expose helper for mini-quiz and other scripts
 if (typeof window !== 'undefined' && !window.buildQuizAttemptName) {
   window.buildQuizAttemptName = buildQuizAttemptName;
 }
