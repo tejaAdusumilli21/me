@@ -34,6 +34,54 @@ const SECTION_JSON_MAP = window.SECTION_JSON_MAP || {
 
 const QUESTIONS_PER_SECTION = 10;
 
+function pad2(num) {
+  return String(num).padStart(2, '0');
+}
+
+function formatAttemptTimestamp(date = new Date()) {
+  return (
+    date.getFullYear() +
+    '-' +
+    pad2(date.getMonth() + 1) +
+    '-' +
+    pad2(date.getDate()) +
+    ' ' +
+    pad2(date.getHours()) +
+    ':' +
+    pad2(date.getMinutes())
+  );
+}
+
+function buildQuizAttemptName(testLabel, participantName, startedAt) {
+  const baseName = participantName && participantName.trim() ? participantName.trim() : 'Anonymous';
+  const timestamp = formatAttemptTimestamp(startedAt instanceof Date ? startedAt : new Date());
+  return `${baseName} - ${timestamp} - ${testLabel}`;
+}
+
+function getSectionKey(question) {
+  if (question.section != null) {
+    return String(question.section);
+  }
+  if (question.sectionName) {
+    return question.sectionName;
+  }
+  return 'unknown';
+}
+
+function getSectionTitle(question) {
+  if (question.sectionName) {
+    return question.sectionName;
+  }
+  if (question.section != null) {
+    return `Section ${question.section}`;
+  }
+  return 'Unknown Section';
+}
+
+if (typeof window !== 'undefined' && !window.buildQuizAttemptName) {
+  window.buildQuizAttemptName = buildQuizAttemptName;
+}
+
 /* random shuffle helper */
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -74,6 +122,9 @@ const quizState = {
   currentIndex: 0,
   score: 0,
   perSectionScore: {}, // section -> correct count
+  status: 'Not Started',
+  startedAt: null,
+  hasPostedResult: false,
 };
 
 /* -------------------------
@@ -116,7 +167,10 @@ function createQuizShell() {
   // attach listeners
   document.getElementById('submit-answer').addEventListener('click', onSubmitAnswer);
   document.getElementById('next-question').addEventListener('click', onNextQuestion);
-  document.getElementById('quit-quiz').addEventListener('click', showFinalResult);
+  document.getElementById('quit-quiz').addEventListener('click', () => {
+    quizState.status = 'Quit';
+    showFinalResult();
+  });
 }
 
 /* -------------------------
@@ -260,11 +314,12 @@ function onSubmitAnswer() {
 
   const feedback = document.getElementById('feedback');
   const correctKey = current.correctKey; // original key like "A"
+  const sectionKey = getSectionKey(current);
   if (sel.origKey === correctKey) {
     // Correct
     sel.element.classList.add('correct');
     quizState.score += 1;
-    quizState.perSectionScore[current.section] = (quizState.perSectionScore[current.section] || 0) + 1;
+    quizState.perSectionScore[sectionKey] = (quizState.perSectionScore[sectionKey] || 0) + 1;
     feedback.innerHTML = `<div style="color:green;"><strong>Correct!</strong></div><div style="margin-top:6px">${current.explanation || ''}</div>`;
   } else {
     // Wrong: highlight selected and highlight correct option
@@ -289,6 +344,7 @@ function onSubmitAnswer() {
 function onNextQuestion() {
   quizState.currentIndex += 1;
   if (quizState.currentIndex >= quizState.questions.length) {
+    quizState.status = 'Completed';
     showFinalResult();
   } else {
     renderQuestion();
@@ -298,30 +354,102 @@ function onNextQuestion() {
 /* -------------------------
    Final result
    ------------------------- */
+function computeSectionSummary() {
+  if (!Array.isArray(quizState.questions) || !quizState.questions.length) {
+    return [];
+  }
+
+  const summaryMap = {};
+  quizState.questions.forEach(question => {
+    const key = getSectionKey(question);
+    if (!summaryMap[key]) {
+      summaryMap[key] = {
+        number: question.section != null ? Number(question.section) : null,
+        title: getSectionTitle(question),
+        total: 0,
+        correct: 0,
+      };
+    }
+    summaryMap[key].total += 1;
+  });
+
+  Object.keys(summaryMap).forEach(key => {
+    summaryMap[key].correct = quizState.perSectionScore[key] || 0;
+  });
+
+  return Object.values(summaryMap).sort((a, b) => {
+    if (a.number != null && b.number != null) {
+      return a.number - b.number;
+    }
+    if (a.number != null) return -1;
+    if (b.number != null) return 1;
+    return a.title.localeCompare(b.title);
+  });
+}
+
 function showFinalResult() {
   quizRoot.innerHTML = '';
   const panel = el('div', { class: 'score-panel' });
   const total = quizState.questions.length;
   const score = quizState.score;
-  const percent = ((score / total) * 100).toFixed(1);
-  panel.appendChild(el('h2', {}, [`Test Complete`]));
+  const percent = total ? ((score / total) * 100).toFixed(1) : '0.0';
+  const status = quizState.status === 'Quit' ? 'Quit' : 'Completed';
+  const sectionSummary = computeSectionSummary();
+  panel.appendChild(el('h2', {}, ['Test Summary']));
   panel.appendChild(el('div', {}, [`Participant: ${quizState.participantName || 'Anonymous'}`]));
+  panel.appendChild(el('div', {}, [`Status: ${status}`]));
   panel.appendChild(el('div', {}, [`Score: ${score} / ${total} (${percent}%)`]));
   // breakdown per section
-  const tableWrap = el('div', { style: 'margin-top:12px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto' });
-  tableWrap.appendChild(el('h4', {}, ['Per-section score:']));
-  const ul = el('ul');
-  Object.keys(quizState.perSectionScore).sort((a,b)=>a-b).forEach(s => {
-    const count = quizState.perSectionScore[s];
-    ul.appendChild(el('li', {}, [`Section ${s}: ${count} / ${QUESTIONS_PER_SECTION}`]));
-  });
-  tableWrap.appendChild(ul);
+  if (sectionSummary.length) {
+    const tableWrap = el('div', {
+      style: 'margin-top:12px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto',
+    });
+    tableWrap.appendChild(el('h4', {}, ['Per-section score:']));
+    const ul = el('ul');
+    sectionSummary.forEach(entry => {
+      const displayName =
+        entry.number != null
+          ? `Section ${entry.number}${entry.title ? ` – ${entry.title}` : ''}`
+          : entry.title;
+      ul.appendChild(el('li', {}, [`${displayName}: ${entry.correct} / ${entry.total}`]));
+    });
+    tableWrap.appendChild(ul);
+    panel.appendChild(tableWrap);
+  }
   // restart button
   const restart = el('button', { class: 'btn', id: 'restart-quiz', style: 'margin-top:14px' }, ['Restart']);
   restart.addEventListener('click', () => location.reload());
-  panel.appendChild(tableWrap);
   panel.appendChild(restart);
   quizRoot.appendChild(panel);
+
+  if (!quizState.hasPostedResult) {
+    const resultPayload = {
+      name: buildQuizAttemptName('Main Test', quizState.participantName, quizState.startedAt),
+      testType: 'Main',
+      status,
+      totalQuestions: total,
+      totalCorrect: score,
+      totalScore: score,
+      sections: sectionSummary.map((entry, idx) => ({
+        number: entry.number != null ? entry.number : idx + 1,
+        title: entry.title,
+        correct: entry.correct,
+      })),
+    };
+
+    quizState.hasPostedResult = true;
+    if (typeof window.postQuizAttemptToSalesforce === 'function') {
+      window
+        .postQuizAttemptToSalesforce(resultPayload)
+        .catch(err => {
+          console.error('Failed to post main quiz result to Salesforce', err);
+          quizState.hasPostedResult = false;
+        });
+    } else {
+      console.warn('postQuizAttemptToSalesforce helper is not available.');
+      quizState.hasPostedResult = false;
+    }
+  }
 }
 
 /* -------------------------
@@ -374,6 +502,12 @@ function setupPretestModal() {
     if (!acceptCheck.checked) { alert('Please accept Terms & Conditions'); return; }
     // set participant
     quizState.participantName = nameInput.value.trim();
+    quizState.startedAt = new Date();
+    quizState.status = 'In Progress';
+    quizState.hasPostedResult = false;
+    quizState.perSectionScore = {};
+    quizState.currentIndex = 0;
+    quizState.score = 0;
     closeModal();
     toggleQuizSections('full');
     // bootstrap quiz: load JSONs
@@ -393,7 +527,6 @@ function setupPretestModal() {
       // initialize counts
       quizState.currentIndex = 0;
       quizState.score = 0;
-      quizState.perSectionScore = {};
       // render first question
       renderQuestion();
     } catch (err) {

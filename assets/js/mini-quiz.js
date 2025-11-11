@@ -7,10 +7,40 @@ const miniState = {
   questions: [],
   currentIndex: 0,
   score: 0,
-  quizTitle: 'Mini Test'
+  quizTitle: 'Mini Test',
+  status: 'Not Started',
+  startedAt: null,
+  hasPostedResult: false
 };
 
 let miniQuestionBankCache = null;
+
+function miniPad2(num) {
+  return String(num).padStart(2, '0');
+}
+
+function miniFormatTimestamp(date = new Date()) {
+  return (
+    date.getFullYear() +
+    '-' +
+    miniPad2(date.getMonth() + 1) +
+    '-' +
+    miniPad2(date.getDate()) +
+    ' ' +
+    miniPad2(date.getHours()) +
+    ':' +
+    miniPad2(date.getMinutes())
+  );
+}
+
+function getMiniAttemptName(testLabel, participantName, startedAt) {
+  if (typeof window !== 'undefined' && typeof window.buildQuizAttemptName === 'function') {
+    return window.buildQuizAttemptName(testLabel, participantName, startedAt);
+  }
+  const baseName = participantName && participantName.trim() ? participantName.trim() : 'Anonymous';
+  const timestamp = miniFormatTimestamp(startedAt instanceof Date ? startedAt : new Date());
+  return `${baseName} - ${timestamp} - ${testLabel}`;
+}
 
 function miniShuffle(arr) {
   const copy = [...arr];
@@ -124,7 +154,10 @@ function createMiniQuizShell() {
 
   submitBtn.addEventListener('click', onMiniSubmitAnswer);
   nextBtn.addEventListener('click', onMiniNextQuestion);
-  quitBtn.addEventListener('click', showMiniFinalResult);
+  quitBtn.addEventListener('click', () => {
+    miniState.status = 'Quit';
+    showMiniFinalResult();
+  });
 }
 
 function renderMiniQuestion() {
@@ -232,6 +265,7 @@ function onMiniSubmitAnswer() {
 function onMiniNextQuestion() {
   miniState.currentIndex += 1;
   if (miniState.currentIndex >= miniState.questions.length) {
+    miniState.status = 'Completed';
     showMiniFinalResult();
   } else {
     renderMiniQuestion();
@@ -246,10 +280,12 @@ function showMiniFinalResult() {
   const total = miniState.questions.length;
   const score = miniState.score;
   const percent = total ? ((score / total) * 100).toFixed(1) : '0.0';
+  const status = miniState.status === 'Quit' ? 'Quit' : 'Completed';
 
   const panel = miniCreateElement('div', { class: 'score-panel' });
   panel.appendChild(miniCreateElement('h2', { text: miniState.quizTitle || 'Mini Test Complete' }));
   panel.appendChild(miniCreateElement('div', { text: `Participant: ${miniState.participantName || 'Anonymous'}` }));
+  panel.appendChild(miniCreateElement('div', { text: `Status: ${status}` }));
   panel.appendChild(miniCreateElement('div', { text: `Score: ${score} / ${total} (${percent}%)` }));
 
   const actions = miniCreateElement('div', { class: 'mini-final-actions' });
@@ -265,12 +301,43 @@ function showMiniFinalResult() {
 
   panel.appendChild(actions);
   root.appendChild(panel);
+
+  if (!miniState.hasPostedResult) {
+    const resultPayload = {
+      name: getMiniAttemptName(miniState.quizTitle || 'Mini Test', miniState.participantName, miniState.startedAt),
+      testType: 'Mini',
+      status,
+      totalQuestions: total,
+      totalCorrect: score,
+      totalScore: score,
+    };
+
+    miniState.hasPostedResult = true;
+    if (typeof window.postQuizAttemptToSalesforce === 'function') {
+      window
+        .postQuizAttemptToSalesforce(resultPayload)
+        .catch(err => {
+          console.error('Failed to post mini quiz result to Salesforce', err);
+          miniState.hasPostedResult = false;
+        });
+    } else {
+      console.warn('postQuizAttemptToSalesforce helper is not available.');
+      miniState.hasPostedResult = false;
+    }
+  }
 }
 
 async function startMiniQuiz(options = {}) {
   const { retake = false, triggerButton = null } = options;
   const root = document.getElementById('mini-quiz-root');
   if (!root) return;
+
+  miniState.status = 'In Progress';
+  miniState.startedAt = new Date();
+  miniState.hasPostedResult = false;
+  miniState.currentIndex = 0;
+  miniState.score = 0;
+  miniState.questions = [];
 
   if (!retake) {
     toggleQuizSections('mini');
