@@ -247,34 +247,37 @@ function renderFeedbackCards(feedbacks) {
   if (!container) return;
 
   container.innerHTML = '';
-  const grid = document.createElement('div');
-  grid.className = 'feedback-grid';
 
   feedbacks.forEach((fb, index) => {
-    const card = document.createElement('div');
-    card.className = 'feedback-card';
+    const card = document.createElement('li');
+    card.className = 'testimonials-item';
     
     const avatarNum = (index % 4) + 1;
-    const name = fb.Name__c || fb.name || 'Anonymous';
-    const email = fb.Email__c || fb.email || '';
-    const comments = fb.Comments__c || fb.comments || 'No comments';
+    const name = fb.Name || 'Anonymous';
+    const email = fb.Email__c || '';
+    const phone = fb.Phone__c || '';
+    const comments = fb.Comments__c || 'No comments';
+    const createdDate = fb.CreatedDate || '';
     
     card.innerHTML = `
-      <div class="feedback-avatar">
-        <img src="./assets/images/avatar-${avatarNum}.png" alt="${name}" onerror="this.src='./assets/images/my-avatar.png'" />
-      </div>
-      <div class="feedback-content">
-        <h4 class="feedback-name">${name}</h4>
-        ${email ? `<p class="feedback-email">${email}</p>` : ''}
-        <p class="feedback-comment">${truncateText(comments, 100)}</p>
+      <div class="content-card" data-feedback-item>
+        <figure class="testimonials-avatar-box">
+          <img src="./assets/images/avatar-${avatarNum}.png" alt="${name}" width="60" data-feedback-avatar />
+        </figure>
+        <h4 class="h4 testimonials-item-title" data-feedback-title>${name}</h4>
+        <div class="testimonials-text" data-feedback-text>
+          <p>${truncateText(comments, 150)}</p>
+        </div>
       </div>
     `;
     
-    card.addEventListener('click', () => openFeedbackModal(fb, index));
-    grid.appendChild(card);
+    // Add click event to open modal
+    card.querySelector('[data-feedback-item]').addEventListener('click', () => {
+      openFeedbackModal(fb, avatarNum);
+    });
+    
+    container.appendChild(card);
   });
-
-  container.appendChild(grid);
 }
 
 function truncateText(text, maxLength) {
@@ -282,54 +285,45 @@ function truncateText(text, maxLength) {
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 }
 
-function openFeedbackModal(feedback, index) {
-  const modal = document.getElementById('feedbackModal');
-  if (!modal) return;
+function openFeedbackModal(feedback, avatarNum) {
+  const modalContainer = document.getElementById('feedbackModalContainer');
+  const modalImg = document.getElementById('feedback-modal-img');
+  const modalName = document.getElementById('feedback-modal-name');
+  const modalEmail = document.getElementById('feedback-modal-email');
+  const modalPhone = document.getElementById('feedback-modal-phone');
+  const modalDate = document.getElementById('feedback-modal-date');
+  const modalComment = document.getElementById('feedback-modal-comment');
 
-  const avatarNum = (index % 4) + 1;
-  const name = feedback.Name__c || feedback.name || 'Anonymous';
-  const email = feedback.Email__c || feedback.email || '';
-  const comments = feedback.Comments__c || feedback.comments || 'No comments provided.';
+  if (!modalContainer) return;
 
-  const modalContent = `
-    <div class="modal-backdrop">
-      <div class="modal-panel">
-        <button class="modal-close-btn" onclick="closeFeedbackModal()">&times;</button>
-        <div class="modal-top">
-          <div class="modal-avatar-box">
-            <img src="./assets/images/avatar-${avatarNum}.png" alt="${name}" onerror="this.src='./assets/images/my-avatar.png'" />
-          </div>
-          <div class="modal-content-inner">
-            <h3>${name}</h3>
-            ${email ? `<p class="modal-email">${email}</p>` : ''}
-          </div>
-        </div>
-        <div class="modal-text">
-          <p>${comments}</p>
-        </div>
-      </div>
-    </div>
-  `;
+  const name = feedback.Name || 'Anonymous';
+  const email = feedback.Email__c || '';
+  const phone = feedback.Phone__c || '';
+  const comments = feedback.Comments__c || 'No comments provided.';
+  const createdDate = feedback.CreatedDate ? new Date(feedback.CreatedDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }) : '';
 
-  modal.innerHTML = modalContent;
-  modal.classList.add('show');
-  modal.setAttribute('aria-hidden', 'false');
-  
-  // Close on backdrop click
-  modal.querySelector('.modal-backdrop').addEventListener('click', (e) => {
-    if (e.target.classList.contains('modal-backdrop')) {
-      closeFeedbackModal();
-    }
-  });
+  modalImg.src = `./assets/images/avatar-${avatarNum}.png`;
+  modalImg.alt = name;
+  modalName.textContent = name;
+  modalEmail.textContent = email ? `📧 ${email}` : '';
+  modalPhone.textContent = phone ? `📱 ${phone}` : '';
+  modalDate.textContent = createdDate;
+  modalComment.textContent = comments;
+
+  modalContainer.style.display = 'flex';
+  modalContainer.classList.add('active');
 }
 
 function closeFeedbackModal() {
-  const modal = document.getElementById('feedbackModal');
-  if (modal) {
-    modal.classList.remove('show');
-    modal.setAttribute('aria-hidden', 'true');
+  const modalContainer = document.getElementById('feedbackModalContainer');
+  if (modalContainer) {
+    modalContainer.classList.remove('active');
     setTimeout(() => {
-      modal.innerHTML = '';
+      modalContainer.style.display = 'none';
     }, 300);
   }
 }
@@ -547,7 +541,19 @@ function updateArrowVisibilityCertificates() {
   prevBtn.style.visibility = container.scrollLeft <= 0 ? "hidden" : "visible";
   nextBtn.style.visibility = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1 ? "hidden" : "visible";
 }
+// Add event listeners for feedback modal
+document.addEventListener('DOMContentLoaded', () => {
+  const feedbackModalCloseBtn = document.querySelector('[data-feedback-modal-close-btn]');
+  const feedbackOverlay = document.querySelector('[data-feedback-overlay]');
 
+  if (feedbackModalCloseBtn) {
+    feedbackModalCloseBtn.addEventListener('click', closeFeedbackModal);
+  }
+
+  if (feedbackOverlay) {
+    feedbackOverlay.addEventListener('click', closeFeedbackModal);
+  }
+});
 document.addEventListener("DOMContentLoaded", () => {
   const testimonialsContainer = document.querySelector(".testimonials-wrapper .testimonials-list");
   if (testimonialsContainer) {

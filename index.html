@@ -967,6 +967,8 @@ Case and work order to there field support team.
         - #FEEDBACK
       -->
      <!--  Feedback Section (drop into page)  -->
+<!-- Replace the existing feedbackModal div with this: -->
+
 <article id="feedbackSection" class="Feedback" data-page="feedback">
   <header>
     <h2 class="h2 article-title">Feedback</h2>
@@ -975,30 +977,34 @@ Case and work order to there field support team.
   <!-- Container where cards will be mounted -->
   <div id="feedbackContainer" class="feedback-grid" aria-live="polite"></div>
 
-  <!-- Modal (hidden until .show is added) -->
-  <div id="feedbackModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-backdrop" data-close-modal>
-      <section class="modal-panel" role="document" aria-labelledby="modal-name" aria-describedby="modal-comment" tabindex="-1">
-        <button class="modal-close-btn" aria-label="Close feedback dialog">&times;</button>
+  <!-- Modal matching your testimonials style -->
+  <div class="modal-container" id="feedbackModalContainer" data-feedback-modal-container style="display:none;">
+    <div class="overlay" data-feedback-overlay></div>
 
-        <div class="modal-top">
-          <figure class="modal-avatar-box">
-            <img id="modal-avatar" src="./assets/images/avatar-1.png" alt="Avatar" width="80" height="80">
-          </figure>
-          <div class="modal-quote">
-            <img src="./assets/images/icon-quote.svg" alt="">
-          </div>
-        </div>
+    <section class="testimonials-modal">
+      <button class="modal-close-btn" data-feedback-modal-close-btn>
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
 
-        <div class="modal-content-inner">
-          <h3 id="modal-name" class="modal-title"></h3>
-          <p id="modal-email" class="modal-email"></p>
-          <div class="modal-text">
-            <p id="modal-comment"></p>
-          </div>
+      <div class="modal-img-wrapper">
+        <figure class="modal-avatar-box">
+          <img id="feedback-modal-img" src="./assets/images/avatar-1.png" alt="Avatar" width="80" />
+        </figure>
+        <img src="./assets/images/icon-quote.svg" alt="quote icon" />
+      </div>
+
+      <div class="modal-content">
+        <h4 class="h3 modal-title" id="feedback-modal-name"></h4>
+        <p id="feedback-modal-email" style="color: var(--light-gray-70); margin-bottom: 8px;"></p>
+        <p id="feedback-modal-phone" style="color: var(--light-gray-70); margin-bottom: 16px;"></p>
+        <time id="feedback-modal-date" style="color: var(--light-gray-70); font-size: 14px;"></time>
+
+        <div data-feedback-modal-text style="margin-top: 20px;">
+          <h5 style="color: var(--orange-yellow-crayola); margin-bottom: 10px;">Suggestion:</h5>
+          <p id="feedback-modal-comment" style="line-height: 1.8;"></p>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </article>
 
