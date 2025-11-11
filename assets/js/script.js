@@ -124,6 +124,11 @@ navigationLinks.forEach((link) => {
         page.classList.add("active");
         link.classList.add("active");
         window.scrollTo(0, 0);
+        
+        // Load feedback when feedback page is active
+        if (targetPage === 'feedback') {
+          loadFeedbackData();
+        }
       } else {
         page.classList.remove("active");
         navigationLinks.forEach((navLink) => {
@@ -138,41 +143,6 @@ navigationLinks.forEach((link) => {
 // Feedback API Configuration
 // ======================
 const FEEDBACK_API_URL = "https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/FeedbackAPI/";
-
-// create feedback form request
-document.addEventListener("DOMContentLoaded", function () {
-  const feedbackForm = document.getElementById("feedbackForm");
-  if (feedbackForm) {
-    feedbackForm.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
-      
-      try {
-        console.log('[Feedback] Submitting to Salesforce:', data);
-        const response = await fetch(FEEDBACK_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        
-        if (response.ok) {
-          const result = await response.json();
-          console.log('[Feedback] Success:', result);
-          showToast('Feedback submitted successfully!');
-          e.target.reset();
-        } else {
-          const errorText = await response.text();
-          console.error('[Feedback] Error:', response.status, errorText);
-          showToast('Failed to submit feedback. Please try again.');
-        }
-      } catch (error) {
-        console.error('[Feedback] Error submitting feedback:', error);
-        showToast('An error occurred. Please try again later.');
-      }
-    });
-  }
-});
 
 // toast message
 function showToast(message) {
@@ -191,13 +161,187 @@ function showToast(message) {
   }, 3000);
 }
 
+// POST feedback form submission
+document.addEventListener("DOMContentLoaded", function () {
+  const feedbackForm = document.getElementById("feedbackForm");
+  if (feedbackForm) {
+    feedbackForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = {
+        name: formData.get('name') || '',
+        email: formData.get('email') || '',
+        phone: formData.get('phone') || '',
+        comments: formData.get('comments') || ''
+      };
+      
+      try {
+        console.log('[Feedback] Submitting to Salesforce:', data);
+        const response = await fetch(FEEDBACK_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          console.log('[Feedback] Success:', result);
+          showToast('Feedback submitted successfully!');
+          e.target.reset();
+          // Reload feedback list after submission
+          loadFeedbackData();
+        } else {
+          const errorText = await response.text();
+          console.error('[Feedback] Error:', response.status, errorText);
+          showToast('Failed to submit feedback. Please try again.');
+        }
+      } catch (error) {
+        console.error('[Feedback] Error submitting feedback:', error);
+        showToast('An error occurred. Please try again later.');
+      }
+    });
+  }
+});
+
+// ======================
+// GET Feedback and Display
+// ======================
+
+async function loadFeedbackData() {
+  const container = document.getElementById('feedbackContainer');
+  if (!container) {
+    console.warn('[Feedback] Container not found');
+    return;
+  }
+
+  container.innerHTML = '<div class="loading">Loading feedback...</div>';
+
+  try {
+    console.log('[Feedback] Fetching from Salesforce...');
+    const response = await fetch(FEEDBACK_API_URL, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const feedbacks = await response.json();
+    console.log('[Feedback] Loaded:', feedbacks);
+
+    if (!Array.isArray(feedbacks) || feedbacks.length === 0) {
+      container.innerHTML = '<div class="no-feedback">No feedback available yet.</div>';
+      return;
+    }
+
+    renderFeedbackCards(feedbacks);
+  } catch (error) {
+    console.error('[Feedback] Error loading:', error);
+    container.innerHTML = '<div class="error">Failed to load feedback. Please try again later.</div>';
+  }
+}
+
+function renderFeedbackCards(feedbacks) {
+  const container = document.getElementById('feedbackContainer');
+  if (!container) return;
+
+  container.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'feedback-grid';
+
+  feedbacks.forEach((fb, index) => {
+    const card = document.createElement('div');
+    card.className = 'feedback-card';
+    
+    const avatarNum = (index % 4) + 1;
+    const name = fb.Name__c || fb.name || 'Anonymous';
+    const email = fb.Email__c || fb.email || '';
+    const comments = fb.Comments__c || fb.comments || 'No comments';
+    
+    card.innerHTML = `
+      <div class="feedback-avatar">
+        <img src="./assets/images/avatar-${avatarNum}.png" alt="${name}" onerror="this.src='./assets/images/my-avatar.png'" />
+      </div>
+      <div class="feedback-content">
+        <h4 class="feedback-name">${name}</h4>
+        ${email ? `<p class="feedback-email">${email}</p>` : ''}
+        <p class="feedback-comment">${truncateText(comments, 100)}</p>
+      </div>
+    `;
+    
+    card.addEventListener('click', () => openFeedbackModal(fb, index));
+    grid.appendChild(card);
+  });
+
+  container.appendChild(grid);
+}
+
+function truncateText(text, maxLength) {
+  if (!text) return '';
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+}
+
+function openFeedbackModal(feedback, index) {
+  const modal = document.getElementById('feedbackModal');
+  if (!modal) return;
+
+  const avatarNum = (index % 4) + 1;
+  const name = feedback.Name__c || feedback.name || 'Anonymous';
+  const email = feedback.Email__c || feedback.email || '';
+  const comments = feedback.Comments__c || feedback.comments || 'No comments provided.';
+
+  const modalContent = `
+    <div class="modal-backdrop">
+      <div class="modal-panel">
+        <button class="modal-close-btn" onclick="closeFeedbackModal()">&times;</button>
+        <div class="modal-top">
+          <div class="modal-avatar-box">
+            <img src="./assets/images/avatar-${avatarNum}.png" alt="${name}" onerror="this.src='./assets/images/my-avatar.png'" />
+          </div>
+          <div class="modal-content-inner">
+            <h3>${name}</h3>
+            ${email ? `<p class="modal-email">${email}</p>` : ''}
+          </div>
+        </div>
+        <div class="modal-text">
+          <p>${comments}</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.innerHTML = modalContent;
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden', 'false');
+  
+  // Close on backdrop click
+  modal.querySelector('.modal-backdrop').addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-backdrop')) {
+      closeFeedbackModal();
+    }
+  });
+}
+
+function closeFeedbackModal() {
+  const modal = document.getElementById('feedbackModal');
+  if (modal) {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    setTimeout(() => {
+      modal.innerHTML = '';
+    }, 300);
+  }
+}
+
+// Expose globally
+window.closeFeedbackModal = closeFeedbackModal;
+
 // ======================
 // Quiz Attempt -> Salesforce (POST)
 // ======================
 
-// Your QuizAttemptAPI endpoint
-const QUIZ_API_URL =
-  "https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/QuizAttemptAPI/";
+const QUIZ_API_URL = "https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/QuizAttemptAPI/";
 
 const MAIN_QUIZ_SECTIONS = [
   { number: 1, title: "Apex Fundamentals & OOP Concepts" },
@@ -254,28 +398,20 @@ const SALESFORCE_PAYLOAD_MOCKS = {
 
 function deepFreeze(object) {
   Object.freeze(object);
-
   Object.getOwnPropertyNames(object).forEach((prop) => {
     const value = object[prop];
     if (value && typeof value === "object" && !Object.isFrozen(value)) {
       deepFreeze(value);
     }
   });
-
   return object;
 }
 
 deepFreeze(SALESFORCE_PAYLOAD_MOCKS);
 
 function normalizeNumber(value) {
-  if (value === "" || value === null || value === undefined) {
-    return undefined;
-  }
-
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : undefined;
-  }
-
+  if (value === "" || value === null || value === undefined) return undefined;
+  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
 }
@@ -285,7 +421,6 @@ function normalizeStatus(status) {
     const trimmed = status.trim();
     if (trimmed) return trimmed;
   }
-
   return "Completed";
 }
 
@@ -318,9 +453,7 @@ async function postQuizAttemptToSalesforce(result = {}) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(
-        `[postQuizAttemptToSalesforce] HTTP ${response.status}: ${errorText}`
-      );
+      console.error(`[postQuizAttemptToSalesforce] HTTP ${response.status}: ${errorText}`);
       throw new Error(`Salesforce API returned ${response.status}`);
     }
 
@@ -338,18 +471,11 @@ function cloneMockPayload(payload) {
 }
 
 function getSalesforceQuizMockPayload(testType = "Main") {
-  const normalizedType =
-    typeof testType === "string" ? testType.trim().toLowerCase() : "";
-
-  const source =
-    normalizedType === "mini"
-      ? SALESFORCE_PAYLOAD_MOCKS.mini
-      : SALESFORCE_PAYLOAD_MOCKS.main;
-
+  const normalizedType = typeof testType === "string" ? testType.trim().toLowerCase() : "";
+  const source = normalizedType === "mini" ? SALESFORCE_PAYLOAD_MOCKS.mini : SALESFORCE_PAYLOAD_MOCKS.main;
   return cloneMockPayload(source);
 }
 
-// Quiz section visibility toggle
 function toggleQuizSections(mode) {
   const quizButtons = document.querySelector('.quiz-buttons');
   const quizBlock = document.querySelector('.quiz-block');
@@ -357,19 +483,16 @@ function toggleQuizSections(mode) {
   const miniQuizRoot = document.getElementById('mini-quiz-root');
 
   if (mode === 'full') {
-    // Show main quiz, hide buttons
     if (quizButtons) quizButtons.style.display = 'none';
     if (quizBlock) quizBlock.style.display = 'block';
     if (quizRoot) quizRoot.style.display = 'block';
     if (miniQuizRoot) miniQuizRoot.style.display = 'none';
   } else if (mode === 'mini') {
-    // Show mini quiz, hide buttons
     if (quizButtons) quizButtons.style.display = 'none';
     if (quizBlock) quizBlock.style.display = 'block';
     if (quizRoot) quizRoot.style.display = 'none';
     if (miniQuizRoot) miniQuizRoot.style.display = 'block';
   } else if (mode === 'exit') {
-    // Show buttons, hide both quizzes
     if (quizButtons) quizButtons.style.display = 'flex';
     if (quizBlock) quizBlock.style.display = 'none';
     if (quizRoot) quizRoot.style.display = 'none';
@@ -377,7 +500,6 @@ function toggleQuizSections(mode) {
   }
 }
 
-// Expose globally
 window.toggleQuizSections = toggleQuizSections;
 window.postQuizAttemptToSalesforce = postQuizAttemptToSalesforce;
 window.getSalesforceQuizMockPayload = getSalesforceQuizMockPayload;
@@ -386,124 +508,66 @@ window.salesforceQuizPayloadMocks = {
   mini: cloneMockPayload(SALESFORCE_PAYLOAD_MOCKS.mini),
 };
 
-// slider function for cards
-/* === Testimonials slider logic === */
+// Testimonials slider
 function scrollTestimonials(direction) {
-  const container = document.querySelector(
-    ".testimonials-wrapper .testimonials-list"
-  );
+  const container = document.querySelector(".testimonials-wrapper .testimonials-list");
   const card = container.querySelector(".testimonials-item");
   if (!container || !card) return;
-
   const gap = parseFloat(getComputedStyle(container).gap || 0);
   const cardWidth = card.getBoundingClientRect().width;
   const scrollAmount = cardWidth + gap;
-
-  container.scrollBy({
-    left: direction * scrollAmount,
-    behavior: "smooth",
-  });
+  container.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
 }
 
 function updateArrowVisibilityTestimonials() {
-  const container = document.querySelector(
-    ".testimonials-wrapper .testimonials-list"
-  );
+  const container = document.querySelector(".testimonials-wrapper .testimonials-list");
   const prevBtn = document.querySelector(".testimonial-nav-btn.left");
   const nextBtn = document.querySelector(".testimonial-nav-btn.right");
-
   if (!container || !prevBtn || !nextBtn) return;
-
   prevBtn.style.visibility = container.scrollLeft <= 0 ? "hidden" : "visible";
-
-  nextBtn.style.visibility =
-    container.scrollLeft + container.clientWidth >= container.scrollWidth - 1
-      ? "hidden"
-      : "visible";
+  nextBtn.style.visibility = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1 ? "hidden" : "visible";
 }
 
-/* === Certifications slider logic === */
+// Certifications slider
 function scrollCertifications(direction) {
-  const container = document.querySelector(
-    ".certificate-wrapper .certificate-list"
-  );
+  const container = document.querySelector(".certificate-wrapper .certificate-list");
   const card = container.querySelector(".certificate-item");
   if (!container || !card) return;
-
   const gap = parseFloat(getComputedStyle(container).gap || 0);
   const cardWidth = card.getBoundingClientRect().width;
   const scrollAmount = cardWidth + gap;
-
-  container.scrollBy({
-    left: direction * scrollAmount,
-    behavior: "smooth",
-  });
+  container.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
 }
 
 function updateArrowVisibilityCertificates() {
-  const container = document.querySelector(
-    ".certificate-wrapper .certificate-list"
-  );
+  const container = document.querySelector(".certificate-wrapper .certificate-list");
   const prevBtn = document.querySelector(".certificate-nav-btn.left");
   const nextBtn = document.querySelector(".certificate-nav-btn.right");
-
   if (!container || !prevBtn || !nextBtn) return;
-
   prevBtn.style.visibility = container.scrollLeft <= 0 ? "hidden" : "visible";
-
-  nextBtn.style.visibility =
-    container.scrollLeft + container.clientWidth >= container.scrollWidth - 1
-      ? "hidden"
-      : "visible";
+  nextBtn.style.visibility = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1 ? "hidden" : "visible";
 }
 
-/* === Attach event listeners on DOM ready === */
 document.addEventListener("DOMContentLoaded", () => {
-  // Testimonials
-  const testimonialsContainer = document.querySelector(
-    ".testimonials-wrapper .testimonials-list"
-  );
+  const testimonialsContainer = document.querySelector(".testimonials-wrapper .testimonials-list");
   if (testimonialsContainer) {
     updateArrowVisibilityTestimonials();
-    testimonialsContainer.addEventListener(
-      "scroll",
-      updateArrowVisibilityTestimonials
-    );
+    testimonialsContainer.addEventListener("scroll", updateArrowVisibilityTestimonials);
   }
   
   const testimonialLeftBtn = document.querySelector(".testimonial-nav-btn.left");
   const testimonialRightBtn = document.querySelector(".testimonial-nav-btn.right");
-  if (testimonialLeftBtn) {
-    testimonialLeftBtn.addEventListener("click", () => scrollTestimonials(-1));
-  }
-  if (testimonialRightBtn) {
-    testimonialRightBtn.addEventListener("click", () => scrollTestimonials(1));
-  }
+  if (testimonialLeftBtn) testimonialLeftBtn.addEventListener("click", () => scrollTestimonials(-1));
+  if (testimonialRightBtn) testimonialRightBtn.addEventListener("click", () => scrollTestimonials(1));
 
-  // Certifications
-  const certificateContainer = document.querySelector(
-    ".certificate-wrapper .certificate-list"
-  );
+  const certificateContainer = document.querySelector(".certificate-wrapper .certificate-list");
   if (certificateContainer) {
     updateArrowVisibilityCertificates();
-    certificateContainer.addEventListener(
-      "scroll",
-      updateArrowVisibilityCertificates
-    );
+    certificateContainer.addEventListener("scroll", updateArrowVisibilityCertificates);
   }
   
   const certLeftBtn = document.querySelector(".certificate-nav-btn.left");
   const certRightBtn = document.querySelector(".certificate-nav-btn.right");
-  if (certLeftBtn) {
-    certLeftBtn.addEventListener("click", () => scrollCertifications(-1));
-  }
-  if (certRightBtn) {
-    certRightBtn.addEventListener("click", () => scrollCertifications(1));
-  }
+  if (certLeftBtn) certLeftBtn.addEventListener("click", () => scrollCertifications(-1));
+  if (certRightBtn) certRightBtn.addEventListener("click", () => scrollCertifications(1));
 });
-
-// feedback fetch and modal logic
-(function() {
-  // Your feedback modal implementation here
-  console.log('Feedback module initialized');
-})();
