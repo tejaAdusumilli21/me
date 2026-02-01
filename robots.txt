@@ -1,0 +1,21 @@
+# robots.txt for Teja Adusumilli Portfolio
+# https://tejaadusumilli21.github.io/me/
+
+# Allow all web crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://tejaadusumilli21.github.io/me/sitemap.xml
+
+# Crawl-delay for polite crawling (optional)
+Crawl-delay: 1
+
+# Disallow test directories
+Disallow: /tests/
+
+# Allow important resources for rendering
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/images/
+Allow: /assets/json/
