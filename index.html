@@ -1103,6 +1103,42 @@ Case and work order to there field support team.
           </div>
           <div id="toast" class="toast hidden">Submitted Successfully!</div>
         </section>
+        <header>
+    <h2 class="h2 article-title">Feedback</h2>
+  </header>
+
+  <!-- Container where cards will be mounted -->
+  <div id="feedbackContainer" class="feedback-grid" aria-live="polite"></div>
+
+  <!-- Modal matching your testimonials style -->
+  <div class="modal-container" id="feedbackModalContainer" data-feedback-modal-container style="display:none;">
+    <div class="overlay" data-feedback-overlay></div>
+
+    <section class="testimonials-modal">
+      <button class="modal-close-btn" data-feedback-modal-close-btn>
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+
+      <div class="modal-img-wrapper">
+        <figure class="modal-avatar-box">
+          <img id="feedback-modal-img" src="./assets/images/avatar-1.png" alt="Avatar" width="80" />
+        </figure>
+        <img src="./assets/images/icon-quote.svg" alt="quote icon" />
+      </div>
+
+      <div class="modal-content">
+        <h4 class="h3 modal-title" id="feedback-modal-name"></h4>
+        <p id="feedback-modal-email" style="color: var(--light-gray-70); margin-bottom: 8px;"></p>
+        <p id="feedback-modal-phone" style="color: var(--light-gray-70); margin-bottom: 16px;"></p>
+        <time id="feedback-modal-date" style="color: var(--light-gray-70); font-size: 14px;"></time>
+
+        <div data-feedback-modal-text style="margin-top: 20px;">
+          <h5 style="color: var(--orange-yellow-crayola); margin-bottom: 10px;">Suggestion:</h5>
+          <p id="feedback-modal-comment" style="line-height: 1.8;"></p>
+        </div>
+      </div>
+    </section>
+  </div>
       </article>
       <!--
         - #FEEDBACK
