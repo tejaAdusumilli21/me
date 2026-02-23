@@ -125,8 +125,8 @@ navigationLinks.forEach((link) => {
         link.classList.add("active");
         window.scrollTo(0, 0);
         
-        // Load feedback when feedback page is active
-        if (targetPage === 'feedback') {
+        // Load feedback when contact page is active
+        if (targetPage === 'contact') {
           loadFeedbackData();
         }
       } else {
