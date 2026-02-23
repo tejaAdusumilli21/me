@@ -261,3 +261,59 @@
 .pcard-link:hover {
   background: rgba(255, 255, 255, 0.22);
 }
+
+/* Wide split card (e.g. Mini Note) */
+.pcard-wide {
+  width: 560px;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.pcard-wide .pcard-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 24px;
+  text-align: left;
+}
+
+.pcard-split-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.pcard-split-left .pcard-title {
+  text-align: left;
+}
+
+.pcard-split-left .pcard-tags {
+  justify-content: flex-start;
+}
+
+.pcard-split-right {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pcard-icon {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 22px;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.45));
+}
+
+@media (max-width: 480px) {
+  .pcard-wide .pcard-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .pcard-split-left .pcard-title,
+  .pcard-split-left .pcard-tags {
+    text-align: center;
+    justify-content: center;
+  }
+}
