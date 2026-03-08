@@ -69,14 +69,9 @@
 .storyhousesections .scard .item {
   padding: 20px;
   text-align: center;
-  transform: translateY(100px);
-  opacity: 0;
-  transition: 0.5s;
-}
-
-.storyhousesections .scard:hover .item {
   transform: translateY(0px);
   opacity: 1;
+  transition: 0.5s;
 }
 
 .storyhousesections .scard .item h1 {
@@ -192,14 +187,9 @@
 .pcard-inner {
   padding: 24px 20px;
   text-align: center;
-  transform: translateY(60px);
-  opacity: 0;
-  transition: 0.4s ease;
-}
-
-.pcard:hover .pcard-inner {
   transform: translateY(0);
   opacity: 1;
+  transition: 0.4s ease;
 }
 
 .pcard-num {
