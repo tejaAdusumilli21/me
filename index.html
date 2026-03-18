@@ -1195,20 +1195,22 @@ Case and work order to there field support team.
       </div>
 
       <!-- Card 3 -->
-      <div class="pcard" data-tilt>
+      <div class="pcard pcard-wide" data-tilt onclick="Array.from(document.querySelectorAll('[data-nav-link]')).find(l=>l.textContent.toLowerCase()==='quiz')?.click()">
         <div class="pcard-inner">
           <span class="pcard-num">03</span>
-          <h2 class="pcard-title">Salesforce Quiz App</h2>
-          <p class="pcard-desc">180-question Salesforce Developer quiz covering Apex, LWC, SOQL, Integrations and more, with live score tracking via Apex REST.</p>
-          <div class="pcard-tags">
-            <span>Apex</span>
-            <span>LWC</span>
-            <span>REST API</span>
-            <span>JavaScript</span>
+          <div class="pcard-split-left">
+            <h2 class="pcard-title">Salesforce Quiz App</h2>
+            <p class="pcard-desc">180-question Salesforce Developer quiz covering Apex, LWC, SOQL, Integrations and more, with live score tracking via Apex REST.</p>
+            <div class="pcard-tags">
+              <span>Apex</span>
+              <span>LWC</span>
+              <span>REST API</span>
+              <span>JavaScript</span>
+            </div>
           </div>
-          <!-- <a href="https://tejaadusumilli21.github.io/me/" target="_blank" class="pcard-link">
-            <ion-icon name="open-outline"></ion-icon> Live Demo
-          </a> -->
+          <div class="pcard-split-right">
+            <img src="./assets/images/lightning_extension.svg" alt="Salesforce Quiz App icon" class="pcard-icon" />
+          </div>
         </div>
       </div>
 
