@@ -24,6 +24,7 @@ Live site: [tejaadusumilli21.github.io/me](https://tejaadusumilli21.github.io/me
 - **Mini Note** — A lightweight Chrome extension with smart search, Kanban board, drawing canvas, auto-save, and dark mode
 - **Plio Workspace** — Personal productivity web app with Kanban boards, rich-text notes, role-based sharing, and live calendar
 - **Salesforce Quiz App** — 180-question Salesforce Developer quiz covering Apex, LWC, SOQL, and Integrations with live score tracking via Apex REST
+- **Salesforce Playground** — A zero-setup Chrome extension that turns any active Salesforce org into a full developer environment. Read, edit, and deploy 16+ metadata types directly from the browser with a visual SOQL builder, diff checker, anonymous Apex executor, and REST API explorer
 
 ---
 
