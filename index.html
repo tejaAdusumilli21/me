@@ -1818,6 +1818,421 @@ Case and work order to there field support team.
   -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  <!-- ── AGENTFORCE CHAT WIDGET ──────────────────────────────────────── -->
+  <style>
+    /* Portfolio theme tokens used in widget */
+    /* --onyx: hsl(240,1%,17%)  --jet: hsl(0,0%,22%)  --eerie-black-1: hsl(240,2%,13%) */
+    /* --orange-yellow-crayola: hsl(45,100%,72%)  --light-gray: hsl(0,0%,84%) */
+
+    #af-fab {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 60px; height: 60px;
+      background: var(--bg-gradient-onyx);
+      border-radius: 50%; border: 2px solid hsl(45,100%,72%);
+      cursor: pointer;
+      box-shadow: -4px 8px 24px hsla(0,0%,0%,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: transform .25s, box-shadow .25s;
+    }
+    #af-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px hsla(0,0%,0%,0.55); }
+    #af-fab img { width: 32px; height: 32px; object-fit: contain; }
+    #af-fab .af-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 18px; height: 18px;
+      background: hsl(45,100%,72%);
+      border-radius: 50%; border: 2px solid hsl(240,2%,13%);
+      font-size: 10px; font-weight: 700; color: hsl(240,2%,13%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #af-window {
+      position: fixed; bottom: 100px; right: 28px;
+      width: 380px; max-height: 600px;
+      background: hsl(240,2%,13%);
+      border-radius: 18px;
+      box-shadow: -4px 8px 24px hsla(0,0%,0%,0.45);
+      display: flex; flex-direction: column; overflow: hidden;
+      z-index: 9998;
+      transform: scale(0.85) translateY(20px); opacity: 0; pointer-events: none;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .25s;
+      border: 1px solid hsl(0,0%,25%);
+      font-family: 'Poppins', sans-serif;
+    }
+    #af-window.af-open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+
+    /* Header */
+    .af-header {
+      background: var(--bg-gradient-onyx);
+      border-bottom: 1px solid hsl(0,0%,25%);
+      padding: 16px 18px; display: flex; align-items: center; gap: 12px;
+    }
+    .af-avatar {
+      width: 42px; height: 42px;
+      background: var(--bg-gradient-yellow-2);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      border: 2px solid hsl(45,100%,72%); flex-shrink: 0;
+    }
+    .af-avatar img { width: 26px; height: 26px; object-fit: contain; }
+    .af-agent-info { flex: 1; }
+    .af-agent-name {
+      font-size: 14px; font-weight: 600;
+      background: var(--text-gradient-yellow);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: .3px;
+    }
+    .af-agent-status { font-size: 11px; color: hsl(0,0%,84%); display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+    .af-status-dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; animation: af-pulse 1.8s infinite; }
+    @keyframes af-pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+    .af-sf-badge {
+      background: hsla(45,100%,72%,0.15);
+      border: 1px solid hsla(45,100%,72%,0.3);
+      border-radius: 20px; padding: 3px 9px;
+      font-size: 10px; font-weight: 600;
+      color: hsl(45,100%,72%);
+      letter-spacing: .5px; text-transform: uppercase;
+    }
+    .af-close {
+      background: none; border: none; cursor: pointer;
+      color: hsl(0,0%,84%);
+      width: 28px; height: 28px; border-radius: 50%; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, color .2s;
+    }
+    .af-close:hover { background: hsla(0,0%,100%,0.08); color: hsl(45,100%,72%); }
+
+    /* Messages area */
+    #af-messages {
+      flex: 1; overflow-y: auto; padding: 16px 14px;
+      display: flex; flex-direction: column; gap: 10px;
+      background: hsl(240,2%,12%);
+    }
+    #af-messages::-webkit-scrollbar { width: 4px; }
+    #af-messages::-webkit-scrollbar-thumb { background: hsl(0,0%,22%); border-radius: 4px; }
+
+    .af-row { display: flex; align-items: flex-end; gap: 8px; animation: af-fadeup .3s ease forwards; opacity: 0; }
+    .af-row.af-user { flex-direction: row-reverse; }
+    @keyframes af-fadeup { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    .af-msg-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 12px; font-weight: 600;
+    }
+    .af-msg-avatar.af-bot { background: var(--bg-gradient-yellow-2); color: hsl(45,100%,72%); border: 1px solid hsla(45,100%,72%,0.3); }
+    .af-msg-avatar.af-user { background: hsl(45,100%,72%); color: hsl(240,2%,13%); }
+
+    .af-bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.6; }
+    .af-bot .af-bubble {
+      background: hsl(0,0%,22%);
+      color: hsl(0,0%,84%);
+      border-bottom-left-radius: 4px;
+      border: 1px solid hsl(0,0%,25%);
+    }
+    .af-bot .af-bubble strong { color: hsl(45,100%,72%); font-weight: 600; }
+    .af-user .af-bubble {
+      background: var(--bg-gradient-yellow-1), hsl(45,100%,72%);
+      color: hsl(240,2%,13%);
+      border-bottom-right-radius: 4px;
+    }
+    .af-user .af-bubble strong { color: hsl(240,2%,13%); font-weight: 600; }
+
+    /* Chips */
+    .af-chips { display: flex; flex-wrap: wrap; gap: 7px; padding: 4px 14px 8px; animation: af-fadeup .35s ease forwards; opacity: 0; }
+    .af-chip {
+      background: hsl(240,2%,13%);
+      border: 1.5px solid hsla(45,100%,72%,0.5);
+      color: hsl(45,100%,72%);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: background .2s, border-color .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .af-chip:hover {
+      background: hsla(45,100%,72%,0.12);
+      border-color: hsl(45,100%,72%);
+      transform: translateY(-1px);
+    }
+    .af-chip.af-ext::after { content: ' ↗'; font-size: 10px; }
+
+    /* Typing indicator */
+    .af-typing {
+      display: flex; align-items: center; gap: 4px;
+      padding: 10px 14px;
+      background: hsl(0,0%,22%);
+      border-radius: 16px; border-bottom-left-radius: 4px;
+      border: 1px solid hsl(0,0%,25%);
+      width: fit-content;
+    }
+    .af-typing span { width: 7px; height: 7px; background: hsl(45,100%,72%); border-radius: 50%; display: block; animation: af-bounce 1.2s infinite; }
+    .af-typing span:nth-child(2){animation-delay:.2s} .af-typing span:nth-child(3){animation-delay:.4s}
+    @keyframes af-bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+    /* Footer / input */
+    .af-footer {
+      padding: 12px 14px;
+      border-top: 1px solid hsl(0,0%,25%);
+      background: hsl(240,2%,13%);
+      display: flex; gap: 8px; align-items: center;
+    }
+    #af-input {
+      flex: 1;
+      border: 1.5px solid hsl(0,0%,25%);
+      border-radius: 22px; padding: 9px 15px;
+      font-family: inherit; font-size: 13px; outline: none;
+      transition: border-color .2s;
+      color: hsl(0,0%,84%);
+      background: hsl(0,0%,22%);
+    }
+    #af-input:focus { border-color: hsl(45,100%,72%); }
+    #af-input::placeholder { color: hsla(0,0%,84%,0.4); }
+    #af-send {
+      width: 38px; height: 38px;
+      background: var(--bg-gradient-yellow-1), hsl(45,100%,72%);
+      border: none; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: transform .2s, opacity .2s;
+    }
+    #af-send:hover { transform: scale(1.08); opacity: .9; }
+    #af-send svg { width: 16px; height: 16px; fill: hsl(240,2%,13%); }
+
+    /* Name input */
+    .af-name-wrap { display: flex; gap: 7px; align-items: center; padding: 4px 14px 8px; animation: af-fadeup .35s ease forwards; opacity: 0; }
+    .af-name-wrap input {
+      flex: 1; border: 1.5px solid hsla(45,100%,72%,0.5); border-radius: 22px;
+      padding: 8px 14px; font-family: inherit; font-size: 13px; outline: none;
+      color: hsl(0,0%,84%); background: hsl(0,0%,22%);
+    }
+    .af-name-wrap input:focus { border-color: hsl(45,100%,72%); }
+    .af-name-wrap button {
+      background: var(--bg-gradient-yellow-1), hsl(45,100%,72%);
+      color: hsl(240,2%,13%); border: none;
+      border-radius: 22px; padding: 8px 16px;
+      font-family: inherit; font-weight: 600; font-size: 13px; cursor: pointer;
+      transition: opacity .2s;
+    }
+    .af-name-wrap button:hover { opacity: .85; }
+
+    /* Powered by */
+    .af-powered {
+      text-align: center; font-size: 10px;
+      color: hsla(0,0%,84%,0.45);
+      padding: 5px 0 8px; letter-spacing: .3px;
+      background: hsl(240,2%,13%);
+    }
+    .af-powered strong { color: hsl(45,100%,72%); }
+
+    @media (max-width: 440px) {
+      #af-window { width: calc(100vw - 20px); right: 10px; bottom: 88px; }
+      #af-fab { bottom: 18px; right: 18px; }
+    }
+  </style>
+
+  <!-- FAB button -->
+  <button id="af-fab" onclick="afToggle()" aria-label="Open Agentforce assistant">
+    <img src="./assets/images/robot.png" alt="AI Assistant" />
+    <span class="af-badge">1</span>
+  </button>
+
+  <!-- Chat window -->
+  <div id="af-window" role="dialog" aria-label="Agentforce Assistant">
+    <div class="af-header">
+      <div class="af-avatar">
+        <img src="./assets/images/robot.png" alt="AI Assistant" />
+      </div>
+      <div class="af-agent-info">
+        <div class="af-agent-name">Teja's AI Assistant</div>
+        <div class="af-agent-status"><span class="af-status-dot"></span>Online • Powered by Agentforce</div>
+      </div>
+      <span class="af-sf-badge">SF Agent</span>
+      <button class="af-close" onclick="afToggle()">✕</button>
+    </div>
+    <div id="af-messages"></div>
+    <div class="af-footer">
+      <input type="text" id="af-input" placeholder="Type a message…" onkeydown="if(event.key==='Enter')afSend()" />
+      <button id="af-send" onclick="afSend()">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+    <div class="af-powered">⚡ Powered by <strong>Salesforce Agentforce</strong></div>
+  </div>
+
+  <script>
+  (function () {
+    let afOpen = false, afName = '', afStage = 'greeting', afBadgeHidden = false;
+
+    const MENU = [
+      { label: '⚡ Learn LWC',      url: 'https://salesforceforward.blogspot.com/search/label/LWC' },
+      { label: '🧩 Learn Apex',     url: 'https://salesforceforward.blogspot.com/search/label/Apex' },
+      { label: '📝 Take Test',      tab: 'quiz' },
+      { label: '💬 Give Feedback',  tab: 'feedback' },
+      { label: '🌐 Learn JS',       url: 'https://javascript-decoded.netlify.app/' },
+    ];
+
+    window.afToggle = function () {
+      afOpen = !afOpen;
+      document.getElementById('af-window').classList.toggle('af-open', afOpen);
+      if (afOpen && !afBadgeHidden) {
+        document.querySelector('#af-fab .af-badge').style.display = 'none';
+        afBadgeHidden = true;
+        setTimeout(afGreet, 300);
+      }
+    };
+
+    function afGreet() {
+      if (document.getElementById('af-messages').children.length > 0) return;
+      afTypingThen(1000, () => {
+        afBotMsg('👋 Hi there! Welcome to <strong>Teja Adusumilli\'s</strong> portfolio.');
+        setTimeout(() => {
+          afBotMsg('I\'m your Agentforce AI assistant. May I know your good name, please? 😊');
+          setTimeout(afNameInput, 400);
+        }, 600);
+      });
+    }
+
+    function afNameInput() {
+      const wrap = document.createElement('div');
+      wrap.className = 'af-name-wrap';
+      wrap.innerHTML = `<input type="text" id="af-name-field" placeholder="Enter your name…"
+        onkeydown="if(event.key==='Enter')afSubmitName()" />
+        <button onclick="afSubmitName()">Go →</button>`;
+      document.getElementById('af-messages').appendChild(wrap);
+      requestAnimationFrame(() => wrap.style.opacity = '1');
+      afScroll();
+      setTimeout(() => document.getElementById('af-name-field')?.focus(), 100);
+    }
+
+    window.afSubmitName = function () {
+      const f = document.getElementById('af-name-field');
+      const v = (f?.value || '').trim();
+      if (!v) { f?.focus(); return; }
+      afName = v;
+      f.closest('.af-name-wrap').remove();
+      afUserMsg(v);
+      afStage = 'named';
+      afTypingThen(800, afShowMenu);
+    };
+
+    function afShowMenu() {
+      afBotMsg(`Hey <strong>${afEsc(afName)}</strong>! 👋 Great to have you here.<br/>How can I help you today?`);
+      setTimeout(afAddChips, 500);
+    }
+
+    function afAddChips() {
+      const row = document.createElement('div');
+      row.className = 'af-chips';
+      MENU.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'af-chip' + (c.url ? ' af-ext' : '');
+        btn.textContent = c.label;
+        btn.onclick = () => afChip(c);
+        row.appendChild(btn);
+      });
+      document.getElementById('af-messages').appendChild(row);
+      requestAnimationFrame(() => row.style.opacity = '1');
+      afScroll();
+    }
+
+    function afChip(c) {
+      afUserMsg(c.label);
+      document.querySelectorAll('.af-chips').forEach(r => r.remove());
+      afTypingThen(700, () => {
+        if (c.url) {
+          afBotMsg(`Great choice! Opening <strong>${afEsc(c.label)}</strong> for you… 🚀`);
+          setTimeout(() => window.open(c.url, '_blank'), 700);
+        } else if (c.tab) {
+          const labels = { quiz: 'Quiz 🎯', feedback: 'Feedback 💬' };
+          afBotMsg(`Navigating you to the <strong>${labels[c.tab]}</strong> section. ${c.tab === 'quiz' ? 'Good luck, ' + afEsc(afName) + '!' : 'Your thoughts matter!'}`);
+          setTimeout(() => afNavTab(c.tab), 800);
+        }
+        setTimeout(() => {
+          afBotMsg(`Anything else I can help you with, ${afEsc(afName)}? 😊`);
+          setTimeout(afAddChips, 400);
+        }, 1400);
+      });
+    }
+
+    function afNavTab(tab) {
+      // Find the matching [data-nav-link] button by text content
+      const btn = Array.from(document.querySelectorAll('[data-nav-link]'))
+        .find(el => el.textContent.trim().toLowerCase() === tab.toLowerCase());
+      if (btn) { btn.click(); return; }
+      // Fallback: scroll to section
+      const sec = document.getElementById(tab) || document.querySelector(`[data-page="${tab}"]`);
+      if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.afSend = function () {
+      const inp = document.getElementById('af-input');
+      const v = inp.value.trim();
+      if (!v) return;
+      inp.value = '';
+
+      if (afStage === 'greeting') {
+        afName = v; afUserMsg(v);
+        document.querySelectorAll('.af-name-wrap').forEach(e => e.remove());
+        afStage = 'named';
+        afTypingThen(800, afShowMenu);
+        return;
+      }
+
+      afUserMsg(v);
+      const lo = v.toLowerCase();
+      if (/lwc|lightning web|component/.test(lo)) {
+        afTypingThen(700, () => { afBotMsg('Redirecting to the <strong>LWC tutorials</strong> ⚡'); setTimeout(() => window.open('https://salesforceforward.blogspot.com/search/label/LWC','_blank'), 700); });
+      } else if (/apex/.test(lo)) {
+        afTypingThen(700, () => { afBotMsg('Opening <strong>Apex articles</strong> 🧩'); setTimeout(() => window.open('https://salesforceforward.blogspot.com/search/label/Apex','_blank'), 700); });
+      } else if (/test|quiz/.test(lo)) {
+        afTypingThen(700, () => { afBotMsg('Taking you to the <strong>Quiz</strong> section 🎯'); setTimeout(() => afNavTab('quiz'), 700); });
+      } else if (/feedback/.test(lo)) {
+        afTypingThen(700, () => { afBotMsg('Opening the <strong>Feedback</strong> section 💬'); setTimeout(() => afNavTab('feedback'), 700); });
+      } else if (/\bjs\b|javascript/.test(lo)) {
+        afTypingThen(700, () => { afBotMsg('Launching <strong>JavaScript Decoded</strong> 🌐'); setTimeout(() => window.open('https://javascript-decoded.netlify.app/','_blank'), 700); });
+      } else if (/menu|help|option/.test(lo)) {
+        afTypingThen(600, () => { afBotMsg(`Here are your options, ${afEsc(afName)} 👇`); setTimeout(afAddChips, 400); });
+      } else {
+        afTypingThen(700, () => { afBotMsg(`Hmm, I didn't quite catch that. Here's what I can help you with, ${afEsc(afName)} 👇`); setTimeout(afAddChips, 400); });
+      }
+    };
+
+    function afBotMsg(html) {
+      const row = document.createElement('div');
+      row.className = 'af-row af-bot';
+      row.innerHTML = `<div class="af-msg-avatar af-bot">SF</div><div class="af-bubble">${html}</div>`;
+      document.getElementById('af-messages').appendChild(row);
+      afScroll();
+    }
+
+    function afUserMsg(text) {
+      const init = (afName || text).charAt(0).toUpperCase();
+      const row = document.createElement('div');
+      row.className = 'af-row af-user';
+      row.innerHTML = `<div class="af-bubble">${afEsc(text)}</div><div class="af-msg-avatar af-user">${init}</div>`;
+      document.getElementById('af-messages').appendChild(row);
+      afScroll();
+    }
+
+    function afTypingThen(delay, cb) {
+      const row = document.createElement('div');
+      row.className = 'af-row af-bot'; row.id = 'af-typing';
+      row.innerHTML = `<div class="af-msg-avatar af-bot">SF</div><div class="af-typing"><span></span><span></span><span></span></div>`;
+      document.getElementById('af-messages').appendChild(row);
+      afScroll();
+      setTimeout(() => { row.remove(); cb(); }, delay);
+    }
+
+    function afScroll() {
+      const m = document.getElementById('af-messages');
+      setTimeout(() => m.scrollTop = m.scrollHeight, 50);
+    }
+
+    function afEsc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  })();
+  </script>
+  <!-- ── END AGENTFORCE CHAT WIDGET ───────────────────────────────────── -->
   <!--  quiz buttons cdn liberry https://uiverse.io/ -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script>
