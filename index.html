@@ -2575,8 +2575,7 @@ Case and work order to there field support team.
           // Step 4 — post verified supporter to Salesforce Feedback
           var comment = '☕ Coffee Supporter · ₹' + totalINR
             + (monthly ? ' · Monthly' : '')
-            + (message ? '\n\n"' + message + '"' : '')
-            + '\n\n— Payment ID: ' + response.razorpay_payment_id;
+            + (message ? ' "' + message + '"' : '');
 
           fetch('https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/FeedbackAPI/', {
             method : 'POST',
