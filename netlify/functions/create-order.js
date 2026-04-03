@@ -14,6 +14,11 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body' }) };
   }
 
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    console.error('[create-order] Missing env vars');
+    return { statusCode: 500, body: JSON.stringify({ error: 'Payment not configured' }) };
+  }
+
   const credentials = Buffer.from(
     process.env.RAZORPAY_KEY_ID + ':' + process.env.RAZORPAY_KEY_SECRET
   ).toString('base64');
