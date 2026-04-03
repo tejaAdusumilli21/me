@@ -2068,6 +2068,7 @@ Case and work order to there field support team.
       { label: '📝 Take Test',      tab: 'quiz' },
       { label: '💬 Give Feedback',  tab: 'feedback' },
       { label: '🌐 Learn JS',       url: 'https://javascript-decoded.netlify.app/' },
+      { label: '☕ Buy Teja a Coffee', action: 'coffee' },
     ];
 
     window.afToggle = function () {
@@ -2145,6 +2146,9 @@ Case and work order to there field support team.
           const labels = { quiz: 'Quiz 🎯', feedback: 'Feedback 💬' };
           afBotMsg(`Navigating you to the <strong>${labels[c.tab]}</strong> section. ${c.tab === 'quiz' ? 'Good luck, ' + afEsc(afName) + '!' : 'Your thoughts matter!'}`);
           setTimeout(() => afNavTab(c.tab), 800);
+        } else if (c.action === 'coffee') {
+          afBotMsg(`That's so kind of you, ${afEsc(afName)}! ☕ Opening the coffee widget...`);
+          setTimeout(() => window.openCoffeeModal && window.openCoffeeModal(), 700);
         }
         setTimeout(() => {
           afBotMsg(`Anything else I can help you with, ${afEsc(afName)}? 😊`);
@@ -2189,6 +2193,8 @@ Case and work order to there field support team.
         afTypingThen(700, () => { afBotMsg('Opening the <strong>Feedback</strong> section 💬'); setTimeout(() => afNavTab('feedback'), 700); });
       } else if (/\bjs\b|javascript/.test(lo)) {
         afTypingThen(700, () => { afBotMsg('Launching <strong>JavaScript Decoded</strong> 🌐'); setTimeout(() => window.open('https://javascript-decoded.netlify.app/','_blank'), 700); });
+      } else if (/coffee|support|donate/.test(lo)) {
+        afTypingThen(700, () => { afBotMsg(`That's so kind! ☕ Opening the coffee widget for you...`); setTimeout(() => window.openCoffeeModal && window.openCoffeeModal(), 700); });
       } else if (/menu|help|option/.test(lo)) {
         afTypingThen(600, () => { afBotMsg(`Here are your options, ${afEsc(afName)} 👇`); setTimeout(afAddChips, 400); });
       } else {
@@ -2230,9 +2236,382 @@ Case and work order to there field support team.
     function afEsc(s) {
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
+
+    window.afBotThankYou = function (name) {
+      if (!afOpen) { afToggle(); }
+      setTimeout(() => {
+        afBotMsg(`☕ Thank you${name ? ', <strong>' + afEsc(name) + '</strong>' : ''}! Your coffee support means the world to Teja! 🙏`);
+      }, 400);
+    };
   })();
   </script>
   <!-- ── END AGENTFORCE CHAT WIDGET ───────────────────────────────────── -->
+
+  <!-- ── BUY ME A COFFEE WIDGET ───────────────────────────────────────── -->
+  <style>
+    /* Overlay */
+    #coffee-overlay {
+      position: fixed; inset: 0;
+      background: hsla(0,0%,0%,0.7);
+      z-index: 10001;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+    }
+    #coffee-overlay.coffee-open { opacity: 1; pointer-events: all; }
+
+    /* Modal card — matches portfolio dark theme */
+    #coffee-modal {
+      background: hsl(240,2%,13%);
+      border: 1px solid hsl(0,0%,22%);
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      width: 100%; max-width: 400px;
+      margin: 16px;
+      position: relative;
+      transform: scale(0.88) translateY(12px);
+      transition: transform .32s cubic-bezier(.34,1.56,.64,1);
+      font-family: 'Poppins', sans-serif;
+      box-shadow: -4px 8px 24px hsla(0,0%,0%,0.45);
+    }
+    #coffee-overlay.coffee-open #coffee-modal { transform: scale(1) translateY(0); }
+
+    .coffee-close-btn {
+      position: absolute; top: 14px; right: 14px;
+      background: none; border: none; cursor: pointer;
+      font-size: 18px; color: hsl(0,0%,84%); line-height: 1;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      transition: background .18s, color .18s;
+    }
+    .coffee-close-btn:hover { background: hsla(0,0%,100%,0.08); color: hsl(45,100%,72%); }
+
+    .coffee-title {
+      font-size: 16px; font-weight: 600;
+      background: var(--text-gradient-yellow);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0 0 18px;
+      padding-right: 32px; line-height: 1.4;
+      display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+    }
+    .coffee-title-help {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; flex-shrink: 0;
+      border: 1.5px solid hsl(0,0%,40%); border-radius: 50%;
+      font-size: 11px;
+      color: hsl(0,0%,60%); cursor: default;
+      -webkit-text-fill-color: hsl(0,0%,60%);
+    }
+
+    /* Quantity row */
+    .coffee-qty-row {
+      background: hsl(240,2%,12%);
+      border: 1px solid hsl(0,0%,22%);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .coffee-cup-emoji { font-size: 30px; line-height: 1; }
+    .coffee-x { color: hsl(0,0%,60%); font-size: 15px; font-weight: 500; }
+    .coffee-qty-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .coffee-qty-btn {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1.5px solid hsla(45,100%,72%,0.35);
+      background: transparent;
+      color: hsl(45,100%,72%);
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s;
+      font-family: inherit;
+    }
+    .coffee-qty-btn.active {
+      background: var(--bg-gradient-yellow-1), hsl(45,100%,72%);
+      border-color: hsl(45,100%,72%);
+      color: hsl(240,2%,13%);
+    }
+    .coffee-qty-btn:hover:not(.active) {
+      border-color: hsl(45,100%,72%);
+      background: hsla(45,100%,72%,0.1);
+    }
+
+    /* Custom amount row */
+    .coffee-amount-row {
+      display: flex; align-items: center;
+      background: hsl(0,0%,22%);
+      border: 1.5px solid hsl(0,0%,25%);
+      border-radius: 12px;
+      padding: 0 15px; margin-bottom: 11px;
+      transition: border-color .18s;
+    }
+    .coffee-amount-row:focus-within { border-color: hsl(45,100%,72%); }
+    .coffee-amount-symbol {
+      font-size: 16px; font-weight: 600;
+      color: hsl(45,100%,72%); flex-shrink: 0;
+    }
+    .coffee-amount-input {
+      flex: 1; border: none; outline: none; background: transparent;
+      padding: 13px 8px; font-family: inherit; font-size: 15px;
+      font-weight: 600; color: hsl(0,0%,84%);
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+    .coffee-amount-input::-webkit-outer-spin-button,
+    .coffee-amount-input::-webkit-inner-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
+    .coffee-amount-input::placeholder { color: hsla(0,0%,84%,0.35); font-weight: 400; }
+
+    /* Inputs */
+    .coffee-field {
+      width: 100%; box-sizing: border-box;
+      background: hsl(0,0%,22%);
+      border: 1.5px solid hsl(0,0%,25%);
+      outline: none; border-radius: 12px;
+      padding: 13px 15px;
+      font-family: inherit; font-size: 13px;
+      color: hsl(0,0%,84%);
+      margin-bottom: 11px;
+      transition: border-color .18s;
+    }
+    .coffee-field:focus { border-color: hsl(45,100%,72%); }
+    .coffee-field::placeholder { color: hsla(0,0%,84%,0.35); }
+    .coffee-textarea { resize: none; height: 96px; display: block; }
+
+    /* Monthly */
+    .coffee-monthly-row {
+      display: flex; align-items: center; gap: 9px;
+      margin-bottom: 16px; cursor: pointer;
+    }
+    .coffee-monthly-row input[type="checkbox"] {
+      width: 18px; height: 18px; border-radius: 4px;
+      cursor: pointer; accent-color: hsl(45,100%,72%); flex-shrink: 0;
+    }
+    .coffee-monthly-label {
+      font-size: 13px; color: hsl(0,0%,84%);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .coffee-monthly-info {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px;
+      border: 1.5px solid hsl(0,0%,40%); border-radius: 50%;
+      font-size: 10px; color: hsl(0,0%,60%); cursor: default;
+    }
+
+    /* Support button */
+    .coffee-support-btn {
+      width: 100%;
+      background: var(--bg-gradient-yellow-1), hsl(45,100%,72%);
+      color: hsl(240,2%,13%);
+      border: none; border-radius: 30px;
+      padding: 14px;
+      font-family: inherit; font-size: 15px; font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .coffee-support-btn:hover { opacity: .88; transform: translateY(-1px); }
+    .coffee-support-btn:active { transform: translateY(0); }
+    .coffee-support-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    @media (max-width: 440px) {
+      #coffee-modal { padding: 22px 16px 20px; }
+      .coffee-qty-btn { width: 38px; height: 38px; font-size: 13px; }
+    }
+  </style>
+
+  <!-- Coffee modal -->
+  <div id="coffee-overlay" onclick="coffeeOverlayClick(event)" role="dialog" aria-modal="true" aria-label="Buy Teja a Coffee">
+    <div id="coffee-modal">
+      <button class="coffee-close-btn" onclick="closeCoffeeModal()" aria-label="Close">✕</button>
+
+      <p class="coffee-title">
+        Buy teja adusumilli a coffee
+        <span class="coffee-title-help" title="Support Teja's open-source work with a coffee!">?</span>
+      </p>
+
+      <div class="coffee-qty-row">
+        <span class="coffee-cup-emoji">☕</span>
+        <span class="coffee-x">×</span>
+        <div class="coffee-qty-btns">
+          <button class="coffee-qty-btn active" data-qty="1" onclick="setCoffeeQty(1)">1</button>
+          <button class="coffee-qty-btn" data-qty="3" onclick="setCoffeeQty(3)">3</button>
+          <button class="coffee-qty-btn" data-qty="5" onclick="setCoffeeQty(5)">5</button>
+          <button class="coffee-qty-btn" data-qty="10" onclick="setCoffeeQty(10)">10</button>
+        </div>
+      </div>
+
+      <div class="coffee-amount-row">
+        <span class="coffee-amount-symbol">₹</span>
+        <input type="number" id="coffee-amount" class="coffee-amount-input" min="1" placeholder="Enter amount" value="99" oninput="onCoffeeAmountInput()" />
+      </div>
+
+      <input type="text" id="coffee-name" class="coffee-field" placeholder="Name or @yoursocial" autocomplete="off" />
+      <textarea id="coffee-message" class="coffee-field coffee-textarea" placeholder="Say something nice..."></textarea>
+
+      <label class="coffee-monthly-row">
+        <input type="checkbox" id="coffee-monthly-cb" />
+        <span class="coffee-monthly-label">
+          Make this monthly
+          <span class="coffee-monthly-info" title="Become a monthly supporter">?</span>
+        </span>
+      </label>
+
+      <button class="coffee-support-btn" id="coffee-btn" onclick="doSupportCoffee()">Support $5</button>
+    </div>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+  (function () {
+    const COFFEE_PRICE_INR = 99; // ₹99 per coffee
+
+    function getCoffeeAmount() {
+      return Math.max(1, parseInt(document.getElementById('coffee-amount').value) || COFFEE_PRICE_INR);
+    }
+
+    function updateSupportBtn() {
+      document.getElementById('coffee-btn').textContent = 'Support ₹' + getCoffeeAmount();
+    }
+
+    window.openCoffeeModal = function () {
+      document.getElementById('coffee-overlay').classList.add('coffee-open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => document.getElementById('coffee-name').focus(), 200);
+    };
+
+    window.closeCoffeeModal = function () {
+      document.getElementById('coffee-overlay').classList.remove('coffee-open');
+      document.body.style.overflow = '';
+    };
+
+    window.coffeeOverlayClick = function (e) {
+      if (e.target === document.getElementById('coffee-overlay')) closeCoffeeModal();
+    };
+
+    window.setCoffeeQty = function (qty) {
+      document.querySelectorAll('.coffee-qty-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.qty) === qty);
+      });
+      document.getElementById('coffee-amount').value = qty * COFFEE_PRICE_INR;
+      updateSupportBtn();
+    };
+
+    window.onCoffeeAmountInput = function () {
+      // Deselect all qty buttons when user types a custom amount
+      document.querySelectorAll('.coffee-qty-btn').forEach(btn => btn.classList.remove('active'));
+      updateSupportBtn();
+    };
+
+    // Init button label
+    updateSupportBtn();
+
+    window.doSupportCoffee = async function () {
+      const name     = (document.getElementById('coffee-name').value    || '').trim();
+      const message  = (document.getElementById('coffee-message').value || '').trim();
+      const monthly  = document.getElementById('coffee-monthly-cb').checked;
+      const totalINR = getCoffeeAmount();
+      if (totalINR < 1) { document.getElementById('coffee-amount').focus(); return; }
+
+      // Disable button while creating order
+      const btn = document.getElementById('coffee-btn');
+      btn.disabled = true;
+      btn.textContent = 'Please wait…';
+
+      let order_id;
+      try {
+        // Step 1 — create order server-side (secret never leaves the server)
+        const orderRes = await fetch('/.netlify/functions/create-order', {
+          method : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body   : JSON.stringify({ amount: totalINR }),
+        });
+        const orderData = await orderRes.json();
+        if (!orderRes.ok) throw new Error(orderData.error || 'Order creation failed');
+        order_id = orderData.order_id;
+      } catch (err) {
+        console.error('[Coffee] create-order failed:', err);
+        btn.disabled = false;
+        updateSupportBtn();
+        alert('Could not initiate payment. Please try again.');
+        return;
+      }
+
+      // Step 2 — open Razorpay checkout with the server-issued order_id
+      const options = {
+        key        : 'rzp_test_SZ324dEzRaxP8l',
+        order_id   : order_id,
+        amount     : totalINR * 100,
+        currency   : 'INR',
+        name       : 'Teja Adusumilli',
+        description: '☕ Coffee Support' + (monthly ? ' (Monthly)' : ''),
+        image      : 'https://tejaadusumilli.netlify.app/assets/images/my-avatar.png',
+        prefill    : { name: name },
+        notes      : { message: message, monthly: monthly ? 'yes' : 'no' },
+        theme      : { color: '#5271ff' },
+        handler: async function (response) {
+          // Step 3 — verify signature server-side
+          try {
+            const verifyRes = await fetch('/.netlify/functions/verify-payment', {
+              method : 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body   : JSON.stringify({
+                razorpay_order_id  : response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature : response.razorpay_signature,
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyData.verified) throw new Error('Signature invalid');
+          } catch (err) {
+            console.error('[Coffee] verify-payment failed:', err);
+            alert('Payment could not be verified. Please contact Teja with your payment ID: ' + response.razorpay_payment_id);
+            return;
+          }
+
+          closeCoffeeModal();
+
+          // Step 4 — post verified supporter to Salesforce Feedback
+          var comment = '☕ Coffee Supporter · ₹' + totalINR
+            + (monthly ? ' · Monthly' : '')
+            + (message ? '\n\n"' + message + '"' : '')
+            + '\n\n— Payment ID: ' + response.razorpay_payment_id;
+
+          fetch('https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/FeedbackAPI/', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({ name: name || 'Anonymous Supporter', email: '', phone: '', comments: comment }),
+          })
+          .then(function () {
+            var feedbackNav = Array.from(document.querySelectorAll('[data-nav-link]'))
+              .find(function (el) { return el.textContent.trim().toLowerCase() === 'feedback'; });
+            if (feedbackNav) feedbackNav.click();
+            if (typeof loadFeedbackData === 'function') setTimeout(loadFeedbackData, 600);
+          })
+          .catch(function (err) { console.warn('[Coffee] Feedback post failed:', err); });
+
+          if (typeof afBotThankYou === 'function') afBotThankYou(name);
+        },
+        modal: {
+          ondismiss: function () {
+            btn.disabled = false;
+            updateSupportBtn();
+          }
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    };
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && document.getElementById('coffee-overlay').classList.contains('coffee-open')) closeCoffeeModal();
+    });
+  })();
+  </script>
+  <!-- ── END BUY ME A COFFEE WIDGET ────────────────────────────────────── -->
   <!--  quiz buttons cdn liberry https://uiverse.io/ -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script>
