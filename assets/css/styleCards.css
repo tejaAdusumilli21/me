@@ -158,10 +158,8 @@
 
 .project-cards {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 28px;
   padding: 30px 16px;
   z-index: 1;
@@ -254,8 +252,7 @@
 
 /* Wide split card (e.g. Mini Note) */
 .pcard-wide {
-  width: 560px;
-  max-width: 100%;
+  width: 100%;
   cursor: pointer;
 }
 
@@ -296,7 +293,10 @@
   filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.45));
 }
 
-@media (max-width: 480px) {
+@media (max-width: 680px) {
+  .project-cards {
+    grid-template-columns: 1fr;
+  }
   .pcard-wide .pcard-inner {
     flex-direction: column;
     text-align: center;

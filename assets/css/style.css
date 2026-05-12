@@ -525,21 +525,10 @@ main {
 }
 
 .service-item {
-  position: relative;
-  background: var(--border-gradient-onyx);
+  background: linear-gradient(to bottom right, hsla(240, 1%, 18%, 0.251) 0%, hsla(240, 2%, 11%, 0) 100%), hsl(240, 2%, 13%);
   padding: 20px;
   border-radius: 14px;
-  box-shadow: var(--shadow-2);
-  z-index: 1;
-}
-
-.service-item::before {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  background: var(--bg-gradient-jet);
-  border-radius: inherit;
-  z-index: -1;
+  box-shadow: 0 16px 30px hsla(0, 0%, 0%, 0.25), 0 0 0 1px hsl(0, 0%, 22%);
 }
 
 .service-icon-box { margin-bottom: 10px; }
