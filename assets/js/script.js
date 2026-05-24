@@ -1,5 +1,31 @@
 "use strict";
 
+// Randomly cycle sidebar avatar every 5 seconds
+(function () {
+  const avatarImages = [
+    "./assets/images/men/avatar-1.png",
+    "./assets/images/men/avator- (4).png",
+    "./assets/images/men/avator- (5).png",
+    "./assets/images/men/avator- (6).png",
+    "./assets/images/men/avator- (7).png",
+    "./assets/images/men/avator- (8).png",
+    "./assets/images/men/avator- (9).png",
+    "./assets/images/men/avator-7.png",
+    "./assets/images/men/my-avatar.png",
+  ];
+  let lastIndex = -1;
+  function setRandomAvatar() {
+    const avatarImg = document.querySelector(".avatar-box img");
+    if (!avatarImg) return;
+    let index;
+    do { index = Math.floor(Math.random() * avatarImages.length); } while (index === lastIndex);
+    lastIndex = index;
+    avatarImg.src = avatarImages[index];
+  }
+  setRandomAvatar();
+  setInterval(setRandomAvatar, 5000);
+})();
+
 // element toggle function
 const elementToggleFunc = function (elem) {
   elem.classList.toggle("active");
