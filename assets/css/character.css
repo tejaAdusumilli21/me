@@ -284,7 +284,9 @@ body {
   font-size: 13px;
   color: var(--text-gray);
   transition: var(--transition);
-  cursor: default;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
 }
 .learning-pill:hover {
   border-color: var(--gold);
@@ -329,7 +331,6 @@ body {
   #POPUP MODAL (shared)
 \*-----------------------------------*/
 
-.learning-pill { cursor: pointer; position: relative; }
 .learning-pill .pill-hint {
   position: absolute; bottom: calc(100% + 6px); left: 50%;
   transform: translateX(-50%);

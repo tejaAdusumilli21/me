@@ -405,7 +405,7 @@ const TOPIC_DATA = {
     body: "<strong>Dreamforce</strong> is the world's largest software conference, hosted annually by Salesforce in San Francisco. It features hundreds of product deep-dives, hands-on labs, certification prep sessions, and community networking. Even if you can't attend in person, Salesforce+ streams most sessions free online. Attending (virtually or physically) keeps you 6–12 months ahead of what's commonly known in the market.",
     tips: ["Salesforce+ streams Dreamforce content live and on-demand — free to watch","Product announcements at Dreamforce preview features coming in the next 1–2 releases","Lab sessions are hands-on — great for trying new features before they're generally available","Community keynotes and Trailblazer stories are as valuable as the product sessions"],
     link: "https://www.salesforce.com/dreamforce/"
-  }
+  },
 
   /* ══════════════════════════════════════════
      RUTH — Admin / Security / Data Management
