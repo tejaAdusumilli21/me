@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Codey — Developer Bear | Teja Adusumilli</title>
+  <link rel="stylesheet" href="./assets/css/character.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon" />
+</head>
+<body>
+  <header class="char-topbar">
+    <button class="char-back-btn" onclick="window.history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+    <p class="char-topbar-title">Salesforce Crew / <span>Codey</span></p>
+  </header>
+  <section class="char-hero">
+    <div class="char-hero-img">
+      <img src="./assets/images/sf-characters/codey.png" alt="Codey - Salesforce mascot" />
+    </div>
+    <div class="char-hero-text">
+      <span class="char-tag">Salesforce Character #2</span>
+      <h1 class="char-hero-name">Codey</h1>
+      <p class="char-hero-role">Developer · Builder · Apex Wizard</p>
+      <p class="char-hero-bio">Codey the Bear is the developer mascot of Salesforce — always seen with a laptop, tools, or code blocks. Codey represents every Apex developer, API builder, and LWC engineer in the ecosystem. This is my mascot. Codey is what I do every day.</p>
+    </div>
+  </section>
+  <main class="char-content">
+    <div class="char-section">
+      <div class="char-section-header">
+        <div class="char-section-icon">🔍</div>
+        <div>
+          <h2 class="char-section-title">Topics & Problems Codey Tackles</h2>
+          <p class="char-section-subtitle">The hard developer problems that live in Codey's domain</p>
+        </div>
+      </div>
+      <div class="topic-grid">
+        <div class="topic-card">
+          <p class="topic-card-num">01</p>
+          <h3 class="topic-card-title">Apex Business Logic</h3>
+          <p class="topic-card-desc">Complex business rules that can't be solved declaratively. Trigger frameworks, service layers, and handler classes that process thousands of records without hitting governor limits.</p>
+        </div>
+        <div class="topic-card">
+          <p class="topic-card-num">02</p>
+          <h3 class="topic-card-title">Lightning Web Components (LWC)</h3>
+          <p class="topic-card-desc">Building dynamic, reusable UI components — custom data tables, modals, search bars, wizards — that feel native inside Salesforce but are fully custom for the business.</p>
+        </div>
+        <div class="topic-card">
+          <p class="topic-card-num">03</p>
+          <h3 class="topic-card-title">Governor Limit Violations</h3>
+          <p class="topic-card-desc">SOQL inside loops, DML in triggers, heap size blowouts — debugging and fixing code that works fine in dev but breaks in production with real data volumes.</p>
+        </div>
+        <div class="topic-card">
+          <p class="topic-card-num">04</p>
+          <h3 class="topic-card-title">Async Apex (Batch, Queueable, Future)</h3>
+          <p class="topic-card-desc">Processing large datasets, chaining jobs, scheduling nightly runs. Choosing the right async pattern for the right problem.</p>
+        </div>
+        <div class="topic-card">
+          <p class="topic-card-num">05</p>
+          <h3 class="topic-card-title">REST & SOAP API Integration</h3>
+          <p class="topic-card-desc">Calling external systems from Apex (callouts), or exposing Salesforce data via custom REST APIs. Authentication, error handling, retry logic.</p>
+        </div>
+        <div class="topic-card">
+          <p class="topic-card-num">06</p>
+          <h3 class="topic-card-title">Test Coverage & Quality</h3>
+          <p class="topic-card-desc">Writing test classes that actually test logic — not just pump coverage numbers. Mocking callouts, using Test.startTest(), covering bulk scenarios and negative paths.</p>
+        </div>
+        <div class="topic-card">
+          <p class="topic-card-num">07</p>
+          <h3 class="topic-card-title">Trigger Frameworks</h3>
+          <p class="topic-card-desc">Preventing trigger hell — one trigger per object, handler classes, preventing recursive firing, keeping business logic out of the trigger itself.</p>
+        </div>
+        <div class="topic-card">
+          <p class="topic-card-num">08</p>
+          <h3 class="topic-card-title">SOQL & SOSL Optimization</h3>
+          <p class="topic-card-desc">Selective queries, index usage, relationship queries, aggregate functions, and avoiding full table scans on large objects with millions of records.</p>
+        </div>
+      </div>
+    </div>
+    <div class="char-section">
+      <div class="char-section-header">
+        <div class="char-section-icon">✅</div>
+        <div>
+          <h2 class="char-section-title">Solutions I Deliver (Codey's Way)</h2>
+          <p class="char-section-subtitle">Real development work I've built as a Salesforce Developer</p>
+        </div>
+      </div>
+      <div class="solution-list">
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <p class="solution-title">Custom Apex Trigger Frameworks</p>
+            <p class="solution-desc">Built trigger handler frameworks across multiple orgs — ensuring one trigger per object, recursive prevention, and clean separation between trigger context and business logic.</p>
+          </div>
+        </div>
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <p class="solution-title">LWC Components for Complex UI</p>
+            <p class="solution-desc">Built custom LWC components: dynamic multi-step wizards, interactive data tables with inline editing, custom search with typeahead, and progress trackers — replacing Visualforce pages with modern components.</p>
+          </div>
+        </div>
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <p class="solution-title">Batch Apex for Data Migration</p>
+            <p class="solution-desc">Processed 500K+ records using Batch Apex with proper start/execute/finish methods, error logging, and email notifications — migrating legacy data into Salesforce without hitting limits.</p>
+          </div>
+        </div>
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <p class="solution-title">REST API Callout with Retry Logic</p>
+            <p class="solution-desc">Built callout classes hitting external REST APIs (with Named Credentials for auth) including timeout handling, HTTP status code branching, and Queueable retry chains for transient failures.</p>
+          </div>
+        </div>
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <p class="solution-title">Test Class Coverage to 95%+</p>
+            <p class="solution-desc">Wrote comprehensive test classes using TestDataFactory patterns, HttpCalloutMock for API tests, and @testSetup blocks — achieving 95%+ coverage that actually validates logic, not just line execution.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="char-section">
+      <div class="char-section-header">
+        <div class="char-section-icon">🎓</div>
+        <div>
+          <h2 class="char-section-title">Things I've Learned from Codey</h2>
+          <p class="char-section-subtitle">Click any topic to learn more + open the Trailhead module</p>
+        </div>
+      </div>
+      <div class="learnings-grid">
+        <span class="learning-pill" data-topic="apex-classes">Apex Classes & Triggers<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="lwc">Lightning Web Components<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="aura">Aura Components<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="visualforce">Visualforce Pages<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="soql-sosl">SOQL & SOSL<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="batch-apex">Batch Apex<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="queueable-apex">Queueable Apex<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="schedulable-apex">Schedulable Apex<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="future-methods">Future Methods<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="rest-api-callouts">REST API Callouts<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="soap-integration">SOAP Integration<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="named-credentials">Named Credentials<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="custom-metadata">Custom Metadata Types<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="test-classes">Test Classes & Mocking<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="governor-limits">Governor Limits<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="trigger-frameworks">Trigger Frameworks<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="pd1-cert">Platform Developer I & II<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="js-cert">JavaScript Developer I Cert<span class="pill-hint">click to explore</span></span>
+        <span class="learning-pill" data-topic="sfdx-cli">SFDX CLI & VS Code<span class="pill-hint">click to explore</span></span>
+      </div>
+    </div>
+    <div class="char-xp-banner">
+      <div class="char-xp-icon">🐻</div>
+      <div>
+        <p class="char-xp-title">My Codey Journey</p>
+        <p class="char-xp-text">Codey is me. As a Salesforce Developer, I live in the world Codey represents — Apex, LWC, APIs, and test classes. I hold Platform Developer I & II certifications and the JavaScript Developer I credential. My daily work involves building custom solutions that the platform's declarative tools can't handle.</p>
+      </div>
+    </div>
+  </main>
+  <!-- POPUP MODAL -->
+  <div class="topic-modal-backdrop" id="topicModal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="topic-modal" tabindex="-1">
+      <button class="topic-modal-close" id="modalCloseX" aria-label="Close">✕</button>
+      <div class="topic-modal-tag" id="modal-tag"></div>
+      <h2 class="topic-modal-title" id="modal-title"></h2>
+      <p class="topic-modal-body" id="modal-body"></p>
+      <div class="topic-modal-tips">
+        <p class="topic-modal-tips-title">Key things to know</p>
+        <ul id="modal-tips"></ul>
+      </div>
+      <div class="topic-modal-actions">
+        <a class="topic-modal-link" id="modal-link" href="#" target="_blank" rel="noopener">
+          Open on Trailhead
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+        <button class="topic-modal-close-btn" id="modalCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/js/character-popup.js"></script>
+</body>
+</html>

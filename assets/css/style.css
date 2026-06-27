@@ -2164,3 +2164,345 @@ textarea.form-input::-webkit-resizer { display: none; }
 .error {
   color: var(--orange-yellow-crayola);
 }
+
+
+/*-----------------------------------*\
+  #MODAL UTILITY CLASSES
+\*-----------------------------------*/
+
+.modal-meta-text {
+  color: var(--light-gray-70);
+  margin-bottom: 8px;
+}
+
+.modal-date-text {
+  color: var(--light-gray-70);
+  font-size: var(--fs-7);
+}
+
+.modal-suggestion-title {
+  color: var(--orange-yellow-crayola);
+  margin-bottom: 10px;
+}
+
+.modal-comment-text {
+  line-height: 1.8;
+}
+
+.quiz-root-wrap {
+  max-width: 1000px;
+  margin: 20px auto;
+}
+
+
+/*-----------------------------------*\
+  #SALESFORCE MASCOTS
+\*-----------------------------------*/
+
+.sf-mascots {
+  margin-block-start: 30px;
+}
+
+.sf-mascots-title {
+  color: var(--white-2);
+  margin-block-end: 6px;
+}
+
+.sf-mascots-subtitle {
+  color: var(--light-gray-70);
+  font-size: var(--fs-6);
+  margin-block-end: 24px;
+}
+
+.sf-mascots-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.sf-mascot-card {
+  background: var(--bg-gradient-jet);
+  border: 1px solid var(--jet);
+  border-radius: 14px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: var(--transition-1);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.sf-mascot-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bg-gradient-yellow-2);
+  opacity: 0;
+  transition: opacity var(--transition-1);
+  border-radius: 14px;
+}
+
+.sf-mascot-card:hover::before {
+  opacity: 1;
+}
+
+.sf-mascot-card:hover {
+  border-color: var(--orange-yellow-crayola);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2);
+}
+
+.sf-mascot-img-wrap {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: hsla(45, 100%, 72%, 0.1);
+  border: 2px solid hsla(45, 100%, 72%, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block-end: 14px;
+  overflow: hidden;
+  position: relative;
+  transition: var(--transition-1);
+}
+
+.sf-mascot-card:hover .sf-mascot-img-wrap {
+  border-color: var(--orange-yellow-crayola);
+  background: hsla(45, 100%, 72%, 0.15);
+}
+
+.sf-mascot-img-wrap img {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  transition: transform var(--transition-2);
+}
+
+.sf-mascot-card:hover .sf-mascot-img-wrap img {
+  transform: scale(1.08);
+}
+
+.sf-mascot-info {
+  position: relative;
+  z-index: 1;
+}
+
+.sf-mascot-name {
+  font-size: var(--fs-5);
+  font-weight: var(--fw-600);
+  color: var(--white-1);
+  margin-block-end: 4px;
+}
+
+.sf-mascot-role {
+  font-size: var(--fs-7);
+  font-weight: var(--fw-500);
+  color: var(--orange-yellow-crayola);
+  margin-block-end: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sf-mascot-desc {
+  font-size: var(--fs-7);
+  color: var(--light-gray-70);
+  line-height: 1.6;
+}
+
+
+/*-----------------------------------*\
+  #RESPONSIVE MASCOTS
+\*-----------------------------------*/
+
+@media (max-width: 580px) {
+  .sf-mascots-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .sf-mascot-img-wrap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .sf-mascot-img-wrap img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 360px) {
+  .sf-mascots-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/*-----------------------------------*\
+  #QUIZ OPTION CARDS
+\*-----------------------------------*/
+
+.quiz-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-block: 30px;
+}
+
+.quiz-option-card {
+  background: var(--bg-gradient-jet);
+  border: 1px solid var(--jet);
+  border-radius: 16px;
+  padding: 28px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: var(--transition-1);
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-option-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bg-gradient-yellow-2);
+  opacity: 0;
+  transition: opacity var(--transition-1);
+  border-radius: 16px;
+}
+
+.quiz-option-card:hover {
+  border-color: var(--orange-yellow-crayola);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
+}
+
+.quiz-option-card:hover::before {
+  opacity: 1;
+}
+
+.quiz-option-card--mini {
+  border-color: hsla(45, 100%, 72%, 0.25);
+}
+
+.quiz-option-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: hsla(45, 100%, 72%, 0.12);
+  border: 1px solid hsla(45, 100%, 72%, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.quiz-option-icon ion-icon {
+  font-size: 22px;
+  color: var(--orange-yellow-crayola);
+}
+
+.quiz-option-body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.quiz-option-title {
+  font-size: var(--fs-4);
+  font-weight: var(--fw-600);
+  color: var(--white-1);
+  margin-block-end: 8px;
+}
+
+.quiz-option-desc {
+  font-size: var(--fs-7);
+  color: var(--light-gray-70);
+  line-height: 1.6;
+  margin-block-end: 14px;
+}
+
+.quiz-option-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quiz-option-meta li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-8);
+  color: var(--light-gray);
+}
+
+.quiz-option-meta ion-icon {
+  font-size: 14px;
+  color: var(--vegas-gold);
+  flex-shrink: 0;
+}
+
+.quiz-start-btn {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  background: var(--bg-gradient-yellow-1);
+  border: 1px solid var(--orange-yellow-crayola);
+  color: var(--smoky-black);
+  font-size: var(--fs-6);
+  font-weight: var(--fw-600);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition-1);
+  width: 100%;
+}
+
+.quiz-start-btn:hover {
+  background: var(--orange-yellow-crayola);
+  box-shadow: 0 4px 15px hsla(45, 100%, 72%, 0.3);
+}
+
+.quiz-start-btn ion-icon {
+  font-size: 16px;
+  transition: transform var(--transition-1);
+}
+
+.quiz-start-btn:hover ion-icon {
+  transform: translateX(3px);
+}
+
+@media (max-width: 680px) {
+  .quiz-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sf-mascot-card--link {
+  cursor: pointer;
+}
+.sf-mascot-card--link::after {
+  content: '→';
+  position: absolute;
+  bottom: 14px;
+  right: 16px;
+  font-size: 14px;
+  color: var(--vegas-gold);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: var(--transition-1);
+  z-index: 1;
+}
+.sf-mascot-card--link:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}

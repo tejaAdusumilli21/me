@@ -202,7 +202,6 @@ document.addEventListener("DOMContentLoaded", function () {
       };
       
       try {
-        console.log('[Feedback] Submitting to Salesforce:', data);
         const response = await fetch(FEEDBACK_API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -211,7 +210,6 @@ document.addEventListener("DOMContentLoaded", function () {
         
         if (response.ok) {
           const result = await response.json();
-          console.log('[Feedback] Success:', result);
           showToast('Feedback submitted successfully!');
           e.target.reset();
           // Reload feedback list after submission
@@ -243,7 +241,6 @@ async function loadFeedbackData() {
   container.innerHTML = '<div class="loading">Loading feedback...</div>';
 
   try {
-    console.log('[Feedback] Fetching from Salesforce...');
     const response = await fetch(FEEDBACK_API_URL, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -254,7 +251,6 @@ async function loadFeedbackData() {
     }
 
     const feedbacks = await response.json();
-    console.log('[Feedback] Loaded:', feedbacks);
 
     if (!Array.isArray(feedbacks) || feedbacks.length === 0) {
       container.innerHTML = '<div class="no-feedback">No feedback available yet.</div>';
@@ -463,8 +459,6 @@ async function postQuizAttemptToSalesforce(result = {}) {
       }));
     }
 
-    console.log("[postQuizAttemptToSalesforce] Payload:", payload);
-
     const response = await fetch(QUIZ_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -478,7 +472,6 @@ async function postQuizAttemptToSalesforce(result = {}) {
     }
 
     const responseData = await response.json();
-    console.log("[postQuizAttemptToSalesforce] Success:", responseData);
     return responseData;
   } catch (err) {
     console.error("[postQuizAttemptToSalesforce] Error:", err);
