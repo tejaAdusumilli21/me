@@ -454,6 +454,18 @@ function setupPretestModal() {
   const acceptCheck = document.getElementById('accept-terms');
   const modalCloseButtons = modal ? modal.querySelectorAll('[data-action="close"], .quiz-modal-close') : [];
 
+  // Detect when modal is opened via external onclick (new quiz card button)
+  if (modal) {
+    const observer = new MutationObserver(() => {
+      if (modal.style.display === 'flex') {
+        if (nameInput) { nameInput.value = ''; nameInput.focus(); }
+        if (acceptCheck) acceptCheck.checked = false;
+        updateStartBtnState();
+      }
+    });
+    observer.observe(modal, { attributes: true, attributeFilter: ['style'] });
+  }
+
   function openModal() {
     if (!modal) return;
     modal.style.display = 'flex';

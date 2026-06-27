@@ -375,14 +375,26 @@ async function startMiniQuiz(options = {}) {
 }
 
 function setupMiniPretestModal() {
+  window._openMiniModal = function() { /* called from card onclick */ };
   const miniBtn = document.querySelector('.learn-more');
   const modal = document.getElementById('mini-quiz-modal');
   const startBtn = document.getElementById('start-mini-test-btn');
   const cancelBtn = document.getElementById('cancel-mini-test-btn');
   const nameInput = document.getElementById('mini-participant-name');
-  if (!miniBtn || !modal || !startBtn || !nameInput) return;
+  if (!modal || !startBtn || !nameInput) return;
 
   const closeButtons = modal.querySelectorAll('[data-mini-action="close"], .quiz-modal-close');
+
+  // Detect when modal is opened via external onclick (our new quiz card button)
+  // and reset name input + re-evaluate start button state
+  const modalObserver = new MutationObserver(() => {
+    if (modal.style.display === 'flex') {
+      nameInput.value = '';
+      nameInput.focus();
+      updateStartState();
+    }
+  });
+  modalObserver.observe(modal, { attributes: true, attributeFilter: ['style'] });
 
   function openModal() {
     modal.style.display = 'flex';
@@ -399,7 +411,6 @@ function setupMiniPretestModal() {
     modal.setAttribute('aria-hidden', 'true');
   }
 
-  miniBtn.addEventListener('click', openModal);
   closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
   if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
