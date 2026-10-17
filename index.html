@@ -1902,7 +1902,7 @@ Case and work order to there field support team.
       { label: 'Take Test', icon: 'pen-to-square', tab: 'quiz' },
       { label: 'Give Feedback', icon: 'comment-dots', tab: 'feedback' },
       { label: 'Learn JS', icon: 'globe', url: 'https://javascript-decoded.netlify.app/' },
-      { label: 'Buy Teja a Coffee', icon: 'mug-hot', action: 'coffee' },
+      { label: 'Buy Me a Coffee', icon: 'mug-hot', action: 'coffee' },
     ];
 
     window.afToggle = function () {
@@ -1975,6 +1975,12 @@ Case and work order to there field support team.
     function afChip(c) {
       afUserMsg(c.label);
       document.querySelectorAll('.af-chips').forEach(r => r.remove());
+      if (c.action === 'coffee') {
+        window.open('https://buymeacoffee.com/teamteja3q', '_blank', 'noopener,noreferrer');
+        afBotMsg(`Thanks for your support, ${afEsc(afName)}! Opening Buy Me a Coffee in a new tab.`);
+        setTimeout(afAddChips, 1400);
+        return;
+      }
       afTypingThen(700, () => {
         if (c.url) {
           afBotMsg(`Great choice! Opening <strong>${afEsc(c.label)}</strong> for you… <i class=icon-rocket aria-hidden=true></i>`);
@@ -1983,9 +1989,6 @@ Case and work order to there field support team.
           const labels = { quiz: 'Quiz <i class=icon-bullseye aria-hidden=true></i>', feedback: 'Feedback <i class=icon-comment-dots aria-hidden=true></i>' };
           afBotMsg(`Navigating you to the <strong>${labels[c.tab]}</strong> section. ${c.tab === 'quiz' ? 'Good luck, ' + afEsc(afName) + '!' : 'Your thoughts matter!'}`);
           setTimeout(() => afNavTab(c.tab), 800);
-        } else if (c.action === 'coffee') {
-          afBotMsg(`That's so kind of you, ${afEsc(afName)}! <i class=icon-mug-hot aria-hidden=true></i> Opening the coffee widget...`);
-          setTimeout(() => window.openCoffeeModal && window.openCoffeeModal(), 700);
         }
         setTimeout(() => {
           afBotMsg(`Anything else I can help you with, ${afEsc(afName)}? <i class=icon-face-smile aria-hidden=true></i>`);
@@ -2031,7 +2034,8 @@ Case and work order to there field support team.
       } else if (/\bjs\b|javascript/.test(lo)) {
         afTypingThen(700, () => { afBotMsg('Launching <strong>JavaScript Decoded</strong> <i class=icon-globe aria-hidden=true></i>'); setTimeout(() => window.open('https://javascript-decoded.netlify.app/','_blank'), 700); });
       } else if (/coffee|support|donate/.test(lo)) {
-        afTypingThen(700, () => { afBotMsg(`That's so kind! <i class=icon-mug-hot aria-hidden=true></i> Opening the coffee widget for you...`); setTimeout(() => window.openCoffeeModal && window.openCoffeeModal(), 700); });
+        window.open('https://buymeacoffee.com/teamteja3q', '_blank', 'noopener,noreferrer');
+        afTypingThen(700, () => { afBotMsg('Thanks for your support! Buy Me a Coffee opened in a new tab.'); setTimeout(afAddChips, 500); });
       } else if (/menu|help|option/.test(lo)) {
         afTypingThen(600, () => { afBotMsg(`Here are your options, ${afEsc(afName)} <i class=icon-arrow-down aria-hidden=true></i>`); setTimeout(afAddChips, 400); });
       } else {
