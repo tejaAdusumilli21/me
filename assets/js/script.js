@@ -420,7 +420,16 @@ function renderFeedbackCards(feedbacks) {
 
   container.innerHTML = '';
 
-  feedbacks.forEach((fb, index) => {
+  const generalFeedbacks = feedbacks.filter(
+    (feedback) => typeof feedback.Company__c !== 'string' || !feedback.Company__c.trim()
+  );
+
+  if (generalFeedbacks.length === 0) {
+    container.innerHTML = '<div class="no-feedback">No feedback available yet.</div>';
+    return;
+  }
+
+  generalFeedbacks.forEach((fb, index) => {
     const card = document.createElement('li');
     card.className = 'testimonials-item';
     
