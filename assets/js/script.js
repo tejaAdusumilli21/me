@@ -267,8 +267,7 @@ async function loadFeedbackData({ refresh = false, showLoading = true } = {}) {
 
   const request = (async () => {
     const response = await fetch(FEEDBACK_API_URL, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
+      method: 'GET'
     });
 
     if (!response.ok) {
