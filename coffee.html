@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Buy Teja Adusumilli a Coffee ☕</title>
+  <title>Buy Teja Adusumilli a Coffee</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/icons.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -44,7 +46,7 @@
       border-radius: 14px; padding: 12px 14px;
       display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
     }
-    .coffee-cup-emoji { font-size: 30px; line-height: 1; }
+    .coffee-cup-icon { font-size: 30px; line-height: 1; }
     .coffee-x { color: hsl(0,0%,60%); font-size: 15px; font-weight: 500; }
     .coffee-qty-btns { display: flex; gap: 8px; flex-wrap: wrap; }
     .coffee-qty-btn {
@@ -123,12 +125,12 @@
 <body>
   <div id="coffee-modal">
     <p class="coffee-title">
-      Buy teja adusumilli a coffee
+      <i class=icon-mug-hot aria-hidden=true></i> Buy teja adusumilli a coffee
       <span class="coffee-title-help" title="Support Teja's open-source work!">?</span>
     </p>
 
     <div class="coffee-qty-row">
-      <span class="coffee-cup-emoji">☕</span>
+      <span class="coffee-cup-icon"><i class=icon-mug-hot aria-hidden=true></i></span>
       <span class="coffee-x">×</span>
       <div class="coffee-qty-btns">
         <button class="coffee-qty-btn active" data-qty="1" onclick="setCoffeeQty(1)">1</button>
@@ -217,7 +219,7 @@
         amount     : totalINR * 100,
         currency   : 'INR',
         name       : 'Teja Adusumilli',
-        description: '☕ Coffee Support' + (monthly ? ' (Monthly)' : ''),
+        description: 'Coffee Support' + (monthly ? ' (Monthly)' : ''),
         image      : BASE_URL + '/assets/images/my-avatar.png',
         prefill    : { name },
         notes      : { message, monthly: monthly ? 'yes' : 'no' },
@@ -241,7 +243,7 @@
           }
 
           // Post to Salesforce feedback
-          var comment = '☕ Coffee Supporter · ₹' + totalINR
+          var comment = 'Coffee Supporter · ₹' + totalINR
             + (monthly ? ' · Monthly' : '')
             + (message ? ' "' + message + '"' : '');
           fetch('https://teja-adusumilli-dev-ed.my.salesforce-sites.com/services/apexrest/FeedbackAPI/', {
@@ -250,7 +252,7 @@
             body   : JSON.stringify({ name: name || 'Anonymous Supporter', email: '', phone: '', comments: comment }),
           }).catch(() => {});
 
-          alert('Thank you ' + (name || '') + '! ☕ Your support means the world to Teja!');
+          alert('Thank you ' + (name || '') + '! Your support means the world to Teja!');
           btn.disabled = false; updateSupportBtn();
         },
         modal: { ondismiss: function () { btn.disabled = false; updateSupportBtn(); } }

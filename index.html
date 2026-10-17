@@ -66,9 +66,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"
-    integrity="sha512-o8Oz5nlfh/wn2cDRoohU80FjplJn6j2FVta+i9NgrU6/DRyzxwGQ+R/XcTHo+wWdaDcV34+wr5FNWjO4gqGI+Q=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/icons.css" />
 
   <!-- Schema.org JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -1784,7 +1783,12 @@ Case and work order to there field support team.
       border-color: hsl(45,100%,72%);
       transform: translateY(-1px);
     }
-    .af-chip.af-ext::after { content: ' ↗'; font-size: 10px; }
+    .af-chip.af-ext::after {
+      content: "\f08e";
+      font-family: "Font Awesome 6 Free";
+      font-size: 10px;
+      font-weight: 900;
+    }
 
     /* Typing indicator */
     .af-typing {
@@ -1885,7 +1889,7 @@ Case and work order to there field support team.
         <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
       </button>
     </div>
-    <div class="af-powered">⚡ Powered by <strong>Salesforce Agentforce</strong></div>
+    <div class="af-powered"><i class=icon-bolt aria-hidden=true></i> Powered by <strong>Salesforce Agentforce</strong></div>
   </div>
 
   <script>
@@ -1893,12 +1897,12 @@ Case and work order to there field support team.
     let afOpen = false, afName = '', afStage = 'greeting', afBadgeHidden = false;
 
     const MENU = [
-      { label: '⚡ Learn LWC',      url: 'https://salesforceforward.blogspot.com/search/label/LWC' },
-      { label: '🧩 Learn Apex',     url: 'https://salesforceforward.blogspot.com/search/label/Apex' },
-      { label: '📝 Take Test',      tab: 'quiz' },
-      { label: '💬 Give Feedback',  tab: 'feedback' },
-      { label: '🌐 Learn JS',       url: 'https://javascript-decoded.netlify.app/' },
-      { label: '☕ Buy Teja a Coffee', action: 'coffee' },
+      { label: 'Learn LWC', icon: 'bolt', url: 'https://salesforceforward.blogspot.com/search/label/LWC' },
+      { label: 'Learn Apex', icon: 'puzzle-piece', url: 'https://salesforceforward.blogspot.com/search/label/Apex' },
+      { label: 'Take Test', icon: 'pen-to-square', tab: 'quiz' },
+      { label: 'Give Feedback', icon: 'comment-dots', tab: 'feedback' },
+      { label: 'Learn JS', icon: 'globe', url: 'https://javascript-decoded.netlify.app/' },
+      { label: 'Buy Teja a Coffee', icon: 'mug-hot', action: 'coffee' },
     ];
 
     window.afToggle = function () {
@@ -1914,9 +1918,9 @@ Case and work order to there field support team.
     function afGreet() {
       if (document.getElementById('af-messages').children.length > 0) return;
       afTypingThen(1000, () => {
-        afBotMsg('👋 Hi there! Welcome to <strong>Teja Adusumilli\'s</strong> portfolio.');
+        afBotMsg('<i class=icon-hand aria-hidden=true></i> Hi there! Welcome to <strong>Teja Adusumilli\'s</strong> portfolio.');
         setTimeout(() => {
-          afBotMsg('I\'m your Agentforce AI assistant. May I know your good name, please? 😊');
+          afBotMsg('I\'m your Agentforce AI assistant. May I know your good name, please? <i class=icon-face-smile aria-hidden=true></i>');
           setTimeout(afNameInput, 400);
         }, 600);
       });
@@ -1946,7 +1950,7 @@ Case and work order to there field support team.
     };
 
     function afShowMenu() {
-      afBotMsg(`Hey <strong>${afEsc(afName)}</strong>! 👋 Great to have you here.<br/>How can I help you today?`);
+      afBotMsg(`Hey <strong>${afEsc(afName)}</strong>! <i class=icon-hand aria-hidden=true></i> Great to have you here.<br/>How can I help you today?`);
       setTimeout(afAddChips, 500);
     }
 
@@ -1956,7 +1960,10 @@ Case and work order to there field support team.
       MENU.forEach(c => {
         const btn = document.createElement('button');
         btn.className = 'af-chip' + (c.url ? ' af-ext' : '');
-        btn.textContent = c.label;
+        const icon = document.createElement('i');
+        icon.className = `icon-${c.icon}`;
+        icon.setAttribute('aria-hidden', 'true');
+        btn.append(icon, document.createTextNode(` ${c.label}`));
         btn.onclick = () => afChip(c);
         row.appendChild(btn);
       });
@@ -1970,18 +1977,18 @@ Case and work order to there field support team.
       document.querySelectorAll('.af-chips').forEach(r => r.remove());
       afTypingThen(700, () => {
         if (c.url) {
-          afBotMsg(`Great choice! Opening <strong>${afEsc(c.label)}</strong> for you… 🚀`);
+          afBotMsg(`Great choice! Opening <strong>${afEsc(c.label)}</strong> for you… <i class=icon-rocket aria-hidden=true></i>`);
           setTimeout(() => window.open(c.url, '_blank'), 700);
         } else if (c.tab) {
-          const labels = { quiz: 'Quiz 🎯', feedback: 'Feedback 💬' };
+          const labels = { quiz: 'Quiz <i class=icon-bullseye aria-hidden=true></i>', feedback: 'Feedback <i class=icon-comment-dots aria-hidden=true></i>' };
           afBotMsg(`Navigating you to the <strong>${labels[c.tab]}</strong> section. ${c.tab === 'quiz' ? 'Good luck, ' + afEsc(afName) + '!' : 'Your thoughts matter!'}`);
           setTimeout(() => afNavTab(c.tab), 800);
         } else if (c.action === 'coffee') {
-          afBotMsg(`That's so kind of you, ${afEsc(afName)}! ☕ Opening the coffee widget...`);
+          afBotMsg(`That's so kind of you, ${afEsc(afName)}! <i class=icon-mug-hot aria-hidden=true></i> Opening the coffee widget...`);
           setTimeout(() => window.openCoffeeModal && window.openCoffeeModal(), 700);
         }
         setTimeout(() => {
-          afBotMsg(`Anything else I can help you with, ${afEsc(afName)}? 😊`);
+          afBotMsg(`Anything else I can help you with, ${afEsc(afName)}? <i class=icon-face-smile aria-hidden=true></i>`);
           setTimeout(afAddChips, 400);
         }, 1400);
       });
@@ -2014,21 +2021,21 @@ Case and work order to there field support team.
       afUserMsg(v);
       const lo = v.toLowerCase();
       if (/lwc|lightning web|component/.test(lo)) {
-        afTypingThen(700, () => { afBotMsg('Redirecting to the <strong>LWC tutorials</strong> ⚡'); setTimeout(() => window.open('https://salesforceforward.blogspot.com/search/label/LWC','_blank'), 700); });
+        afTypingThen(700, () => { afBotMsg('Redirecting to the <strong>LWC tutorials</strong> <i class=icon-bolt aria-hidden=true></i>'); setTimeout(() => window.open('https://salesforceforward.blogspot.com/search/label/LWC','_blank'), 700); });
       } else if (/apex/.test(lo)) {
-        afTypingThen(700, () => { afBotMsg('Opening <strong>Apex articles</strong> 🧩'); setTimeout(() => window.open('https://salesforceforward.blogspot.com/search/label/Apex','_blank'), 700); });
+        afTypingThen(700, () => { afBotMsg('Opening <strong>Apex articles</strong> <i class=icon-puzzle-piece aria-hidden=true></i>'); setTimeout(() => window.open('https://salesforceforward.blogspot.com/search/label/Apex','_blank'), 700); });
       } else if (/test|quiz/.test(lo)) {
-        afTypingThen(700, () => { afBotMsg('Taking you to the <strong>Quiz</strong> section 🎯'); setTimeout(() => afNavTab('quiz'), 700); });
+        afTypingThen(700, () => { afBotMsg('Taking you to the <strong>Quiz</strong> section <i class=icon-bullseye aria-hidden=true></i>'); setTimeout(() => afNavTab('quiz'), 700); });
       } else if (/feedback/.test(lo)) {
-        afTypingThen(700, () => { afBotMsg('Opening the <strong>Feedback</strong> section 💬'); setTimeout(() => afNavTab('feedback'), 700); });
+        afTypingThen(700, () => { afBotMsg('Opening the <strong>Feedback</strong> section <i class=icon-comment-dots aria-hidden=true></i>'); setTimeout(() => afNavTab('feedback'), 700); });
       } else if (/\bjs\b|javascript/.test(lo)) {
-        afTypingThen(700, () => { afBotMsg('Launching <strong>JavaScript Decoded</strong> 🌐'); setTimeout(() => window.open('https://javascript-decoded.netlify.app/','_blank'), 700); });
+        afTypingThen(700, () => { afBotMsg('Launching <strong>JavaScript Decoded</strong> <i class=icon-globe aria-hidden=true></i>'); setTimeout(() => window.open('https://javascript-decoded.netlify.app/','_blank'), 700); });
       } else if (/coffee|support|donate/.test(lo)) {
-        afTypingThen(700, () => { afBotMsg(`That's so kind! ☕ Opening the coffee widget for you...`); setTimeout(() => window.openCoffeeModal && window.openCoffeeModal(), 700); });
+        afTypingThen(700, () => { afBotMsg(`That's so kind! <i class=icon-mug-hot aria-hidden=true></i> Opening the coffee widget for you...`); setTimeout(() => window.openCoffeeModal && window.openCoffeeModal(), 700); });
       } else if (/menu|help|option/.test(lo)) {
-        afTypingThen(600, () => { afBotMsg(`Here are your options, ${afEsc(afName)} 👇`); setTimeout(afAddChips, 400); });
+        afTypingThen(600, () => { afBotMsg(`Here are your options, ${afEsc(afName)} <i class=icon-arrow-down aria-hidden=true></i>`); setTimeout(afAddChips, 400); });
       } else {
-        afTypingThen(700, () => { afBotMsg(`Hmm, I didn't quite catch that. Here's what I can help you with, ${afEsc(afName)} 👇`); setTimeout(afAddChips, 400); });
+        afTypingThen(700, () => { afBotMsg(`Hmm, I didn't quite catch that. Here's what I can help you with, ${afEsc(afName)} <i class=icon-arrow-down aria-hidden=true></i>`); setTimeout(afAddChips, 400); });
       }
     };
 
@@ -2070,7 +2077,7 @@ Case and work order to there field support team.
     window.afBotThankYou = function (name) {
       if (!afOpen) { afToggle(); }
       setTimeout(() => {
-        afBotMsg(`☕ Thank you${name ? ', <strong>' + afEsc(name) + '</strong>' : ''}! Your coffee support means the world to Teja! 🙏`);
+        afBotMsg(`<i class=icon-mug-hot aria-hidden=true></i> Thank you${name ? ', <strong>' + afEsc(name) + '</strong>' : ''}! Your coffee support means the world to Teja! <i class=icon-hands-praying aria-hidden=true></i>`);
       }, 400);
     };
   })();
@@ -2144,7 +2151,7 @@ Case and work order to there field support team.
       display: flex; align-items: center; gap: 10px;
       margin-bottom: 14px;
     }
-    .coffee-cup-emoji { font-size: 30px; line-height: 1; }
+    .coffee-cup-icon { font-size: 30px; line-height: 1; }
     .coffee-x { color: hsl(0,0%,60%); font-size: 15px; font-weight: 500; }
     .coffee-qty-btns { display: flex; gap: 8px; flex-wrap: wrap; }
     .coffee-qty-btn {
@@ -2262,7 +2269,7 @@ Case and work order to there field support team.
       </p>
 
       <div class="coffee-qty-row">
-        <span class="coffee-cup-emoji">☕</span>
+        <span class="coffee-cup-icon"><i class=icon-mug-hot aria-hidden=true></i></span>
         <span class="coffee-x">×</span>
         <div class="coffee-qty-btns">
           <button class="coffee-qty-btn active" data-qty="1" onclick="setCoffeeQty(1)">1</button>
@@ -2375,7 +2382,7 @@ Case and work order to there field support team.
         amount     : totalINR * 100,
         currency   : 'INR',
         name       : 'Teja Adusumilli',
-        description: '☕ Coffee Support' + (monthly ? ' (Monthly)' : ''),
+        description: 'Coffee Support' + (monthly ? ' (Monthly)' : ''),
         image      : 'https://tejaadusumilli.netlify.app/assets/images/my-avatar.png',
         prefill    : { name: name },
         notes      : { message: message, monthly: monthly ? 'yes' : 'no' },
@@ -2403,7 +2410,7 @@ Case and work order to there field support team.
           closeCoffeeModal();
 
           // Step 4 — post verified supporter to Salesforce Feedback
-          var comment = '☕ Coffee Supporter · ₹' + totalINR
+          var comment = '<i class=icon-mug-hot aria-hidden=true></i> Coffee Supporter · ₹' + totalINR
             + (monthly ? ' · Monthly' : '')
             + (message ? ' "' + message + '"' : '');
 

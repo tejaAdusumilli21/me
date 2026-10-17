@@ -489,13 +489,23 @@ function openFeedbackModal(feedback, avatarSrc) {
   modalImg.src = avatarSrc;
   modalImg.alt = name;
   modalName.textContent = name;
-  modalEmail.textContent = email ? `📧 ${email}` : '';
-  modalPhone.textContent = phone ? `📱 ${phone}` : '';
+  setFeedbackContact(modalEmail, email, 'envelope');
+  setFeedbackContact(modalPhone, phone, 'mobile-screen-button');
   modalDate.textContent = createdDate;
   modalComment.textContent = comments;
 
   modalContainer.style.display = 'flex';
   modalContainer.classList.add('active');
+}
+
+function setFeedbackContact(element, value, iconName) {
+  element.replaceChildren();
+  if (!value) return;
+
+  const icon = document.createElement('i');
+  icon.className = `icon-${iconName}`;
+  icon.setAttribute('aria-hidden', 'true');
+  element.append(icon, document.createTextNode(` ${value}`));
 }
 
 function closeFeedbackModal() {

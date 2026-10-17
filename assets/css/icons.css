@@ -1,0 +1,68 @@
+i[class^="icon-"]::before,
+i[class*=" icon-"]::before {
+  display: inline-block;
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 900;
+  line-height: 1;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-search::before { content: "\f002"; }
+.icon-circle-check::before { content: "\f058"; }
+.icon-graduation-cap::before { content: "\f19d"; }
+.icon-paw::before { content: "\f1b0"; }
+.icon-folder-tree::before { content: "\f802"; }
+.icon-link::before { content: "\f0c1"; }
+.icon-compass::before { content: "\f14e"; }
+.icon-gear::before { content: "\f013"; }
+.icon-trophy::before { content: "\f091"; }
+.icon-clipboard-list::before { content: "\f0ea"; }
+.icon-flask::before { content: "\f0c3"; }
+.icon-cart-shopping::before { content: "\f07a"; }
+.icon-medal::before { content: "\f5a2"; }
+.icon-chart-column::before { content: "\f080"; }
+.icon-earth-americas::before { content: "\f57d"; }
+.icon-rocket::before { content: "\f135"; }
+.icon-bolt::before { content: "\f0e7"; }
+.icon-desktop::before { content: "\f108"; }
+.icon-file-lines::before { content: "\f15c"; }
+.icon-plug::before { content: "\f1e6"; }
+.icon-lock::before { content: "\f023"; }
+.icon-ruler::before { content: "\f545"; }
+.icon-building::before { content: "\f1ad"; }
+.icon-screwdriver-wrench::before { content: "\f7d9"; }
+.icon-robot::before { content: "\f544"; }
+.icon-pen::before { content: "\f304"; }
+.icon-shield-halved::before { content: "\f3ed"; }
+.icon-scale-balanced::before { content: "\f24e"; }
+.icon-box-archive::before { content: "\f187"; }
+.icon-brain::before { content: "\f5dc"; }
+.icon-mobile-screen-button::before { content: "\f3cd"; }
+.icon-bullseye::before { content: "\f140"; }
+.icon-calculator::before { content: "\f1ec"; }
+.icon-tag::before { content: "\f02b"; }
+.icon-map::before { content: "\f279"; }
+.icon-user::before { content: "\f007"; }
+.icon-lock-open::before { content: "\f3c1"; }
+.icon-microscope::before { content: "\f610"; }
+.icon-users::before { content: "\f0c0"; }
+.icon-clock::before { content: "\f017"; }
+.icon-key::before { content: "\f084"; }
+.icon-box::before { content: "\f466"; }
+.icon-inbox::before { content: "\f01c"; }
+.icon-arrows-rotate::before { content: "\f021"; }
+.icon-chart-line::before { content: "\f201"; }
+.icon-mug-hot::before { content: "\f7b6"; }
+.icon-puzzle-piece::before { content: "\f12e"; }
+.icon-pen-to-square::before { content: "\f044"; }
+.icon-comment-dots::before { content: "\f4ad"; }
+.icon-globe::before { content: "\f0ac"; }
+.icon-hand::before { content: "\f256"; }
+.icon-face-smile::before { content: "\f118"; }
+.icon-arrow-down::before { content: "\f063"; }
+.icon-hands-praying::before { content: "\f684"; }
+.icon-envelope::before { content: "\f0e0"; }
+.icon-book-open::before { content: "\f518"; }
