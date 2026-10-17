@@ -2327,6 +2327,12 @@ textarea.form-input::-webkit-resizer { display: none; }
   line-height: 1.6;
 }
 
+@media (min-width: 768px) {
+  .sf-mascot-item--einstein {
+    grid-column: span 2;
+  }
+}
+
 
 /*-----------------------------------*\
   #RESPONSIVE MASCOTS
