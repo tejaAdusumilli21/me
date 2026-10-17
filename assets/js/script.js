@@ -41,7 +41,7 @@ sidebarBtn.addEventListener("click", function () {
 });
 
 // testimonials variables
-const testimonialsItem = document.querySelectorAll("[data-testimonials-item]");
+const testimonialsList = document.querySelector("#collaborationTestimonials");
 const modalContainer = document.querySelector("[data-modal-container]");
 const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
 const overlay = document.querySelector("[data-overlay]");
@@ -49,6 +49,7 @@ const overlay = document.querySelector("[data-overlay]");
 // modal variable
 const modalImg = document.querySelector("[data-modal-img]");
 const modalTitle = document.querySelector("[data-modal-title]");
+const modalCompany = document.querySelector("[data-modal-company]");
 const modalText = document.querySelector("[data-modal-text]");
 
 // modal toggle function
@@ -57,13 +58,22 @@ const testimonialsModalFunc = function () {
   overlay.classList.toggle("active");
 };
 
-// add click event to all modal items
-for (let i = 0; i < testimonialsItem.length; i++) {
-  testimonialsItem[i].addEventListener("click", function () {
-    modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
-    modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
-    modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
-    modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
+// Delegate clicks because collaboration cards are loaded from the API.
+if (testimonialsList) {
+  testimonialsList.addEventListener("click", function (event) {
+    const card = event.target.closest("[data-testimonials-item]");
+    if (!card) return;
+
+    const avatar = card.querySelector("[data-testimonials-avatar]");
+    const title = card.querySelector("[data-testimonials-title]");
+    const company = card.querySelector("[data-testimonials-company]");
+    const text = card.querySelector("[data-testimonials-text]");
+
+    modalImg.src = avatar.src;
+    modalImg.alt = avatar.alt;
+    modalTitle.textContent = title.textContent;
+    modalCompany.textContent = company.textContent;
+    modalText.textContent = text.textContent;
     testimonialsModalFunc();
   });
 }
@@ -278,6 +288,7 @@ async function loadFeedbackData({ refresh = false, showLoading = true } = {}) {
     }
 
     cachedFeedbacks = feedbacks;
+    renderCollaborationCards(feedbacks);
     if (feedbacks.length === 0) {
       container.innerHTML = '<div class="no-feedback">No feedback available yet.</div>';
       return;
@@ -288,6 +299,7 @@ async function loadFeedbackData({ refresh = false, showLoading = true } = {}) {
     if (feedbackRequest !== request) return;
     console.error('[Feedback] Error loading:', error);
     container.innerHTML = '<div class="error">Failed to load feedback. Please try again later.</div>';
+    renderCollaborationStatus('Failed to load collaboration feedback.');
   } finally {
     if (feedbackRequest === request) feedbackRequest = null;
   }
@@ -335,6 +347,71 @@ function getFeedbackAvatarSrc(feedback, index) {
   const avatars = feedbackAvatars[folder];
   const filename = avatars[index % avatars.length];
   return `./assets/images/${folder}/${filename}`;
+}
+
+function renderCollaborationStatus(message) {
+  const container = document.getElementById('collaborationTestimonials');
+  if (!container) return;
+  container.replaceChildren();
+  const status = document.createElement('li');
+  status.className = 'testimonials-status';
+  status.textContent = message;
+  container.appendChild(status);
+}
+
+function renderCollaborationCards(feedbacks) {
+  const container = document.getElementById('collaborationTestimonials');
+  if (!container) return;
+  container.replaceChildren();
+
+  const companyFeedbacks = feedbacks.filter(
+    (feedback) => typeof feedback.Company__c === 'string' && feedback.Company__c.trim()
+  );
+
+  if (companyFeedbacks.length === 0) {
+    renderCollaborationStatus('No collaboration feedback available yet.');
+    return;
+  }
+
+  companyFeedbacks.forEach((feedback, index) => {
+    const card = document.createElement('li');
+    card.className = 'testimonials-item';
+
+    const content = document.createElement('div');
+    content.className = 'content-card';
+    content.dataset.testimonialsItem = '';
+
+    const avatarBox = document.createElement('figure');
+    avatarBox.className = 'testimonials-avatar-box';
+    const avatar = document.createElement('img');
+    const name = feedback.Name || 'Anonymous';
+    avatar.src = getFeedbackAvatarSrc(feedback, index);
+    avatar.alt = name;
+    avatar.width = 60;
+    avatar.dataset.testimonialsAvatar = '';
+    avatarBox.appendChild(avatar);
+
+    const title = document.createElement('h4');
+    title.className = 'h4 testimonials-item-title';
+    title.dataset.testimonialsTitle = '';
+    title.textContent = name;
+
+    const company = document.createElement('p');
+    company.className = 'testimonials-item-company';
+    company.dataset.testimonialsCompany = '';
+    company.textContent = feedback.Company__c || '';
+
+    const text = document.createElement('div');
+    text.className = 'testimonials-text';
+    text.dataset.testimonialsText = '';
+    const comment = document.createElement('p');
+    comment.textContent = feedback.Comments__c || 'No comments';
+    text.appendChild(comment);
+
+    content.append(avatarBox, title, company, text);
+    card.appendChild(content);
+    container.appendChild(card);
+  });
 }
 
 function renderFeedbackCards(feedbacks) {

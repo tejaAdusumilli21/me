@@ -586,6 +586,12 @@ main {
 
 .testimonials-item-title { margin-bottom: 7px; }
 
+.testimonials-item-company {
+  color: var(--light-gray-70);
+  font-size: var(--fs-7);
+  margin-bottom: 7px;
+}
+
 .testimonials-text {
   color: var(--light-gray);
   font-size: var(--fs-6);
@@ -596,6 +602,12 @@ main {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.testimonials-status {
+  min-width: 100%;
+  color: var(--light-gray-70);
+  padding: 20px 0;
 }
 
 
