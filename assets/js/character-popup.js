@@ -467,7 +467,7 @@ const TOPIC_DATA = {
     link: "https://trailhead.salesforce.com/content/learn/modules/identity_login/identity_login_sso"
   },
   "data-loader": {
-    tag: "<i class=icon-box aria-hidden=true></i> Data Tools",
+    tag: "<i class=icon-package aria-hidden=true></i> Data Tools",
     title: "Data Loader",
     body: "<strong>Data Loader is a desktop tool for importing, exporting, updating, and deleting large volumes of records</strong> — up to 5 million rows per operation. It uses CSV files and maps columns to Salesforce fields. Unlike the Import Wizard, Data Loader supports all standard and custom objects, bulk API (for speed), and can be automated via command line for scheduled operations.",
     tips: ["Use 'Upsert' with an External ID field to avoid creating duplicates on re-import","Always export a backup BEFORE running any mass update or delete","Data Loader uses Bulk API by default — switch to REST API for small loads needing immediate results","Check the success/error CSV files after every operation — partial failures are silent otherwise"],

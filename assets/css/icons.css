@@ -51,7 +51,7 @@ i[class*=" icon-"]::before {
 .icon-users::before { content: "\f0c0"; }
 .icon-clock::before { content: "\f017"; }
 .icon-key::before { content: "\f084"; }
-.icon-box::before { content: "\f466"; }
+.icon-package::before { content: "\f466"; }
 .icon-inbox::before { content: "\f01c"; }
 .icon-arrows-rotate::before { content: "\f021"; }
 .icon-chart-line::before { content: "\f201"; }
