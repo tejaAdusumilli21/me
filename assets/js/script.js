@@ -296,6 +296,47 @@ async function loadFeedbackData({ refresh = false, showLoading = true } = {}) {
 // Warm the feedback list while visitors browse other sections.
 setTimeout(() => loadFeedbackData({ showLoading: false }), 0);
 
+const feedbackAvatars = {
+  men: [
+    'avatar-1.png',
+    'avator- (4).png',
+    'avator- (5).png',
+    'avator- (6).png',
+    'avator- (7).png',
+    'avator- (8).png',
+    'avator- (9).png',
+    'avator-7.png',
+    'my-avatar.png',
+  ],
+  female: [
+    'avatar-2.png',
+    'avatar-3.png',
+    'avator- (1).png',
+    'avator- (2).png',
+    'avator- (3).png',
+    'avator- (10).png',
+    'avator- (11).png',
+    'avator- (12).png',
+    'avator- (13).png',
+    'avator- (14).png',
+    'avator- (15).png',
+    'avator- (16).png',
+    'avator- (17).png',
+    'avator- (18).png',
+    'avator- (19).png',
+  ],
+};
+
+function getFeedbackAvatarSrc(feedback, index) {
+  const gender = typeof feedback.gender__c === 'string'
+    ? feedback.gender__c.trim().toUpperCase()
+    : '';
+  const folder = gender === 'FEMALE' ? 'female' : 'men';
+  const avatars = feedbackAvatars[folder];
+  const filename = avatars[index % avatars.length];
+  return `./assets/images/${folder}/${filename}`;
+}
+
 function renderFeedbackCards(feedbacks) {
   const container = document.getElementById('feedbackContainer');
   if (!container) return;
@@ -306,7 +347,7 @@ function renderFeedbackCards(feedbacks) {
     const card = document.createElement('li');
     card.className = 'testimonials-item';
     
-    const avatarNum = (index % 4) + 1;
+    const avatarSrc = getFeedbackAvatarSrc(fb, index);
     const name = fb.Name || 'Anonymous';
     const email = fb.Email__c || '';
     const phone = fb.Phone__c || '';
@@ -316,7 +357,7 @@ function renderFeedbackCards(feedbacks) {
     card.innerHTML = `
       <div class="content-card" data-feedback-item>
         <figure class="testimonials-avatar-box">
-          <img src="./assets/images/avatar-${avatarNum}.png" alt="${name}" width="60" data-feedback-avatar />
+          <img src="${avatarSrc}" alt="${name}" width="60" data-feedback-avatar />
         </figure>
         <h4 class="h4 testimonials-item-title" data-feedback-title>${name}</h4>
         <div class="testimonials-text" data-feedback-text>
@@ -327,7 +368,7 @@ function renderFeedbackCards(feedbacks) {
     
     // Add click event to open modal
     card.querySelector('[data-feedback-item]').addEventListener('click', () => {
-      openFeedbackModal(fb, avatarNum);
+      openFeedbackModal(fb, avatarSrc);
     });
     
     container.appendChild(card);
@@ -339,7 +380,7 @@ function truncateText(text, maxLength) {
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 }
 
-function openFeedbackModal(feedback, avatarNum) {
+function openFeedbackModal(feedback, avatarSrc) {
   const modalContainer = document.getElementById('feedbackModalContainer');
   const modalImg = document.getElementById('feedback-modal-img');
   const modalName = document.getElementById('feedback-modal-name');
@@ -360,7 +401,7 @@ function openFeedbackModal(feedback, avatarNum) {
     day: 'numeric'
   }) : '';
 
-  modalImg.src = `./assets/images/avatar-${avatarNum}.png`;
+  modalImg.src = avatarSrc;
   modalImg.alt = name;
   modalName.textContent = name;
   modalEmail.textContent = email ? `📧 ${email}` : '';
