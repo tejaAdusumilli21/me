@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
           showToast('Feedback submitted successfully!');
           e.target.reset();
           // Reload feedback list after submission
-          loadFeedbackData();
+          loadFeedbackData({ refresh: true });
         } else {
           const errorText = await response.text();
           console.error('[Feedback] Error:', response.status, errorText);
@@ -231,16 +231,31 @@ document.addEventListener("DOMContentLoaded", function () {
 // GET Feedback and Display
 // ======================
 
-async function loadFeedbackData() {
+let cachedFeedbacks;
+let feedbackRequest;
+
+async function loadFeedbackData({ refresh = false, showLoading = true } = {}) {
   const container = document.getElementById('feedbackContainer');
   if (!container) {
     console.warn('[Feedback] Container not found');
     return;
   }
 
-  container.innerHTML = '<div class="loading">Loading feedback...</div>';
+  if (!refresh && cachedFeedbacks) {
+    renderFeedbackCards(cachedFeedbacks);
+    return;
+  }
 
-  try {
+  if (feedbackRequest && !refresh) {
+    if (showLoading) container.innerHTML = '<div class="loading">Loading feedback...</div>';
+    await feedbackRequest.catch(() => {});
+    return;
+  }
+
+  if (refresh) cachedFeedbacks = undefined;
+  if (showLoading) container.innerHTML = '<div class="loading">Loading feedback...</div>';
+
+  const request = (async () => {
     const response = await fetch(FEEDBACK_API_URL, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -250,19 +265,36 @@ async function loadFeedbackData() {
       throw new Error(`HTTP ${response.status}`);
     }
 
-    const feedbacks = await response.json();
+    return response.json();
+  })();
+  feedbackRequest = request;
 
-    if (!Array.isArray(feedbacks) || feedbacks.length === 0) {
+  try {
+    const feedbacks = await request;
+    if (feedbackRequest !== request) return;
+
+    if (!Array.isArray(feedbacks)) {
+      throw new Error('Unexpected feedback response');
+    }
+
+    cachedFeedbacks = feedbacks;
+    if (feedbacks.length === 0) {
       container.innerHTML = '<div class="no-feedback">No feedback available yet.</div>';
       return;
     }
 
     renderFeedbackCards(feedbacks);
   } catch (error) {
+    if (feedbackRequest !== request) return;
     console.error('[Feedback] Error loading:', error);
     container.innerHTML = '<div class="error">Failed to load feedback. Please try again later.</div>';
+  } finally {
+    if (feedbackRequest === request) feedbackRequest = null;
   }
 }
+
+// Warm the feedback list while visitors browse other sections.
+setTimeout(() => loadFeedbackData({ showLoading: false }), 0);
 
 function renderFeedbackCards(feedbacks) {
   const container = document.getElementById('feedbackContainer');
