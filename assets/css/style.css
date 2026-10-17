@@ -650,6 +650,7 @@ main {
   background: var(--eerie-black-2);
   position: relative;
   width: auto;
+  max-width: 100%;
   padding: 15px;
   margin: 15px 12px;
   border: 1px solid var(--jet);
