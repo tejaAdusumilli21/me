@@ -242,65 +242,107 @@ document.addEventListener("DOMContentLoaded", function () {
 // ======================
 
 let cachedFeedbacks;
-let feedbackRequest;
+let feedbackRequest = null;
+let feedbackRequestController = null;
 
-async function loadFeedbackData({ refresh = false, showLoading = true } = {}) {
-  const container = document.getElementById('feedbackContainer');
-  if (!container) {
-    console.warn('[Feedback] Container not found');
-    return;
-  }
+async function loadFeedbackData({
+  refresh = false,
+  showLoading = true
+} = {}) {
+  const container = document.getElementById("feedbackContainer");
+
+  if (!container) return;
 
   if (!refresh && cachedFeedbacks) {
+    renderCollaborationCards(cachedFeedbacks);
     renderFeedbackCards(cachedFeedbacks);
     return;
   }
 
   if (feedbackRequest && !refresh) {
-    if (showLoading) container.innerHTML = '<div class="loading">Loading feedback...</div>';
-    await feedbackRequest.catch(() => {});
-    return;
+    if (showLoading) {
+      container.innerHTML =
+        '<div class="loading">Loading feedback...</div>';
+    }
+
+    return feedbackRequest;
   }
 
-  if (refresh) cachedFeedbacks = undefined;
-  if (showLoading) container.innerHTML = '<div class="loading">Loading feedback...</div>';
+  if (refresh) {
+    cachedFeedbacks = undefined;
+    feedbackRequestController?.abort();
+  }
+
+  if (showLoading) {
+    container.innerHTML =
+      '<div class="loading">Loading feedback...</div>';
+  }
+
+  const controller = new AbortController();
+  feedbackRequestController = controller;
 
   const request = (async () => {
-    const response = await fetch(FEEDBACK_API_URL, {
-      method: 'GET'
-    });
+    const startedAt = performance.now();
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+    try {
+      const response = await fetch(FEEDBACK_API_URL, {
+        method: "GET",
+        signal: controller.signal,
+        cache: "no-store"
+      });
+
+      console.info(
+        `[Feedback] HTTP response: ${(performance.now() - startedAt).toFixed(0)} ms`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const feedbacks = await response.json();
+
+      console.info(
+        `[Feedback] Total fetch and JSON time: ${(performance.now() - startedAt).toFixed(0)} ms`
+      );
+
+      if (!Array.isArray(feedbacks)) {
+        throw new Error("Unexpected feedback response");
+      }
+
+      cachedFeedbacks = feedbacks;
+      renderCollaborationCards(feedbacks);
+      renderFeedbackCards(feedbacks);
+
+      return feedbacks;
+    } catch (error) {
+      if (error.name === "AbortError") return;
+
+      console.error("[Feedback] Loading failed:", error);
+
+      container.innerHTML =
+        '<div class="error">Unable to load feedback. Please try again.</div>';
+
+      renderCollaborationStatus(
+        "Unable to load collaboration feedback."
+      );
+
+      return null;
     }
-
-    return response.json();
   })();
+
   feedbackRequest = request;
 
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
   try {
-    const feedbacks = await request;
-    if (feedbackRequest !== request) return;
-
-    if (!Array.isArray(feedbacks)) {
-      throw new Error('Unexpected feedback response');
-    }
-
-    cachedFeedbacks = feedbacks;
-    renderCollaborationCards(feedbacks);
-    if (feedbacks.length === 0) {
-      container.innerHTML = '<div class="no-feedback">No feedback available yet.</div>';
-      return;
-    }
-
-    renderFeedbackCards(feedbacks);
-  } catch (error) {
-    if (feedbackRequest !== request) return;
-    console.error('[Feedback] Error loading:', error);
-    container.innerHTML = '<div class="error">Failed to load feedback. Please try again later.</div>';
-    renderCollaborationStatus('Failed to load collaboration feedback.');
+    await request;
   } finally {
-    if (feedbackRequest === request) feedbackRequest = null;
+    clearTimeout(timeout);
+
+    if (feedbackRequest === request) {
+      feedbackRequest = null;
+      feedbackRequestController = null;
+    }
   }
 }
 
